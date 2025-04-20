@@ -1,0 +1,239 @@
+/* --- Reset & Base --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.6;
+    color: #1d1d1f;
+    background-color: #f5f5f7; /* Slightly adjusted Apple-like background */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Layout Container --- */
+.container {
+    max-width: 900px; /* Slightly wider for card layout */
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+/* --- Typography --- */
+h1, h2, h3 {
+    line-height: 1.2;
+    font-weight: 600;
+    color: #1d1d1f; /* Use primary text color for headings */
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem; /* Space above card grid */
+    text-align: center; /* Center section titles */
+}
+
+h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    font-size: 1rem; /* Slightly smaller default paragraph */
+    color: #333;
+}
+
+a {
+    color: #007aff;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    /* text-decoration: underline; */ /* Remove underline for cleaner look */
+    opacity: 0.85;
+}
+
+/* --- Header / Hero --- */
+.hero {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    margin-bottom: 3rem;
+}
+
+.hero .tagline {
+    font-size: 1.3rem;
+    font-weight: 400; /* Normal weight */
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.hero .intro-sentence {
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 600px; /* Constrain width of intro */
+    margin: 0 auto; /* Center intro sentence */
+    line-height: 1.5;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: block;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- Sections --- */
+section {
+    margin-bottom: 3.5rem;
+}
+
+/* --- Card Grid Layout --- */
+.card-grid {
+    display: grid;
+    /* Adjust minmax for desired card size */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem; /* Space between cards */
+}
+
+/* --- Card Styling --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 16px; /* Prominent rounded corners */
+    padding: 1.75rem; /* Generous internal padding */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06); /* Softer shadow */
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+    display: flex; /* Use flexbox for internal alignment */
+    flex-direction: column; /* Stack content vertically */
+    height: 100%; /* Make cards in a row equal height */
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    color: #1d1d1f;
+}
+
+.card p {
+    font-size: 0.95rem; /* Slightly smaller text inside cards */
+    color: #555;
+    flex-grow: 1; /* Allows paragraph to push link down in project card */
+    margin-bottom: 1rem; /* Ensure space before link */
+}
+
+.card a {
+    font-weight: 600; /* Bolder links within cards */
+    font-size: 0.95rem;
+    margin-top: auto; /* Pushes link to bottom if card uses flex */
+}
+
+/* --- Project Card Specifics --- */
+/* .project-card { } */ /* Add specific styles if needed */
+
+/* --- Contact Card Specifics --- */
+.contact-card {
+    text-align: center;
+}
+
+.contact-card p {
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem; /* Slightly larger text for contact prompt */
+}
+
+.contact-links a {
+    margin: 0 0.75rem;
+    font-weight: 500;
+    display: inline-block; /* Ensure spacing works */
+    padding: 0.25rem 0; /* Add a bit of clickable area */
+}
+
+/* --- View More Link --- */
+.view-more {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1rem;
+}
+.view-more a {
+    font-weight: 600;
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e5e5;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.4rem;
+    }
+    h2 {
+        font-size: 1.6rem;
+    }
+    .container {
+        padding: 2rem 1rem;
+    }
+    .card-grid {
+        /* Adjust minmax or switch to single column if needed */
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+    }
+    .card {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 15px;
+    }
+    h1 {
+        font-size: 2.1rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    .hero .tagline {
+        font-size: 1.15rem;
+    }
+    .hero .intro-sentence {
+        font-size: 1rem;
+    }
+    .card-grid {
+        /* Stack cards on very small screens */
+        grid-template-columns: 1fr;
+    }
+    .contact-links a {
+        margin: 0 0.5rem 0.5rem; /* Add bottom margin for stacking */
+    }
+}
