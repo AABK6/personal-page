@@ -84,7 +84,7 @@ border-top: 30px solid #00449E;
 </head>
 <body class="text-gray-800">
 
-<header class="bg-[#00449E] text-white p-8 text-center sticky top-0 z-50 shadow-lg">
+<header id="mainHeader" class="bg-[#00449E] text-white p-8 text-center sticky top-0 z-50 shadow-lg transition-transform duration-300">
     <h1 class="text-4xl md:text-5xl font-bold mb-2">Strategic Imperatives in Global Aid</h1>
     <p class="text-lg text-[#89D1FF]">A Visual Analysis of Development in a World of Polycrisis</p>
 </header>
@@ -560,6 +560,24 @@ document.addEventListener('DOMContentLoaded', function () {
              }
         }
     });
+
+    // Hide header on scroll for mobile (<768px)
+    let lastScrollY = window.scrollY;
+    const header = document.getElementById('mainHeader');
+    function handleScroll() {
+        if (window.innerWidth < 768) {
+            if (window.scrollY > lastScrollY && window.scrollY > 20) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = '';
+            }
+            lastScrollY = window.scrollY;
+        } else {
+            header.style.transform = '';
+        }
+    }
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
 });
 </script>
 </body>
