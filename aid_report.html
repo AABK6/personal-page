@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic Imperatives in Global Aid: An Infographic</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #f0f4f8;
+}
+.chart-container {
+position: relative;
+width: 100%;
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+height: 350px;
+max-height: 400px;
+}
+@media (min-width: 768px) {
+.chart-container {
+height: 400px;
+}
+}
+.stat-card {
+background-color: #005CB9;
+color: white;
+padding: 2rem;
+border-radius: 0.75rem;
+text-align: center;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.stat-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.stat-number {
+font-size: 4rem;
+font-weight: 900;
+line-height: 1;
+}
+.stat-label {
+margin-top: 1rem;
+font-size: 1.125rem;
+font-weight: 600;
+}
+.flowchart-step {
+border: 2px solid #0074D4;
+background-color: #ffffff;
+color: #00449E;
+position: relative;
+}
+.flowchart-arrow {
+color: #0074D4;
+font-size: 2rem;
+line-height: 1;
+}
+.balance-beam {
+height: 8px;
+background-color: #00449E;
+border-radius: 4px;
+}
+.balance-fulcrum::before {
+content: '';
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 0;
+height: 0;
+border-left: 20px solid transparent;
+border-right: 20px solid transparent;
+border-top: 30px solid #00449E;
+}
+</style>
+</head>
+<body class="text-gray-800">
+
+<header class="bg-[#00449E] text-white p-8 text-center sticky top-0 z-50 shadow-lg">
+    <h1 class="text-4xl md:text-5xl font-bold mb-2">Strategic Imperatives in Global Aid</h1>
+    <p class="text-lg text-[#89D1FF]">A Visual Analysis of Development in a World of Polycrisis</p>
+</header>
+
+<main class="p-4 md:p-8">
+
+    <section id="polycrisis" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">A World at a Crossroads: The Polycrisis</h2>
+            <p class="text-lg">The global development landscape is strained by a convergence of crises. Progress on poverty has stalled, inequality remains entrenched, and climate change poses a fundamental threat to hard-won gains. This polycrisis demands a radical rethinking of traditional development aid.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div class="stat-card">
+                <div class="stat-number">~700M</div>
+                <div class="stat-label">People in Extreme Poverty</div>
+                <p class="mt-2 text-sm text-[#89D1FF]">Living on less than $2.15 per day, with progress toward eradication nearly at a standstill.</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1.7B</div>
+                <div class="stat-label">People in High-Inequality Economies</div>
+                <p class="mt-2 text-sm text-[#89D1FF]">Concentrated in Sub-Saharan Africa and Latin America, hindering socioeconomic mobility.</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1 in 5</div>
+                <div class="stat-label">People at Risk of Extreme Weather</div>
+                <p class="mt-2 text-sm text-[#89D1FF]">Climate events disproportionately affect vulnerable populations, reversing development gains.</p>
+            </div>
+        </div>
+         <div class="mt-12 bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+            <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">The Epicenter of Poverty</h3>
+            <p class="text-center mb-6">Sub-Saharan Africa bears a disproportionate burden of global poverty. This chart visualizes the stark concentration, highlighting the region as the central focus of contemporary development challenges.</p>
+            <div class="chart-container">
+                <canvas id="povertyConcentrationChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section id="dilemma" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The Core Dilemma: Growth vs. Inequality</h2>
+            <p class="text-lg">For decades, a central debate has shaped aid strategy: should we prioritize aggregate economic growth, believing it will lift all boats, or directly attack inequality as the primary barrier to sustainable development? Recent evidence suggests the answer is not a simple choice, but a question of balance and targeting.</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-8 max-w-5xl mx-auto">
+            <div class="relative mb-8">
+                 <div class="balance-beam w-full"></div>
+                 <div class="absolute -bottom-8 w-full balance-fulcrum h-8"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="text-center border-r-0 md:border-r-2 border-dashed border-[#89D1FF] pr-8">
+                    <h3 class="text-2xl font-bold text-[#005CB9] mb-4">The Growth-First Approach</h3>
+                    <p class="mb-4">This perspective argues that sustained economic growth is the most powerful engine for poverty reduction. Aid, therefore, should focus on creating the conditions for robust economic expansion.</p>
+                    <ul class="text-left list-disc list-inside space-y-2">
+                        <li><span class="font-semibold">Primary Goal:</span> Boost aggregate GDP.</li>
+                        <li><span class="font-semibold">Evidence:</span> Cross-country data shows a strong correlation between growth and poverty decline.</li>
+                        <li><span class="font-semibold">Critique:</span> May exacerbate inequality if growth is not inclusive.</li>
+                    </ul>
+                </div>
+                 <div class="text-center">
+                    <h3 class="text-2xl font-bold text-[#005CB9] mb-4">The Inequality-First Approach</h3>
+                    <p class="mb-4">Reflected in the SDGs' "Leave No One Behind" principle, this view contends that reducing inequality is the key to sustainable, long-term progress and social cohesion.</p>
+                    <ul class="text-left list-disc list-inside space-y-2">
+                       <li><span class="font-semibold">Primary Goal:</span> Reduce disparities in income, wealth, and opportunity.</li>
+                       <li><span class="font-semibold">Evidence:</span> Some studies show a 1% reduction in inequality has a greater poverty impact than 1% growth.</li>
+                       <li><span class="font-semibold">Critique:</span> May neglect growth engines needed to generate resources for redistribution.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t-2 border-dashed border-[#89D1FF]">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-2">A New Synthesis: Targeted Redistribution with Growth</h3>
+                <p class="text-center">The most effective strategy appears to be a hybrid: fostering pro-poor, inclusive growth while implementing well-targeted redistributive policies. Research shows that targeted redistribution to low-income households can stimulate consumption and investment, creating a virtuous cycle that enhances both equity and growth.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="finance" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The Money Maze: Navigating Development Finance</h2>
+            <p class="text-lg">Achieving the Sustainable Development Goals is threatened by a colossal funding gap, which has likely doubled since the pandemic. Mobilizing the necessary "billions to trillions" requires optimizing all sources of finance, from domestic taxes to international cooperation, yet each comes with significant challenges.</p>
+        </div>
+         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">The Staggering SDG Finance Gap</h3>
+                 <div class="stat-card bg-[#00449E]">
+                    <div class="stat-number">~$5T</div>
+                    <div class="stat-label">Estimated Annual SDG Financing Gap</div>
+                    <p class="mt-2 text-sm text-[#89D1FF]">A shortfall that hampers progress on every global goal, from health and education to climate action.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">The Blended Finance Paradox</h3>
+                <p class="text-center mb-6">Blended finance aims to use public funds to attract private investment. However, evidence shows these resources are not reaching the countries that need them most.</p>
+                <div class="chart-container h-80">
+                    <canvas id="blendedFinanceChart"></canvas>
+                </div>
+            </div>
+             <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">SDR Allocation: An Unequal Share</h3>
+                <p class="text-center mb-6">Special Drawing Rights (SDRs) provide debt-free liquidity, but the 2021 allocation mechanism heavily favored wealthy nations, highlighting systemic inequities.</p>
+                <div class="chart-container h-80">
+                    <canvas id="sdrAllocationChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">Tapping New Revenue: Potential of International Taxes</h3>
+                 <p class="text-center mb-6">Proposals for international taxes on carbon, financial transactions, and digital services could unlock vast, predictable funding streams for development, though political hurdles remain immense.</p>
+                <div class="chart-container">
+                    <canvas id="taxPotentialChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="technology" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The Technology Catalyst: Promise & Paradox</h2>
+            <p class="text-lg">Technology transfer is a powerful engine for development, enabling countries to enhance productivity and leapfrog traditional development stages. However, its success depends on a complex interplay of intellectual property rights, local innovation capacity, and supportive policies.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-6">The Technology Transfer Pathway</h3>
+                <p class="text-center mb-8">Successful transfer is more than just providing equipment; it's a process that requires a receptive ecosystem to absorb, adapt, and innovate upon new knowledge.</p>
+                <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full md:w-1/4">
+                        <div class="font-bold text-lg">1. Idea & R&D</div>
+                        <p class="text-sm">Innovation and development of new technologies.</p>
+                    </div>
+                    <div class="flowchart-arrow transform md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full md:w-1/4">
+                        <div class="font-bold text-lg">2. Transfer</div>
+                        <p class="text-sm">Via FDI, Licensing, JVs, G2G Partnerships.</p>
+                    </div>
+                    <div class="flowchart-arrow transform md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full md:w-1/4">
+                         <div class="font-bold text-lg">3. Absorption</div>
+                        <p class="text-sm">Requires skilled human capital & infrastructure.</p>
+                    </div>
+                    <div class="flowchart-arrow transform md:rotate-0 rotate-90">&rarr;</div>
+                    <div class="flowchart-step p-4 rounded-lg text-center w-full md:w-1/4">
+                         <div class="font-bold text-lg">4. Impact</div>
+                        <p class="text-sm">Productivity gains & sustainable development.</p>
+                    </div>
+                </div>
+                 <div class="mt-8 pt-6 border-t-2 border-dashed border-[#89D1FF]">
+                    <h4 class="text-xl font-bold text-center text-[#005CB9]">The IPR Paradox</h4>
+                    <p class="text-center mt-2">Strong Intellectual Property Rights (IPRs) incentivize innovation and transfer, but can also act as barriers, restricting access to essential technologies for developing countries. Balancing these interests is a core global challenge.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">Case Study: Digital Payments in Africa</h3>
+                <p class="text-center mb-6">Africa's adoption of mobile money is a prime example of technological leapfrogging, driving financial inclusion for millions who were previously unbanked.</p>
+                <div class="text-center space-y-4">
+                    <div class="text-7xl text-[#0074D4]">📱</div>
+                    <p class="font-semibold text-lg">Mobile money has extended financial services to vast, previously underserved populations.</p>
+                    <div class="text-7xl text-[#0074D4]">💹</div>
+                    <p class="font-semibold text-lg">Reduced transaction costs stimulate economic activity and cross-border trade for SMEs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demographics" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The People Factor: Demographic Destinies</h2>
+            <p class="text-lg">Population trends profoundly shape development needs and opportunities. Africa's "youth bulge" presents a time-limited chance for a demographic dividend, but current aid allocation biases may misdirect crucial resources.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">The "Youth Bulge" Opportunity</h3>
+                <p class="text-center mb-6">A large youth population can be a massive economic boon if they are educated, healthy, and employed. If not, it risks becoming a source of instability.</p>
+                <div id="pyramidContainer" class="w-full max-w-sm mx-auto flex flex-col-reverse items-center gap-1">
+                    <div class="bg-[#00449E] text-white text-center py-2 rounded" style="width: 100%;">0-14 years</div>
+                    <div class="bg-[#005CB9] text-white text-center py-2 rounded" style="width: 80%;">15-24 years</div>
+                    <div class="bg-[#0074D4] text-white text-center py-2 rounded" style="width: 65%;">25-54 years</div>
+                    <div class="bg-[#41A6FF] text-white text-center py-2 rounded" style="width: 40%;">55-64 years</div>
+                    <div class="bg-[#89D1FF] text-white text-center py-2 rounded" style="width: 25%;">65+ years</div>
+                </div>
+                <p class="text-center mt-4 font-semibold">Typical age structure in a youth-bulge country.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-center text-[#00449E] mb-4">The "Small-Country Bias" in Aid</h3>
+                <p class="text-center mb-6">Aid allocation often provides proportionally more aid per capita to smaller nations, regardless of need. This systemic bias risks underfunding large, youthful populations where investments could yield the highest demographic dividend.</p>
+                <div class="chart-container">
+                    <canvas id="smallCountryBiasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="geopolitics" class="mb-16">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The Geopolitical Game: Aid as a Strategic Tool</h2>
+            <p class="text-lg">Development aid is rarely purely altruistic. It is a tool of economic statecraft, used to build influence and manage global risks. New models like Just Energy Transition Partnerships (JETPs) are promising, but navigate this same complex tension between donor interests and recipient needs.</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-6 max-w-6xl mx-auto">
+            <h3 class="text-2xl font-bold text-center text-[#00449E] mb-6">Just Energy Transition Partnerships (JETPs): A Snapshot</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-[#00449E] text-white">
+                            <th class="p-3 font-semibold">Country</th>
+                            <th class="p-3 font-semibold">Funding (Approx.)</th>
+                            <th class="p-3 font-semibold">Primary Goal</th>
+                            <th class="p-3 font-semibold">Key Challenge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-200">
+                            <td class="p-3 font-semibold text-[#005CB9]">South Africa</td>
+                            <td class="p-3">$8.5 Billion</td>
+                            <td class="p-3">Accelerate coal phase-out, support renewables.</td>
+                            <td class="p-3">Managing social impacts on coal communities.</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <td class="p-3 font-semibold text-[#005CB9]">Indonesia</td>
+                            <td class="p-3">$20 Billion</td>
+                            <td class="p-3">Peak power emissions by 2030, accelerate renewables.</td>
+                            <td class="p-3">Concerns over energy privatization and donor influence.</td>
+                        </tr>
+                         <tr class="border-b border-gray-200">
+                            <td class="p-3 font-semibold text-[#005CB9]">Vietnam</td>
+                            <td class="p-3">$15.5 Billion</td>
+                            <td class="p-3">Peak emissions by 2030, accelerate coal phase-out.</td>
+                            <td class="p-3">Aligning donor conditions with national energy plans.</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <td class="p-3 font-semibold text-[#005CB9]">Senegal</td>
+                            <td class="p-3">€2.5 Billion</td>
+                            <td class="p-3">Increase renewable energy share to 40% by 2030.</td>
+                            <td class="p-3">Mobilizing sufficient private finance inclusively.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="forward" class="mb-8">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#00449E] mb-4">The Path Forward: A Call for Coherent Strategy</h2>
+            <p class="text-lg">Enhancing the impact of development aid requires a fundamental shift towards more coherent, equitable, and evidence-based strategies that genuinely empower developing nations and collaboratively address our shared global challenges.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="text-5xl mb-4">🏛️</div>
+                <h3 class="text-xl font-bold text-[#005CB9]">Reform IFIs</h3>
+                <p class="mt-2">Increase the voice and voting power of developing countries in the World Bank and IMF.</p>
+            </div>
+             <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="text-5xl mb-4">🔄</div>
+                <h3 class="text-xl font-bold text-[#005CB9]">Ensure Policy Coherence</h3>
+                <p class="mt-2">Align donor trade, agriculture, and security policies with development objectives.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="text-5xl mb-4">🎯</div>
+                <h3 class="text-xl font-bold text-[#005CB9]">Invest in Local Capacity</h3>
+                <p class="mt-2">Prioritize strengthening recipient-country systems over creating parallel donor-led programs.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                <div class="text-5xl mb-4">💡</div>
+                <h3 class="text-xl font-bold text-[#005CB9]">Foster Learning Agencies</h3>
+                <p class="mt-2">Build internal research and strategic planning capacity within aid agencies to adapt to new challenges.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="text-center p-6 bg-[#00449E] text-[#89D1FF] mt-8">
+    <p>Infographic based on the "Strategic Imperatives in Development and Aid" comprehensive analysis. Data synthesized for visualization purposes.</p>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const brilliantBlues = ['#00449E', '#005CB9', '#0074D4', '#41A6FF', '#89D1FF'];
+    const tooltipTitleCallback = function(tooltipItems) {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+            return label.join(' ');
+        } else {
+            return label;
+        }
+    };
+
+    const chartOptionsTemplate = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: { color: '#00449E', font: { size: 14 } }
+            },
+            tooltip: {
+                callbacks: {
+                    title: tooltipTitleCallback
+                },
+                backgroundColor: '#00449E',
+                titleColor: '#FFFFFF',
+                bodyColor: '#FFFFFF',
+                padding: 10,
+                cornerRadius: 6,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: '#005CB9' },
+                grid: { color: '#e0e0e0' }
+            },
+            x: {
+                ticks: { color: '#005CB9' },
+                grid: { display: false }
+            }
+        }
+    };
+
+    function wrapLabel(str, maxWidth) {
+        if (str.length <= maxWidth) {
+            return str;
+        }
+        const words = str.split(' ');
+        const lines = [];
+        let currentLine = words[0];
+        for (let i = 1; i < words.length; i++) {
+            if (currentLine.length + words[i].length + 1 < maxWidth) {
+                currentLine += ' ' + words[i];
+            } else {
+                lines.push(currentLine);
+                currentLine = words[i];
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    }
+
+    new Chart(document.getElementById('povertyConcentrationChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Sub-Saharan Africa', 'Rest of World'],
+            datasets: [{
+                label: '% of Global Extreme Poverty',
+                data: [67, 33],
+                backgroundColor: [brilliantBlues[1], brilliantBlues[3]],
+                borderColor: [brilliantBlues[0], brilliantBlues[2]],
+                borderWidth: 1
+            }]
+        },
+        options: { ...chartOptionsTemplate }
+    });
+
+    new Chart(document.getElementById('blendedFinanceChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Low-Income Countries', 'Middle & Upper-Middle Income Countries'],
+            datasets: [{
+                label: 'Blended Finance Distribution',
+                data: [6, 94],
+                backgroundColor: [brilliantBlues[3], brilliantBlues[0]],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#00449E', font: { size: 12 } } },
+                tooltip: {
+                    callbacks: { title: tooltipTitleCallback },
+                    backgroundColor: '#00449E',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF'
+                }
+            }
+        }
+    });
+    
+    new Chart(document.getElementById('sdrAllocationChart'), {
+        type: 'bar',
+        data: {
+            labels: ['SDR Allocation (2021)'],
+            datasets: [
+                {
+                    label: 'G7 Countries',
+                    data: [280],
+                    backgroundColor: brilliantBlues[0]
+                },
+                {
+                    label: 'African Continent',
+                    data: [33],
+                    backgroundColor: brilliantBlues[3]
+                }
+            ]
+        },
+        options: {
+            ...chartOptionsTemplate,
+            indexAxis: 'y',
+            scales: {
+              x: {
+                stacked: true,
+                ticks: { color: '#005CB9' },
+                grid: { display: false },
+                title: { display: true, text: 'Billions of USD', color: '#00449E' }
+              },
+              y: {
+                stacked: true,
+                ticks: { display: false },
+                grid: { display: false }
+              }
+            },
+            plugins: { ...chartOptionsTemplate.plugins, legend: {position: 'bottom'} }
+        }
+    });
+
+    new Chart(document.getElementById('taxPotentialChart'), {
+        type: 'bar',
+        data: {
+            labels: [
+                wrapLabel('Global Carbon Tax', 16),
+                wrapLabel('Financial Transaction Tax (Forex)', 16),
+                wrapLabel('Global Minimum Corp. Tax (Pillar 2)', 16)
+            ],
+            datasets: [{
+                label: 'Estimated Annual Revenue Potential (USD)',
+                data: [1400, 825, 150],
+                backgroundColor: [brilliantBlues[0], brilliantBlues[2], brilliantBlues[4]],
+            }]
+        },
+        options: {
+             ...chartOptionsTemplate,
+             scales: {
+                ...chartOptionsTemplate.scales,
+                y: {
+                    ...chartOptionsTemplate.scales.y,
+                    title: { display: true, text: 'Billions of USD', color: '#00449E' }
+                }
+             }
+        }
+    });
+    
+    new Chart(document.getElementById('smallCountryBiasChart'), {
+        type: 'bubble',
+        data: {
+            datasets: [
+                {
+                    label: 'Small Population, High Per-Capita Aid',
+                    data: [{x: 2, y: 150, r: 15}, {x: 5, y: 120, r: 20}, {x: 8, y: 100, r: 25}],
+                    backgroundColor: brilliantBlues[3] + 'B3'
+                },
+                {
+                    label: 'Medium Population, Medium Per-Capita Aid',
+                    data: [{x: 25, y: 60, r: 30}, {x: 40, y: 50, r: 35}, {x: 60, y: 40, r: 40}],
+                     backgroundColor: brilliantBlues[1] + 'B3'
+                },
+                {
+                    label: 'Large Population, Low Per-Capita Aid',
+                    data: [{x: 100, y: 20, r: 45}, {x: 150, y: 15, r: 50}, {x: 200, y: 10, r: 55}],
+                    backgroundColor: brilliantBlues[0] + 'B3'
+                }
+            ]
+        },
+        options: {
+             ...chartOptionsTemplate,
+             plugins: { ...chartOptionsTemplate.plugins, legend: {display: false} },
+             scales: {
+                y: {
+                    ...chartOptionsTemplate.scales.y,
+                    title: { display: true, text: 'Aid per Capita ($)', color: '#00449E'}
+                },
+                x: {
+                    ...chartOptionsTemplate.scales.x,
+                    title: { display: true, text: 'Country Population (Millions)', color: '#00449E'}
+                }
+             }
+        }
+    });
+});
+</script>
+</body>
+</html>
