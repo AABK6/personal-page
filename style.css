@@ -278,3 +278,70 @@ footer {
         margin: 0 0.5rem 0.5rem; /* Add bottom margin for stacking */
     }
 }
+
+/* --- Parallax Hero and 3D Canvas --- */
+
+#parallax {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+}
+
+.parallax-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.layer-back { background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=80'); }
+.layer-mid { background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80'); }
+.layer-front { background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80'); }
+
+.intro {
+    position: relative;
+    z-index: 10;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#start-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.2rem;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#three-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+#three-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#interaction {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 1.2rem;
+    display: none;
+    pointer-events: none;
+}
