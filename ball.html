@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smooth Sphere → Grid • Round Glowing Dots</title>
+  <style>
+    html,
+    body {
+      height: 220vh;
+      margin: 0;
+      background: linear-gradient(#450000 0%, #ff5500 100%);
+      overflow-x: hidden;
+    }
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+  </style>
+
+  <!-- Import‑map so "three" resolves without bundler -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+
+  <script type="module">
+    /*
+      Bug fix: removed stray "disc64," token and duplicate callback that broke the loader call.
+      Now the loader arguments are: url, onLoad, onProgress (undefined), onError.
+    */
+
+    import * as THREE from 'three';
+
+    // ——— Scene & renderer ———
+    const canvas   = document.getElementById('bg');
+    const scene    = new THREE.Scene();
+    const camera   = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 1000);
+    camera.position.z = 10;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+
+    // ——— Geometry ———
+    const COLS = 20, ROWS = 20, POINTS = COLS * ROWS, RADIUS = 2;
+    const sphere = [], grid = [];
+
+    for (let i = 0; i < POINTS; i++) {
+      const phi   = Math.acos(1 - 2 * (i + 0.5) / POINTS);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * (i + 0.5);
+      sphere.push(new THREE.Vector3(
+        RADIUS * Math.sin(phi) * Math.cos(theta),
+        RADIUS * Math.sin(phi) * Math.sin(theta),
+        RADIUS * Math.cos(phi)
+      ));
+    }
+
+    const viewH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+    const viewW = viewH * camera.aspect;
+    const dx = viewW / (COLS - 1), dy = viewH / (ROWS - 1);
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        grid.push(new THREE.Vector3(-viewW / 2 + c * dx, viewH / 2 - r * dy, 0));
+      }
+    }
+
+    const posArr = new Float32Array(POINTS * 3);
+    sphere.forEach((v, i) => posArr.set([v.x, v.y, v.z], i * 3));
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+
+    // Basic white squares to guarantee visibility
+    const mat = new THREE.PointsMaterial({ size: 0.22, color: 0xffffff, sizeAttenuation: true, depthWrite: false });
+    const dots = new THREE.Points(geo, mat);
+    scene.add(dots);
+
+    // Swap to round glowing discs once texture loads
+    const discURL = 'https://unpkg.com/three@0.160.0/examples/textures/sprites/disc.png';
+    new THREE.TextureLoader().setCrossOrigin('anonymous').load(
+      discURL,
+      (tex) => {
+        tex.toneMapped = false;
+        mat.map        = tex;
+        mat.transparent= true;
+        mat.alphaTest  = 0.25;
+        mat.blending   = THREE.AdditiveBlending;
+        mat.needsUpdate= true;
+      },
+      undefined,
+      (err) => console.warn('sprite load failed', err)
+    );
+
+    // ——— Cursor trail ———
+    const MAX_PATH = 5;
+    const trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAX_PATH * 3), 3));
+    const trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: 0xffffff }));
+    trail.visible = false;
+    scene.add(trail);
+
+    // ——— Interaction helpers ———
+    const raycaster = new THREE.Raycaster();
+    const pointer   = new THREE.Vector2();
+    const cursor    = new THREE.Vector3();
+    const tmp       = new THREE.Vector3();
+    const history   = [];
+    const CAP2      = 0.25 * 0.25;
+
+    addEventListener('pointermove', (e) => {
+      pointer.x = (e.clientX / innerWidth) * 2 - 1;
+      pointer.y = -(e.clientY / innerHeight) * 2 + 1;
+    });
+
+    // Scroll tracking
+    let scroll = 0;
+    const updateScroll = () => {
+      const h = document.body.scrollHeight - innerHeight;
+      scroll = h ? pageYOffset / h : 0;
+    };
+    addEventListener('scroll', updateScroll);
+    updateScroll();
+
+    // ——— Animation loop ———
+    const positions = geo.attributes.position.array;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      raycaster.setFromCamera(pointer, camera);
+      raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), cursor);
+
+      const grow  = THREE.MathUtils.smoothstep(scroll, 0, 0.45);
+      const phase = THREE.MathUtils.clamp((scroll - 0.45) / 0.55, 0, 1);
+
+      trail.visible = phase === 1;
+      if (!trail.visible) history.length = 0;
+
+      for (let i = 0; i < POINTS; i++) {
+        const idx = i * 3;
+        tmp.fromArray(positions, idx);
+
+        const growP = sphere[i].clone().multiplyScalar(1 + grow * 4);
+        const gridP = sphere[i].clone().lerp(grid[i], phase);
+        let target  = phase < 1 ? growP : gridP;
+        if (phase === 1) {
+          const d = tmp.distanceTo(cursor);
+          if (d < 1.2) target.add(tmp.clone().sub(cursor).normalize().multiplyScalar((1.2 - d) * 0.4));
+        }
+        tmp.lerp(target, 0.14);
+        positions[idx]     = tmp.x;
+        positions[idx + 1] = tmp.y;
+        positions[idx + 2] = tmp.z;
+      }
+      geo.attributes.position.needsUpdate = true;
+
+      if (trail.visible) {
+        let nearest = -1, best = CAP2;
+        for (let i = 0; i < POINTS; i++) {
+          tmp.fromArray(positions, i * 3);
+          const d2 = tmp.distanceToSquared(cursor);
+          if (d2 < best) { best = d2; nearest = i; }
+        }
+        if (nearest !== -1 && (history.length === 0 || history[history.length - 1] !== nearest)) {
+          history.push(nearest);
+          if (history.length > MAX_PATH) history.shift();
+        }
+        const lineArr = trailGeo.attributes.position.array;
+        history.forEach((id, i) => {
+          lineArr[i * 3]     = positions[id * 3];
+          lineArr[i * 3 + 1] = positions[id * 3 + 1];
+          lineArr[i * 3 + 2] = positions[id * 3 + 2];
+        });
+        trail.geometry.setDrawRange(0, history.length);
+        trailGeo.attributes.position.needsUpdate = true;
+      }
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // ——— Resize ———
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+  </script>
+</body>
+</html>
