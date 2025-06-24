@@ -8,7 +8,7 @@ const charBB = new THREE.Box3();
 const tempBB = new THREE.Box3();
 let interactionEl;
 
-window.initThree = function initThree() {
+export function initThree() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xa0a0a0);
 
@@ -71,7 +71,7 @@ window.initThree = function initThree() {
 
   window.addEventListener('resize', onWindowResize);
   document.addEventListener('keydown', onKeyDown);
-};
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
