@@ -19,11 +19,52 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* --- Background Network Canvas --- */
+#network-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, #f5f5f7, #e6e6e9);
+}
+
+/* --- Preloader --- */
+#preloader {
+    position: fixed;
+    inset: 0;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+#preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #007aff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Layout Container --- */
 .container {
     max-width: 900px; /* Slightly wider for card layout */
     margin: 0 auto;
     padding: 3rem 1.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* --- Typography --- */
