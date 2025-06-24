@@ -8,83 +8,95 @@ window.addEventListener('load', () => {
   }
 });
 
-// Interactive particle network background
-const canvas = document.getElementById('network');
-if (canvas) {
+(() => {
+  const canvas = document.getElementById('network-canvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let width, height;
-  let particles = [];
-  const maxDistance = 120;
+  const POINTS = 75;
+  const CONNECT_DIST = 120;
+  const INFLUENCE = 100;
+  const points = [];
+  const mouse = { x: null, y: null };
 
   function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    const count = Math.floor((width * height) / 8000);
-    particles = Array.from({ length: count }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.7,
-      vy: (Math.random() - 0.5) * 0.7,
-    }));
   }
-
-  let mouse = { x: null, y: null };
-
   window.addEventListener('resize', resize);
-  window.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
-  window.addEventListener('mouseleave', () => {
-    mouse.x = null;
-    mouse.y = null;
-  });
+  resize();
 
-  function update() {
-    ctx.clearRect(0, 0, width, height);
-    for (const p of particles) {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > width) p.vx *= -1;
-      if (p.y < 0 || p.y > height) p.vy *= -1;
+  class Point {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.vx = (Math.random() - 0.5) * 0.6;
+      this.vy = (Math.random() - 0.5) * 0.6;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
 
       if (mouse.x !== null) {
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < maxDistance) {
-          p.vx += dx * 0.0005;
-          p.vy += dy * 0.0005;
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < INFLUENCE && dist > 0) {
+          const force = (INFLUENCE - dist) / INFLUENCE;
+          this.vx += (dx / dist) * force * 0.5;
+          this.vy += (dy / dist) * force * 0.5;
         }
       }
 
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+    }
+    draw() {
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
       ctx.fill();
     }
+  }
 
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i];
-        const b = particles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < maxDistance) {
-          ctx.strokeStyle = `rgba(255,255,255,${1 - dist / maxDistance})`;
+  for (let i = 0; i < POINTS; i++) {
+    points.push(new Point());
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseout', () => {
+    mouse.x = mouse.y = null;
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#1d1d1f';
+    points.forEach((p) => p.update());
+
+    ctx.strokeStyle = '#1d1d1f';
+    for (let i = 0; i < POINTS; i++) {
+      for (let j = i + 1; j < POINTS; j++) {
+        const dx = points[i].x - points[j].x;
+        const dy = points[i].y - points[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECT_DIST) {
+          ctx.globalAlpha = 1 - dist / CONNECT_DIST;
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[j].x, points[j].y);
           ctx.stroke();
         }
       }
     }
+    ctx.globalAlpha = 1;
+    points.forEach((p) => p.draw());
 
-    requestAnimationFrame(update);
+    requestAnimationFrame(animate);
   }
 
-  resize();
-  update();
-}
+  animate();
+})();
