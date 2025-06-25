@@ -238,6 +238,37 @@
             document.addEventListener('mousemove', onMouseMove, false);
             document.getElementById('scroll-container').addEventListener('wheel', onWheel, false);
 
+            // --- Mobile Touch Scroll Support ---
+            let lastTouchY = null;
+            const scrollContainer = document.getElementById('scroll-container');
+            scrollContainer.addEventListener('touchstart', function(e) {
+                if (e.touches.length === 1) {
+                    lastTouchY = e.touches[0].clientY;
+                }
+            }, { passive: false });
+            scrollContainer.addEventListener('touchmove', function(e) {
+                if (e.touches.length === 1 && lastTouchY !== null) {
+                    const currentY = e.touches[0].clientY;
+                    const deltaY = lastTouchY - currentY;
+                    scrollContainer.scrollTop += deltaY;
+                    lastTouchY = currentY;
+                    // Replicate onWheel logic for mobile
+                    const scrollY = scrollContainer.scrollTop;
+                    const scrollThreshold = 500;
+                    const maxZoom = 10;
+                    const minZoom = 30;
+                    const zoom = minZoom - (scrollY / 100);
+                    camera.position.z = Math.max(zoom, maxZoom);
+                    if (scrollY > scrollThreshold && !isTransitioning) {
+                        transitionToGrid();
+                    }
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            scrollContainer.addEventListener('touchend', function(e) {
+                lastTouchY = null;
+            });
+
             // --- Initial Transition ---
             // Hide loader after a delay
             setTimeout(() => {
