@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U x Machina Animation Replication</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+    <!-- 
+      Import Map to handle module resolution for Three.js.
+      This tells the browser where to find modules when it sees an import like:
+      import * from 'three';
+    -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js",
+                "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #111;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111;
+            z-index: 100;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* Keyframe animation for the spinning loader */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        #scene-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animation 1: The Spinning Loader -->
+    <div id="loader">
+        <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
+            <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
+          </g>
+        </svg>
+    </div>
+
+    <!-- Info Panel -->
+    <div id="info-panel" class="info-panel opacity-0 transition-opacity duration-500">
+        <h2 class="font-bold text-lg mb-2">Interactive Particle System</h2>
+        <p>This animation replicates the two visual effects you requested from the U x Machina website.</p>
+        <ul class="list-disc list-inside mt-2">
+            <li>Move your mouse to interact with the particles.</li>
+            <li>Click and drag to rotate the camera.</li>
+            <li>Scroll to zoom in and out.</li>
+        </ul>
+        <p class="mt-2 text-xs text-gray-400">This is a simplified replication for demonstration.</p>
+    </div>
+
+    <!-- Animation 2: The Particle System Canvas -->
+    <canvas id="scene-container"></canvas>
+
+    <script type="module">
+        // Import Three.js and OrbitControls as ES modules
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+        // --- Basic Setup ---
+        let scene, camera, renderer, particles, controls;
+        let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
+        const particleCount = 10000;
+        const sphereRadius = 3;
+        const gridDimensions = 20;
+
+        const spherePositions = [];
+        const gridPositions = [];
+        let isTransitioning = false;
+
+        // --- Initialization ---
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x111111, 10, 20);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10;
+
+            // Renderer
+            const canvas = document.getElementById('scene-container');
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Orbit Controls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.enablePan = false;
+            controls.minDistance = 3;
+            controls.maxDistance = 15;
+
+            // --- Particle Creation ---
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const initialColors = new Float32Array(particleCount * 3); // To store original colors
+
+            const color = new THREE.Color();
+
+            // 1. Generate Sphere Positions
+            for (let i = 0; i < particleCount; i++) {
+                const phi = Math.acos(-1 + (2 * i) / particleCount);
+                const theta = Math.sqrt(particleCount * Math.PI) * phi;
+
+                const x = sphereRadius * Math.cos(theta) * Math.sin(phi);
+                const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
+                const z = sphereRadius * Math.cos(phi);
+
+                spherePositions.push(x, y, z);
+                positions[i * 3] = x;
+                positions[i * 3 + 1] = y;
+                positions[i * 3 + 2] = z;
+
+                color.setHSL(i / particleCount, 1.0, 0.5);
+                colors[i*3] = color.r;
+                colors[i*3+1] = color.g;
+                colors[i*3+2] = color.b;
+
+                // Store initial color
+                initialColors[i*3] = color.r;
+                initialColors[i*3+1] = color.g;
+                initialColors[i*3+2] = color.b;
+
+                sizes[i] = Math.random() * 0.1 + 0.05;
+            }
+
+            // 2. Generate Grid Positions
+            const halfGrid = gridDimensions / 2;
+            for (let i = 0; i < particleCount; i++) {
+                 const x = (Math.random() - 0.5) * gridDimensions;
+                 const y = (Math.random() - 0.5) * gridDimensions;
+                 const z = (Math.random() - 0.5) * gridDimensions;
+                 gridPositions.push(x, y, z);
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('initialColor', new THREE.BufferAttribute(initialColors, 3)); // Store for reset
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            // Custom shaders for size attenuation and color
+            const vertexShader = `
+                attribute float size;
+                varying vec3 vColor;
+                void main() {
+                    vColor = color;
+                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_Position = projectionMatrix * mvPosition;
+                }
+            `;
+            const fragmentShader = `
+                varying vec3 vColor;
+                void main() {
+                    if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
+                    gl_FragColor = vec4(vColor, 1.0);
+                }
+            `;
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    color: { value: new THREE.Color(0xffffff) },
+                },
+                vertexShader,
+                fragmentShader,
+                vertexColors: true,
+                transparent: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // --- Event Listeners ---
+            window.addEventListener('resize', onWindowResize, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+
+            // --- Initial Transition ---
+            // Hide loader after a delay
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                document.getElementById('info-panel').classList.remove('opacity-0');
+                 setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    // Start the sphere-to-grid transition
+                    transitionToGrid();
+                 }, 500);
+            }, 2000); // 2-second simulated load time
+        }
+
+        // --- Transition Animation ---
+        function transitionToGrid() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            const positions = particles.geometry.attributes.position.array;
+
+            for (let i = 0; i < particleCount; i++) {
+                 const proxy = {
+                    x: positions[i * 3],
+                    y: positions[i * 3 + 1],
+                    z: positions[i * 3 + 2]
+                };
+
+                gsap.to(proxy, {
+                    x: gridPositions[i * 3],
+                    y: gridPositions[i * 3 + 1],
+                    z: gridPositions[i * 3 + 2],
+                    duration: 4,
+                    delay: Math.random() * 1.5, // Staggered start
+                    ease: "power3.inOut",
+                    onUpdate: () => {
+                        positions[i * 3] = proxy.x;
+                        positions[i * 3 + 1] = proxy.y;
+                        positions[i * 3 + 2] = proxy.z;
+                        particles.geometry.attributes.position.needsUpdate = true;
+                    }
+                });
+            }
+        }
+
+
+        // --- Event Handlers ---
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            // Normalize mouse position to [-1, 1]
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            // Interaction logic
+            const positions = particles.geometry.attributes.position.array;
+            const colors = particles.geometry.attributes.color.array;
+            const initialColors = particles.geometry.attributes.initialColor.array;
+            const interactionRadius = 1.5;
+            const brightColor = new THREE.Color(0xffffff); // White highlight
+
+            for (let i = 0; i < particleCount; i++) {
+                const ix = i * 3;
+                const iy = i * 3 + 1;
+                const iz = i * 3 + 2;
+
+                const particlePosition = new THREE.Vector3(positions[ix], positions[iy], positions[iz]);
+
+                // Project mouse onto a plane at z=0 in camera space
+                const mouseWorld = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
+                const direction = mouseWorld.sub(camera.position).normalize();
+                const distanceToPlane = -camera.position.z / direction.z;
+                const mouseOnPlane = camera.position.clone().add(direction.multiplyScalar(distanceToPlane));
+
+                // Calculate distance and apply force/color change
+                const dist = particlePosition.distanceTo(mouseOnPlane);
+
+                if (dist < interactionRadius) {
+                    // "Draw lines" by making particles bright
+                     gsap.to(particles.geometry.attributes.color.array, {
+                        [ix]: brightColor.r,
+                        [iy]: brightColor.g,
+                        [iz]: brightColor.b,
+                        duration: 0.2,
+                     });
+                } else {
+                     // Fade back to original color
+                     gsap.to(particles.geometry.attributes.color.array, {
+                        [ix]: initialColors[ix],
+                        [iy]: initialColors[iy],
+                        [iz]: initialColors[iz],
+                        duration: 1.5,
+                     });
+                }
+            }
+
+            particles.geometry.attributes.position.needsUpdate = true;
+            particles.geometry.attributes.color.needsUpdate = true;
+
+
+            renderer.render(scene, camera);
+        }
+
+        // --- Start ---
+        init();
+        animate();
+    </script>
+</body>
+</html>
