@@ -26,7 +26,7 @@
     <style>
         body {
             margin: 0;
-            overflow: hidden;
+            /* overflow: hidden; */
             background-color: #111;
             color: white;
             font-family: 'Inter', sans-serif;
@@ -61,6 +61,8 @@
             width: 100vw;
             height: 100vh;
             display: block;
+            position: sticky;
+            top: 0;
         }
 
         .info-panel {
@@ -80,6 +82,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="scroll-container" style="height: 100vh; overflow-y: scroll;">
     <!-- Animation 1: The Spinning Loader -->
     <div id="loader">
         <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
@@ -103,6 +106,9 @@
     <!-- Animation 2: The Particle System Canvas -->
     <canvas id="scene-container"></canvas>
 
+    <div style="height: 200vh;"></div>
+    </div>
+
     <script type="module">
         // Import Three.js and OrbitControls as ES modules
         import * as THREE from 'three';
@@ -112,8 +118,8 @@
         let scene, camera, renderer, particles, controls;
         let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
         const particleCount = 10000;
-        const sphereRadius = 3;
-        const gridDimensions = 20;
+        const sphereRadius = 2; // radius of the sphere for initial particle positions
+        const gridDimensions = 80; // size of the grid area
 
         const spherePositions = [];
         const gridPositions = [];
@@ -127,7 +133,7 @@
 
             // Camera
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 10;
+            camera.position.z = 30;
 
             // Renderer
             const canvas = document.getElementById('scene-container');
@@ -141,7 +147,7 @@
             controls.dampingFactor = 0.05;
             controls.enablePan = false;
             controls.minDistance = 3;
-            controls.maxDistance = 15;
+            controls.maxDistance = 30;
 
             // --- Particle Creation ---
             const geometry = new THREE.BufferGeometry();
@@ -176,7 +182,7 @@
                 initialColors[i*3+1] = color.g;
                 initialColors[i*3+2] = color.b;
 
-                sizes[i] = Math.random() * 0.1 + 0.05;
+                sizes[i] = Math.random() * 0.5 + 0.01; // Random size between 0.01 and 0.5
             }
 
             // 2. Generate Grid Positions
@@ -230,6 +236,7 @@
             // --- Event Listeners ---
             window.addEventListener('resize', onWindowResize, false);
             document.addEventListener('mousemove', onMouseMove, false);
+            document.getElementById('scroll-container').addEventListener('wheel', onWheel, false);
 
             // --- Initial Transition ---
             // Hide loader after a delay
@@ -239,7 +246,7 @@
                  setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
                     // Start the sphere-to-grid transition
-                    transitionToGrid();
+                    // transitionToGrid();
                  }, 500);
             }, 2000); // 2-second simulated load time
         }
@@ -286,6 +293,28 @@
             // Normalize mouse position to [-1, 1]
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onWheel(event) {
+            event.preventDefault();
+            const scrollContainer = document.getElementById('scroll-container');
+            scrollContainer.scrollTop += event.deltaY;
+
+            const scrollY = scrollContainer.scrollTop;
+            console.log('ScrollY:', scrollY, 'DeltaY:', event.deltaY); // Debugging line
+            const scrollThreshold = 500; // When the explosion happens
+            const maxZoom = 10; // Minimum zoom level
+            const minZoom = 30; // Maximum zoom level
+
+            // Camera zoom effect
+            const zoom = minZoom - (scrollY / 100); //
+            camera.position.z = Math.max(zoom, maxZoom); // Clamp zoom
+
+            // Trigger explosion
+            if (scrollY > scrollThreshold && !isTransitioning) {
+                console.log('Triggering explosion!'); // Debugging line
+                transitionToGrid();
+            }
         }
 
         // --- Animation Loop ---
@@ -348,3 +377,4 @@
     </script>
 </body>
 </html>
+
