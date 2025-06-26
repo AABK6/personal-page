@@ -85,6 +85,7 @@
     <body>
     <!-- Animation 1: The Spinning Loader -->
     <div id="loader">
+        <!-- SVG spinner for loading animation -->
         <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
             <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
           </g>
@@ -110,52 +111,56 @@
 
     <script type="module">
         // Import Three.js and OrbitControls as ES modules
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+        import * as THREE from 'three'; // Three.js core library
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Camera controls
 
         // --- Basic Setup ---
         let scene, camera, renderer, particles, controls;
+        let earthMesh, cloudsMesh, atmosphereMesh;
         let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
-        const particleCount = 10000;
+        const particleCount = 10000; // Number of particles in the system
         const sphereRadius = 3; // radius of the sphere for initial particle positions
         const gridDimensions = 80; // size of the grid area
+        const EARTH_RADIUS = 0.5;
 
-        const spherePositions = [];
-        const gridPositions = [];
+        const spherePositions = []; // Stores initial sphere positions for each particle
+        const gridPositions = [];   // Stores grid positions for each particle
         let animationState = 'sphere'; // sphere, exploding, grid, journeying, focused
-        let targetParticleIndex;
-        let targetParticlePosition = new THREE.Vector3();
+        let targetParticleIndex; // Index of the special particle for the camera journey
+        let targetParticlePosition = new THREE.Vector3(); // Position of the target particle
 
-
-        let virtualScrollY = 0;
-        let targetScrollY = 0;
+        let virtualScrollY = 0; // Smoothed scroll position
+        let targetScrollY = 0;  // Target scroll position (raw input)
         let scrollSpeed = 0.07; // Adjust for smoother or faster interpolation
-
 
         // --- Event Handlers ---
         function onWindowResize() {
+            // Update camera and renderer on window resize
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
         function onMouseMove(event) {
-            // Normalize mouse position to [-1, 1]
+            // Normalize mouse position to [-1, 1] for use in shaders
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         }
 
         function onWheel(event) {
+            // Handle scroll wheel for zoom and triggering transitions
             event.preventDefault();
             targetScrollY += event.deltaY * 0.5;
         }
 
         let lastTouchY = 0;
         function onTouchStart(event) {
+            // Store initial Y position for touch scrolling
             lastTouchY = event.touches[0].clientY;
         }
 
         function onTouchMove(event) {
+            // Handle vertical touch movement for scrolling
             event.preventDefault();
             const currentY = event.touches[0].clientY;
             const deltaY = lastTouchY - currentY;
@@ -163,10 +168,10 @@
             lastTouchY = currentY;
         }
 
-
         function handleScroll(scrollY) {
-            const explosionThreshold = 500;
-            const journeyThreshold = 1500;
+            // Handles scroll-based transitions and camera zoom
+            const explosionThreshold = 500; // When to trigger sphere-to-grid
+            const journeyThreshold = 1500;  // When to trigger camera journey
             const maxZoom = 10;
             const minZoom = 35;
 
@@ -176,6 +181,7 @@
                 camera.position.z = Math.max(zoom, maxZoom);
             }
 
+            // Trigger transitions based on scroll position
             if (scrollY > explosionThreshold && animationState === 'sphere') {
                 transitionToGrid();
             } else if (scrollY > journeyThreshold && animationState === 'grid') {
@@ -187,17 +193,25 @@
         function init() {
             // Scene
             scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x111111, 10, 20);
+            scene.fog = new THREE.Fog(0x111111, 10, 20); // Add fog for depth effect
+
+            // --- Lighting for the globe ---
+            const sun = new THREE.DirectionalLight(0xffffff, 2); // brighter key light
+            sun.position.set(5, 3, 5);
+            scene.add(sun);
+
+            scene.add(new THREE.AmbientLight(0x666666));         // slightly brighter fill
 
             // Camera
             camera = new THREE.PerspectiveCamera(110, window.innerWidth / window.innerHeight, 0.1, 1000); // Perspective camera : FOV, aspect ratio, near and far planes
-            camera.position.z = 40;
+            camera.position.z = 40; // Start far away
 
             // Renderer
             const canvas = document.getElementById('scene-container');
             renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.outputEncoding = THREE.sRGBEncoding;
 
             // Orbit Controls
             controls = new OrbitControls(camera, renderer.domElement);
@@ -209,15 +223,16 @@
 
             // --- Particle Creation ---
             const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
+            const positions = new Float32Array(particleCount * 3); // Particle positions
+            const colors = new Float32Array(particleCount * 3);    // Particle colors
+            const sizes = new Float32Array(particleCount);         // Particle sizes
             const initialColors = new Float32Array(particleCount * 3); // To store original colors
 
-            const color = new THREE.Color();
+            const color = new THREE.Color(); // Helper for color calculations
 
             // 1. Generate Sphere Positions
             for (let i = 0; i < particleCount; i++) {
+                // Fibonacci sphere algorithm for even distribution
                 const phi = Math.acos(-1 + (2 * i) / particleCount);
                 const theta = Math.sqrt(particleCount * Math.PI) * phi;
 
@@ -225,17 +240,18 @@
                 const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
                 const z = sphereRadius * Math.cos(phi);
 
-                spherePositions.push(x, y, z);
+                spherePositions.push(x, y, z); // Store for later
                 positions[i * 3] = x;
                 positions[i * 3 + 1] = y;
                 positions[i * 3 + 2] = z;
 
+                // Assign color using HSL for a rainbow effect
                 color.setHSL(i / particleCount, 1.0, 0.5);
                 colors[i*3] = color.r;
                 colors[i*3+1] = color.g;
                 colors[i*3+2] = color.b;
 
-                // Store initial color
+                // Store initial color for reset
                 initialColors[i*3] = color.r;
                 initialColors[i*3+1] = color.g;
                 initialColors[i*3+2] = color.b;
@@ -245,19 +261,76 @@
 
             // 2. Generate Grid Positions and Select Target
             const halfGrid = gridDimensions / 2;
-            targetParticleIndex = Math.floor(Math.random() * particleCount);
+            targetParticleIndex = Math.floor(Math.random() * particleCount); // Pick a random target
 
             for (let i = 0; i < particleCount; i++) {
+                 // Random grid position within the cube
                  const x = (Math.random() - 0.5) * gridDimensions;
                  const y = (Math.random() - 0.5) * gridDimensions;
                  const z = (Math.random() - 0.5) * gridDimensions;
                  gridPositions.push(x, y, z);
 
+                 // Store the target's position for the camera journey
                  if (i === targetParticleIndex) {
                     targetParticlePosition.set(x, y, z);
                  }
             }
 
+            // --- Create high-fidelity Earth at targetParticlePosition ---
+            const loader = new THREE.TextureLoader().setCrossOrigin('anonymous');
+            const earthMap   = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg', t => t.encoding = THREE.sRGBEncoding);
+            const bumpMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg');
+            const specMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg');
+            const cloudsMap  = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png');
+
+
+            // Planet
+            earthMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 64, 64),           // radius 0.5 world-units
+            new THREE.MeshPhongMaterial({
+                map: earthMap,
+                bumpMap: bumpMap,
+                bumpScale: 0.005,
+                specularMap: specMap,
+                shininess: 5
+            })
+            );
+            earthMesh.position.copy(targetParticlePosition);
+            earthMesh.visible = false;               // ← start hidden
+            scene.add(earthMesh);
+
+            // Clouds: slightly larger transparent sphere
+            cloudsMesh = new THREE.Mesh(
+            new THREE.SphereGeometry(0.503, 64, 64),
+            new THREE.MeshPhongMaterial({
+                map: cloudsMap,
+                transparent: true,
+                depthWrite: false
+            })
+            );
+            cloudsMesh.position.copy(targetParticlePosition);
+            cloudsMesh.visible = false;
+            scene.add(cloudsMesh);
+
+            // Subtle atmosphere glow (fresnel)
+            const glowMaterial = new THREE.ShaderMaterial({
+                uniforms: { 'c':{value:1.0}, 'p':{value:2.0}, glowColor:{value:new THREE.Color(0x3b8cff)}},
+                vertexShader: `varying vec3 vNormal; void main(){vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);} `,
+                fragmentShader:`uniform vec3 glowColor; uniform float c; uniform float p; varying vec3 vNormal;
+                    void main(){float intensity = pow(c - dot(vNormal, vec3(0.0,0.0,1.0)), p); gl_FragColor = vec4(glowColor * intensity, 1.0);} `,
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+            atmosphereMesh = new THREE.Mesh(new THREE.SphereGeometry(0.53,64,64), glowMaterial);
+            atmosphereMesh.position.copy(targetParticlePosition);
+            atmosphereMesh.visible = false;
+            scene.add(atmosphereMesh);
+
+            // Hide the original point so it doesn’t poke through
+            sizes[targetParticleIndex] = 0;
+
+            // Assign attributes to geometry
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
             geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
             geometry.setAttribute('initialColor', new THREE.BufferAttribute(initialColors, 3)); // Store for reset
@@ -294,6 +367,7 @@
                 varying float vHighlight;
 
                 void main() {
+                    // Discard pixels outside the circular point
                     if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
                     
                     // Mix base color with a bright highlight color
@@ -304,6 +378,7 @@
                 }
             `;
 
+            // Shader material for custom particle effects
             const material = new THREE.ShaderMaterial({
                 uniforms: {
                     uMouse: { value: new THREE.Vector3(-100, -100, 0) }, // Off-screen initially
@@ -317,6 +392,7 @@
                 blending: THREE.AdditiveBlending
             });
 
+            // Create the Points object and add to scene
             particles = new THREE.Points(geometry, material);
             particles.frustumCulled = false;   // ← stop Three.js from culling the whole cloud
             scene.add(particles);
@@ -341,6 +417,7 @@
 
         // --- Transition Animations ---
         function transitionToGrid() {
+            // Transition from sphere to grid layout
             animationState = 'exploding';
 
             // Animate the interaction radius to a larger value for the grid
@@ -354,6 +431,7 @@
             let animationsComplete = 0;
 
             for (let i = 0; i < particleCount; i++) {
+                 // Proxy object for GSAP to animate
                  const proxy = {
                     x: positions[i * 3],
                     y: positions[i * 3 + 1],
@@ -368,6 +446,7 @@
                     delay: Math.random() * 1.5, // Staggered start
                     ease: "power3.inOut",
                     onUpdate: () => {
+                        // Update geometry position as GSAP animates
                         positions[i * 3] = proxy.x;
                         positions[i * 3 + 1] = proxy.y;
                         positions[i * 3 + 2] = proxy.z;
@@ -384,6 +463,7 @@
         }
 
         function startJourneyToParticle() {
+            // Camera flies to a specific particle in the grid
             animationState = 'journeying';
             controls.enabled = false;
 
@@ -392,14 +472,31 @@
             window.removeEventListener('touchstart', onTouchStart);
             window.removeEventListener('touchmove', onTouchMove);
 
-            const cameraEndPosition = targetParticlePosition.clone().add(new THREE.Vector3(0.1, 0.1, 0.5));
+            // Offset along the vector from the scene origin toward the target,
+            // long enough to clear the 0.5-unit sphere (radius) plus a little extra.
+            const dir = targetParticlePosition.clone().normalize();            // unit vector
+            const cameraEndPosition = targetParticlePosition.clone()
+                .add(dir.multiplyScalar(EARTH_RADIUS * 2.0));  // 1 × diameter in front
+
 
             const tl = gsap.timeline({
+                onStart: () => {                      // ← make them appear
+                    earthMesh.visible      = true;
+                    cloudsMesh.visible     = true;
+                    atmosphereMesh.visible = true;
+
+                    // nice 1-second fade-in
+                    gsap.fromTo([earthMesh.material, cloudsMesh.material, atmosphereMesh.material],
+                        { opacity: 0 },
+                        { opacity: 1, duration: 1, ease: "power2.out" }
+                    );
+                },
                 onComplete: () => {
+                    // When journey is done, allow user to orbit around the target
                     animationState = 'focused';
                     controls.enabled = true;
-                    controls.minDistance = 0.1;
-                    controls.maxDistance = 1;
+                    controls.minDistance = EARTH_RADIUS * 1.1; // can’t enter atmosphere
+                    controls.maxDistance = EARTH_RADIUS * 4;   // but can back away a bit
                     // Ensure the target is set precisely at the end
                     controls.target.copy(targetParticlePosition);
 
@@ -410,6 +507,7 @@
                 }
             });
 
+            // Animate camera position to the target
             tl.to(camera.position, {
                 x: cameraEndPosition.x,
                 y: cameraEndPosition.y,
@@ -419,18 +517,22 @@
             }, 0);
         }
 
-
-        
-
         // --- Animation Loop ---
         function animate() {
+            // Main render loop
             requestAnimationFrame(animate);
+
+            if (earthMesh) {
+                earthMesh.rotation.y  += 0.0005;   // slow spin
+                cloudsMesh.rotation.y += 0.0006;   // clouds a bit faster
+            }
 
             // Smoothly interpolate the virtual scroll position
             virtualScrollY += (targetScrollY - virtualScrollY) * scrollSpeed;
             handleScroll(virtualScrollY);
 
             if (animationState === 'journeying') {
+                // Lock camera look-at during journey
                 camera.lookAt(targetParticlePosition);
             } else {
                 controls.update();
@@ -442,15 +544,15 @@
             const distanceToPlane = -camera.position.z / direction.z;
             const mouseOnPlane = camera.position.clone().add(direction.multiplyScalar(distanceToPlane));
 
-            // Update the shader uniform
+            // Update the shader uniform for mouse position
             particles.material.uniforms.uMouse.value.copy(mouseOnPlane);
 
             renderer.render(scene, camera);
         }
 
         // --- Start ---
-        init();
-        animate();
+        init(); // Initialize scene and objects
+        animate(); // Start animation loop
     </script>
 </body>
 </html>
