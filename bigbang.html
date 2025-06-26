@@ -82,7 +82,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="scroll-container" style="height: 100vh; overflow-y: scroll;">
+    <body>
     <!-- Animation 1: The Spinning Loader -->
     <div id="loader">
         <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
@@ -106,8 +106,7 @@
     <!-- Animation 2: The Particle System Canvas -->
     <canvas id="scene-container"></canvas>
 
-    <div style="height: 200vh;"></div>
-    </div>
+    
 
     <script type="module">
         // Import Three.js and OrbitControls as ES modules
@@ -123,7 +122,66 @@
 
         const spherePositions = [];
         const gridPositions = [];
-        let isTransitioning = false;
+        let animationState = 'sphere'; // sphere, exploding, grid, journeying, focused
+        let targetParticleIndex;
+        let targetParticlePosition = new THREE.Vector3();
+
+
+        let virtualScrollY = 0;
+        let targetScrollY = 0;
+        let scrollSpeed = 0.07; // Adjust for smoother or faster interpolation
+
+
+        // --- Event Handlers ---
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            // Normalize mouse position to [-1, 1]
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function onWheel(event) {
+            event.preventDefault();
+            targetScrollY += event.deltaY * 0.5;
+        }
+
+        let lastTouchY = 0;
+        function onTouchStart(event) {
+            lastTouchY = event.touches[0].clientY;
+        }
+
+        function onTouchMove(event) {
+            event.preventDefault();
+            const currentY = event.touches[0].clientY;
+            const deltaY = lastTouchY - currentY;
+            targetScrollY += deltaY;
+            lastTouchY = currentY;
+        }
+
+
+        function handleScroll(scrollY) {
+            const explosionThreshold = 500;
+            const journeyThreshold = 1500;
+            const maxZoom = 10;
+            const minZoom = 35;
+
+            // Only control zoom if we are not on the final journey
+            if (animationState !== 'journeying' && animationState !== 'focused') {
+                const zoom = minZoom - (scrollY / 60);
+                camera.position.z = Math.max(zoom, maxZoom);
+            }
+
+            if (scrollY > explosionThreshold && animationState === 'sphere') {
+                transitionToGrid();
+            } else if (scrollY > journeyThreshold && animationState === 'grid') {
+                startJourneyToParticle();
+            }
+        }
 
         // --- Initialization ---
         function init() {
@@ -185,13 +243,19 @@
                 sizes[i] = Math.random() * 0.5 + 0.01; // Random size between 0.01 and 0.5
             }
 
-            // 2. Generate Grid Positions
+            // 2. Generate Grid Positions and Select Target
             const halfGrid = gridDimensions / 2;
+            targetParticleIndex = Math.floor(Math.random() * particleCount);
+
             for (let i = 0; i < particleCount; i++) {
                  const x = (Math.random() - 0.5) * gridDimensions;
                  const y = (Math.random() - 0.5) * gridDimensions;
                  const z = (Math.random() - 0.5) * gridDimensions;
                  gridPositions.push(x, y, z);
+
+                 if (i === targetParticleIndex) {
+                    targetParticlePosition.set(x, y, z);
+                 }
             }
 
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -259,38 +323,9 @@
             // --- Event Listeners ---
             window.addEventListener('resize', onWindowResize, false);
             document.addEventListener('mousemove', onMouseMove, false);
-            document.getElementById('scroll-container').addEventListener('wheel', onWheel, false);
-
-            // --- Mobile Touch Scroll Support ---
-            let lastTouchY = null;
-            const scrollContainer = document.getElementById('scroll-container');
-            scrollContainer.addEventListener('touchstart', function(e) {
-                if (e.touches.length === 1) {
-                    lastTouchY = e.touches[0].clientY;
-                }
-            }, { passive: false });
-            scrollContainer.addEventListener('touchmove', function(e) {
-                if (e.touches.length === 1 && lastTouchY !== null) {
-                    const currentY = e.touches[0].clientY;
-                    const deltaY = lastTouchY - currentY;
-                    scrollContainer.scrollTop += deltaY;
-                    lastTouchY = currentY;
-                    // Replicate onWheel logic for mobile
-                    const scrollY = scrollContainer.scrollTop;
-                    const scrollThreshold = 500;
-                    const maxZoom = 10;
-                    const minZoom = 30;
-                    const zoom = minZoom - (scrollY / 100);
-                    camera.position.z = Math.max(zoom, maxZoom);
-                    if (scrollY > scrollThreshold && !isTransitioning) {
-                        transitionToGrid();
-                    }
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            scrollContainer.addEventListener('touchend', function(e) {
-                lastTouchY = null;
-            });
+            window.addEventListener('wheel', onWheel, { passive: false });
+            window.addEventListener('touchstart', onTouchStart, { passive: false });
+            window.addEventListener('touchmove', onTouchMove, { passive: false });
 
             // --- Initial Transition ---
             // Hide loader after a delay
@@ -299,16 +334,13 @@
                 document.getElementById('info-panel').classList.remove('opacity-0');
                  setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
-                    // Start the sphere-to-grid transition
-                    // transitionToGrid();
                  }, 500);
             }, 2000); // 2-second simulated load time
         }
 
-        // --- Transition Animation ---
+        // --- Transition Animations ---
         function transitionToGrid() {
-            if (isTransitioning) return;
-            isTransitioning = true;
+            animationState = 'exploding';
 
             // Animate the interaction radius to a larger value for the grid
             gsap.to(particles.material.uniforms.uInteractionRadius, {
@@ -318,6 +350,7 @@
             });
 
             const positions = particles.geometry.attributes.position.array;
+            let animationsComplete = 0;
 
             for (let i = 0; i < particleCount; i++) {
                  const proxy = {
@@ -338,51 +371,69 @@
                         positions[i * 3 + 1] = proxy.y;
                         positions[i * 3 + 2] = proxy.z;
                         particles.geometry.attributes.position.needsUpdate = true;
+                    },
+                    onComplete: () => {
+                        animationsComplete++;
+                        if (animationsComplete === particleCount) {
+                            animationState = 'grid';
+                        }
                     }
                 });
             }
         }
 
+        function startJourneyToParticle() {
+            animationState = 'journeying';
+            controls.enabled = false;
 
-        // --- Event Handlers ---
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            // Disable scroll listeners to prevent interference
+            window.removeEventListener('wheel', onWheel);
+            window.removeEventListener('touchstart', onTouchStart);
+            window.removeEventListener('touchmove', onTouchMove);
+
+            const cameraEndPosition = targetParticlePosition.clone().add(new THREE.Vector3(0.1, 0.1, 0.5));
+
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    animationState = 'focused';
+                    controls.enabled = true;
+                    controls.minDistance = 0.1;
+                    controls.maxDistance = 1;
+                    // Ensure the target is set precisely at the end
+                    controls.target.copy(targetParticlePosition);
+
+                    // Re-enable scroll listeners
+                    window.addEventListener('wheel', onWheel, { passive: false });
+                    window.addEventListener('touchstart', onTouchStart, { passive: false });
+                    window.addEventListener('touchmove', onTouchMove, { passive: false });
+                }
+            });
+
+            tl.to(camera.position, {
+                x: cameraEndPosition.x,
+                y: cameraEndPosition.y,
+                z: cameraEndPosition.z,
+                duration: 4,
+                ease: "power3.inOut"
+            }, 0);
         }
 
-        function onMouseMove(event) {
-            // Normalize mouse position to [-1, 1]
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        }
 
-        function onWheel(event) {
-            event.preventDefault();
-            const scrollContainer = document.getElementById('scroll-container');
-            scrollContainer.scrollTop += event.deltaY;
-
-            const scrollY = scrollContainer.scrollTop;
-            console.log('ScrollY:', scrollY, 'DeltaY:', event.deltaY); // Debugging line
-            const scrollThreshold = 500; // When the explosion happens
-            const maxZoom = 10; // Minimum zoom level
-            const minZoom = 35; // Maximum zoom level
-
-            // Camera zoom effect
-            const zoom = minZoom - (scrollY / 60); //
-            camera.position.z = Math.max(zoom, maxZoom); // Clamp zoom
-
-            // Trigger explosion
-            if (scrollY > scrollThreshold && !isTransitioning) {
-                console.log('Triggering explosion!'); // Debugging line
-                transitionToGrid();
-            }
-        }
+        
 
         // --- Animation Loop ---
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
+
+            // Smoothly interpolate the virtual scroll position
+            virtualScrollY += (targetScrollY - virtualScrollY) * scrollSpeed;
+            handleScroll(virtualScrollY);
+
+            if (animationState === 'journeying') {
+                camera.lookAt(targetParticlePosition);
+            } else {
+                controls.update();
+            }
 
             // Project mouse onto a plane at z=0 in world space
             const mouseWorld = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
