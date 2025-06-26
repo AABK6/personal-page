@@ -309,6 +309,14 @@
         function transitionToGrid() {
             if (isTransitioning) return;
             isTransitioning = true;
+
+            // Animate the interaction radius to a larger value for the grid
+            gsap.to(particles.material.uniforms.uInteractionRadius, {
+                value: 6.0, // Larger radius for the spread-out grid
+                duration: 4,
+                ease: "power3.inOut"
+            });
+
             const positions = particles.geometry.attributes.position.array;
 
             for (let i = 0; i < particleCount; i++) {
