@@ -213,6 +213,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.domElement.style.touchAction = 'none';   // canvas owns all touch gestures
 
             // Orbit Controls
             controls = new OrbitControls(camera, renderer.domElement);
@@ -237,7 +238,7 @@
                 // How many pointers are currently active?
                 if (pointers.size === 1) {                   // ← our "narrative swipe"
                     const lastY = pointers.get(e.pointerId);
-                    const dy    = e.clientY - lastY;
+                    const dy    = lastY - e.clientY;
                     pointers.set(e.pointerId, e.clientY);
 
                     // feed vertical delta into timeline
@@ -432,8 +433,6 @@
             window.addEventListener('resize', onWindowResize, false);
             document.addEventListener('mousemove', onMouseMove, false);
             window.addEventListener('wheel', onWheel, { passive: false });
-            window.addEventListener('touchstart', onTouchStart, { passive: false });
-            window.addEventListener('touchmove', onTouchMove, { passive: false });
 
             // --- Initial Transition ---
             // Hide loader after a delay
