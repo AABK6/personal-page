@@ -120,8 +120,9 @@
         let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
         const particleCount = 10000; // Number of particles in the system
         const sphereRadius = 3; // radius of the sphere for initial particle positions
-        const gridDimensions = 80; // size of the grid area
+        const gridDimensions = 120; // size of the grid area
         const EARTH_RADIUS = 0.5;
+        const pointers = new Map();
 
         const spherePositions = []; // Stores initial sphere positions for each particle
         const gridPositions = [];   // Stores grid positions for each particle
@@ -220,6 +221,36 @@
             controls.enablePan = false;
             controls.minDistance = 3;
             controls.maxDistance = 40;
+
+            /* --- mobile touch mapping --- */
+            controls.touches.ONE = THREE.TOUCH.NONE;          // disable 1-finger rotate
+            controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;  // 2-fingers = zoom + orbit
+            // optional: keep three-finger pan
+
+            canvas.addEventListener('pointerdown', e => {
+                pointers.set(e.pointerId, e.clientY);
+            });
+
+            canvas.addEventListener('pointermove', e => {
+                if (!pointers.has(e.pointerId)) return;
+
+                // How many pointers are currently active?
+                if (pointers.size === 1) {                   // ← our "narrative swipe"
+                    const lastY = pointers.get(e.pointerId);
+                    const dy    = e.clientY - lastY;
+                    pointers.set(e.pointerId, e.clientY);
+
+                    // feed vertical delta into timeline
+                    targetScrollY += dy;
+                    e.preventDefault();                      // stop page scroll / rubber-band
+                }
+                // else (2+ pointers) do nothing – OrbitControls is handling the event.
+            }, { passive:false });
+
+            ['pointerup','pointercancel','pointerleave','pointerout']
+            .forEach(type => canvas.addEventListener(type, e => {
+                pointers.delete(e.pointerId);
+            }));
 
             // --- Particle Creation ---
             const geometry = new THREE.BufferGeometry();
