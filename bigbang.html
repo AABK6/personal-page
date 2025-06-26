@@ -318,6 +318,7 @@
             });
 
             particles = new THREE.Points(geometry, material);
+            particles.frustumCulled = false;   // ← stop Three.js from culling the whole cloud
             scene.add(particles);
 
             // --- Event Listeners ---
