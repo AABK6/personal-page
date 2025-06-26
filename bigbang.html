@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U x Machina Animation Replication</title>
+    <title>Big Bang</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- GSAP for smooth animations -->
@@ -132,8 +132,8 @@
             scene.fog = new THREE.Fog(0x111111, 10, 20);
 
             // Camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 30;
+            camera = new THREE.PerspectiveCamera(110, window.innerWidth / window.innerHeight, 0.1, 1000); // Perspective camera : FOV, aspect ratio, near and far planes
+            camera.position.z = 40;
 
             // Renderer
             const canvas = document.getElementById('scene-container');
@@ -147,7 +147,7 @@
             controls.dampingFactor = 0.05;
             controls.enablePan = false;
             controls.minDistance = 3;
-            controls.maxDistance = 30;
+            controls.maxDistance = 40;
 
             // --- Particle Creation ---
             const geometry = new THREE.BufferGeometry();
@@ -335,10 +335,10 @@
             console.log('ScrollY:', scrollY, 'DeltaY:', event.deltaY); // Debugging line
             const scrollThreshold = 500; // When the explosion happens
             const maxZoom = 10; // Minimum zoom level
-            const minZoom = 30; // Maximum zoom level
+            const minZoom = 35; // Maximum zoom level
 
             // Camera zoom effect
-            const zoom = minZoom - (scrollY / 100); //
+            const zoom = minZoom - (scrollY / 60); //
             camera.position.z = Math.max(zoom, maxZoom); // Clamp zoom
 
             // Trigger explosion
