@@ -203,8 +203,23 @@
             const vertexShader = `
                 attribute float size;
                 varying vec3 vColor;
+                
+                uniform vec3 uMouse;
+                uniform float uInteractionRadius;
+
+                varying float vHighlight;
+
                 void main() {
                     vColor = color;
+
+                    // Calculate distance to the mouse uniform
+                    float dist = length(position - uMouse);
+
+                    // Use smoothstep to create a falloff effect.
+                    // It will be 1.0 if dist < uInteractionRadius and 0.0 if dist > uInteractionRadius + falloff
+                    float falloff = 1.0; // How quickly the highlight fades
+                    vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
+
                     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
                     gl_PointSize = size * (300.0 / -mvPosition.z);
                     gl_Position = projectionMatrix * mvPosition;
@@ -212,15 +227,23 @@
             `;
             const fragmentShader = `
                 varying vec3 vColor;
+                varying float vHighlight;
+
                 void main() {
                     if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
-                    gl_FragColor = vec4(vColor, 1.0);
+                    
+                    // Mix base color with a bright highlight color
+                    vec3 highlightColor = vec3(1.0, 1.0, 1.0); // White
+                    vec3 finalColor = mix(vColor, highlightColor, vHighlight);
+
+                    gl_FragColor = vec4(finalColor, 1.0);
                 }
             `;
 
             const material = new THREE.ShaderMaterial({
                 uniforms: {
-                    color: { value: new THREE.Color(0xffffff) },
+                    uMouse: { value: new THREE.Vector3(-100, -100, 0) }, // Off-screen initially
+                    uInteractionRadius: { value: 1.5 }
                 },
                 vertexShader,
                 fragmentShader,
@@ -353,51 +376,14 @@
             requestAnimationFrame(animate);
             controls.update();
 
-            // Interaction logic
-            const positions = particles.geometry.attributes.position.array;
-            const colors = particles.geometry.attributes.color.array;
-            const initialColors = particles.geometry.attributes.initialColor.array;
-            const interactionRadius = 1.5;
-            const brightColor = new THREE.Color(0xffffff); // White highlight
+            // Project mouse onto a plane at z=0 in world space
+            const mouseWorld = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
+            const direction = mouseWorld.sub(camera.position).normalize();
+            const distanceToPlane = -camera.position.z / direction.z;
+            const mouseOnPlane = camera.position.clone().add(direction.multiplyScalar(distanceToPlane));
 
-            for (let i = 0; i < particleCount; i++) {
-                const ix = i * 3;
-                const iy = i * 3 + 1;
-                const iz = i * 3 + 2;
-
-                const particlePosition = new THREE.Vector3(positions[ix], positions[iy], positions[iz]);
-
-                // Project mouse onto a plane at z=0 in camera space
-                const mouseWorld = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
-                const direction = mouseWorld.sub(camera.position).normalize();
-                const distanceToPlane = -camera.position.z / direction.z;
-                const mouseOnPlane = camera.position.clone().add(direction.multiplyScalar(distanceToPlane));
-
-                // Calculate distance and apply force/color change
-                const dist = particlePosition.distanceTo(mouseOnPlane);
-
-                if (dist < interactionRadius) {
-                    // "Draw lines" by making particles bright
-                     gsap.to(particles.geometry.attributes.color.array, {
-                        [ix]: brightColor.r,
-                        [iy]: brightColor.g,
-                        [iz]: brightColor.b,
-                        duration: 0.2,
-                     });
-                } else {
-                     // Fade back to original color
-                     gsap.to(particles.geometry.attributes.color.array, {
-                        [ix]: initialColors[ix],
-                        [iy]: initialColors[iy],
-                        [iz]: initialColors[iz],
-                        duration: 1.5,
-                     });
-                }
-            }
-
-            particles.geometry.attributes.position.needsUpdate = true;
-            particles.geometry.attributes.color.needsUpdate = true;
-
+            // Update the shader uniform
+            particles.material.uniforms.uMouse.value.copy(mouseOnPlane);
 
             renderer.render(scene, camera);
         }
