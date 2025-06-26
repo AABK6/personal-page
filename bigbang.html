@@ -76,6 +76,35 @@
             font-size: 14px;
             line-height: 1.5;
         }
+        .caption-card{
+            position:fixed;left:50%;top:15%;transform:translateX(-50%);
+            z-index:150;
+            background:rgba(0,0,0,.25);
+             -webkit-backdrop-filter:blur(4px);
+            backdrop-filter:blur(4px);
+            padding:.55rem .9rem;border-radius:.65rem;
+            font-family:"EB Garamond",serif;
+            font-size:clamp(14px,4vw,18px);      /* smaller & responsive */
+            font-weight:400;letter-spacing:.2px;
+            line-height:1.35;text-align:center;
+            max-width:88vw;white-space:normal;   /* wraps on small screens */
+            opacity:.6;                          /* base transparency */
+        }
+
+        #caption-earth{top:78%;}             /* will fade in later */
+
+        .scroll-arrow{
+            position:fixed;left:50%;bottom:8%;transform:translateX(-50%);
+            z-index:150;
+            font-size:26px;color:#fff;opacity:.35;
+            animation:arrowPulse 1.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes arrowPulse{
+          from{transform:translate(-50%,0);}
+          to  {transform:translate(-50%,8px);}   /* gentle bounce */
+        }
+
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,6 +119,19 @@
             <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
           </g>
         </svg>
+    </div>
+
+    <div id="caption-intro" class="caption-card opacity-0 pointer-events-none">
+      Au début, l’univers tout entier tenait ici.
+    </div>
+
+    <div id="caption-earth" class="caption-card opacity-0 pointer-events-none">
+      Maintenant, toute l’humanité se tient là.
+    </div>
+
+    <!-- scroll cue -->
+    <div id="scroll-arrow" class="scroll-arrow pointer-events-none">
+    &#x2B07;
     </div>
 
     <!-- Info Panel -->
@@ -123,6 +165,9 @@
         const gridDimensions = 120; // size of the grid area
         const EARTH_RADIUS = 0.5;
         const pointers = new Map();
+        const captionIntro  = document.getElementById('caption-intro');
+        const captionEarth  = document.getElementById('caption-earth');
+        const scrollArrow   = document.getElementById('scroll-arrow');
 
         const spherePositions = []; // Stores initial sphere positions for each particle
         const gridPositions = [];   // Stores grid positions for each particle
@@ -175,6 +220,11 @@
             const journeyThreshold = 1500;  // When to trigger camera journey
             const maxZoom = 10;
             const minZoom = 35;
+
+            if(!handleScroll.first && Math.abs(scrollY) > 5){
+            handleScroll.first = true;
+            gsap.to([captionIntro, scrollArrow], {opacity:0, duration:0.6, ease:"power2.in"});
+            }
 
             // Only control zoom if we are not on the final journey
             if (animationState !== 'journeying' && animationState !== 'focused') {
@@ -441,6 +491,8 @@
                 document.getElementById('info-panel').classList.remove('opacity-0');
                  setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
+                    // fade in intro caption & arrow
+                    gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out"});
                  }, 500);
             }, 2000); // 2-second simulated load time
         }
@@ -510,18 +562,17 @@
 
 
             const tl = gsap.timeline({
-                onStart: () => {                      // ← make them appear
+                onStart: () => {                      // ← just show meshes
                     earthMesh.visible      = true;
                     cloudsMesh.visible     = true;
                     atmosphereMesh.visible = true;
-
-                    // nice 1-second fade-in
                     gsap.fromTo([earthMesh.material, cloudsMesh.material, atmosphereMesh.material],
                         { opacity: 0 },
                         { opacity: 1, duration: 1, ease: "power2.out" }
                     );
                 },
                 onComplete: () => {
+                    gsap.fromTo(captionEarth,{opacity:0},{opacity:.6,duration:1.2,ease:"power2.out"});
                     // When journey is done, allow user to orbit around the target
                     animationState = 'focused';
                     controls.enabled = true;
