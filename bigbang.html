@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Big Bang</title>
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- GSAP for smooth animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big&nbsp;Bang</title>
 
-    <!-- 
-      Import Map to handle module resolution for Three.js.
-      This tells the browser where to find modules when it sees an import like:
-      import * from 'three';
-    -->
+  <!-- Tailwind (just once) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Import-map: Three .js + GSAP 3.12.X (ES-module syntax) -->
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js",
-                "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/"
-            }
-        }
+    {
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js",
+        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/",
+        "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js",
+        "gsap/MotionPathPlugin": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/MotionPathPlugin.js"
+    }
+    }
     </script>
+
+  <!-- Optional: a favicon to silence the 404 -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
 
     <style>
         body {
@@ -111,7 +114,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <body>
     <!-- Animation 1: The Spinning Loader -->
     <div id="loader">
         <!-- SVG spinner for loading animation -->
@@ -131,7 +133,7 @@
 
     <!-- scroll cue -->
     <div id="scroll-arrow" class="scroll-arrow pointer-events-none">
-    &#x2B07;
+    &#x25BD;
     </div>
 
     <!-- Info Panel -->
@@ -155,6 +157,35 @@
         // Import Three.js and OrbitControls as ES modules
         import * as THREE from 'three'; // Three.js core library
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Camera controls
+        import { gsap } from 'gsap';
+        import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+
+        // --- hard-override a few Vector3 helpers ------------------------------------
+        {
+        const tmpEuler = new THREE.Euler();
+        const v3 = THREE.Vector3.prototype;
+
+        v3.setEulerFromRotationMatrix = function (m, order = "XYZ") {
+            if (!m || !m.elements) return this;            // <- guard
+            tmpEuler.setFromRotationMatrix(m, order);
+            return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
+        };
+
+        v3.setEulerFromQuaternion = function (q, order = "XYZ") {
+            tmpEuler.setFromQuaternion(q, order);
+            return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
+        };
+
+        // Three’s own helper blows up when m is undefined – patch it too
+        const _setFromMatrixPosition = v3.setFromMatrixPosition;
+        v3.setFromMatrixPosition = function (m) {
+            return (!m || !m.elements) ? this : _setFromMatrixPosition.call(this, m);
+        };
+        }
+        // -----------------------------------------------------------------------------
+
+        // Register GSAP plugins
+        gsap.registerPlugin(MotionPathPlugin);
 
         // --- Basic Setup ---
         let scene, camera, renderer, particles, controls;
@@ -194,24 +225,31 @@
         }
 
         function onWheel(event) {
-            // Handle scroll wheel for zoom and triggering transitions
-            event.preventDefault();
-            targetScrollY += event.deltaY * 0.5;
+            // During the narrative part, we prevent default to control the scene.
+            if (animationState !== 'focused') {
+                event.preventDefault();
+                targetScrollY += event.deltaY * 0.5;
+            }
+            // When focused on the Earth, we let OrbitControls handle the scroll for zooming.
         }
 
         let lastTouchY = 0;
         function onTouchStart(event) {
             // Store initial Y position for touch scrolling
-            lastTouchY = event.touches[0].clientY;
+            if (animationState !== 'focused') {
+                lastTouchY = event.touches[0].clientY;
+            }
         }
 
         function onTouchMove(event) {
             // Handle vertical touch movement for scrolling
-            event.preventDefault();
-            const currentY = event.touches[0].clientY;
-            const deltaY = lastTouchY - currentY;
-            targetScrollY += deltaY;
-            lastTouchY = currentY;
+            if (animationState !== 'focused') {
+                event.preventDefault();
+                const currentY = event.touches[0].clientY;
+                const deltaY = lastTouchY - currentY;
+                targetScrollY += deltaY;
+                lastTouchY = currentY;
+            }
         }
 
         function handleScroll(scrollY) {
@@ -549,50 +587,60 @@
             animationState = 'journeying';
             controls.enabled = false;
 
-            // Disable scroll listeners to prevent interference
-            window.removeEventListener('wheel', onWheel);
-            window.removeEventListener('touchstart', onTouchStart);
-            window.removeEventListener('touchmove', onTouchMove);
+            // A fixed viewing position relative to the Earth for a consistent final view
+            const cameraEndPosition = targetParticlePosition.clone().add(new THREE.Vector3(0, EARTH_RADIUS * 0.5, EARTH_RADIUS * 4));
+            const startPosition     = camera.position.clone();
 
-            // Offset along the vector from the scene origin toward the target,
-            // long enough to clear the 0.5-unit sphere (radius) plus a little extra.
-            const dir = targetParticlePosition.clone().normalize();            // unit vector
-            const cameraEndPosition = targetParticlePosition.clone()
-                .add(dir.multiplyScalar(EARTH_RADIUS * 2.0));  // 1 × diameter in front
+            // Control point for the bezier curve, creating an arc
+            const controlPoint      = new THREE.Vector3()
+                .lerpVectors(startPosition, cameraEndPosition, 0.5)
+                .add(new THREE.Vector3(0, startPosition.distanceTo(cameraEndPosition) * 0.2, 0));
 
+            const journeyLookAtTarget = new THREE.Vector3().copy(controls.target);
 
             const tl = gsap.timeline({
-                onStart: () => {                      // ← just show meshes
-                    earthMesh.visible      = true;
-                    cloudsMesh.visible     = true;
+                onStart: () => {
+                    // Make Earth visible and fade it in
+                    earthMesh.visible = true;
+                    cloudsMesh.visible = true;
                     atmosphereMesh.visible = true;
                     gsap.fromTo([earthMesh.material, cloudsMesh.material, atmosphereMesh.material],
                         { opacity: 0 },
-                        { opacity: 1, duration: 1, ease: "power2.out" }
+                        { opacity: 1, duration: 1.5, ease: "power2.out" }
                     );
                 },
                 onComplete: () => {
-                    gsap.fromTo(captionEarth,{opacity:0},{opacity:.6,duration:1.2,ease:"power2.out"});
-                    // When journey is done, allow user to orbit around the target
+                    // Finalize the scene
+                    gsap.fromTo(captionEarth, { opacity: 0 }, { opacity: .6, duration: 1.2, ease: "power2.out" });
                     animationState = 'focused';
                     controls.enabled = true;
-                    controls.minDistance = EARTH_RADIUS * 1.1; // can’t enter atmosphere
-                    controls.maxDistance = EARTH_RADIUS * 4;   // but can back away a bit
-                    // Ensure the target is set precisely at the end
+                    controls.minDistance = EARTH_RADIUS * 1.1;
+                    controls.maxDistance = EARTH_RADIUS * 5;
+                    // Update the official OrbitControls target and sync
                     controls.target.copy(targetParticlePosition);
-
-                    // Re-enable scroll listeners
-                    window.addEventListener('wheel', onWheel, { passive: false });
-                    window.addEventListener('touchstart', onTouchStart, { passive: false });
-                    window.addEventListener('touchmove', onTouchMove, { passive: false });
+                    controls.update();
                 }
             });
 
-            // Animate camera position to the target
+            // Animate camera position along a smooth bezier curve
             tl.to(camera.position, {
-                x: cameraEndPosition.x,
-                y: cameraEndPosition.y,
-                z: cameraEndPosition.z,
+            duration: 4,
+            ease: "power3.inOut",
+            motionPath: {      // ⬅️ new
+                path: [startPosition, controlPoint, cameraEndPosition],
+                curviness: 1,    // “soft” is the default, so one line is enough
+                autoRotate: false
+            },
+                onUpdate: () => {
+                    camera.lookAt(journeyLookAtTarget);
+                }
+            }, 0);
+
+            // Simultaneously animate our temporary look-at target
+            tl.to(journeyLookAtTarget, {
+                x: targetParticlePosition.x,
+                y: targetParticlePosition.y,
+                z: targetParticlePosition.z,
                 duration: 4,
                 ease: "power3.inOut"
             }, 0);
@@ -600,7 +648,6 @@
 
         // --- Animation Loop ---
         function animate() {
-            // Main render loop
             requestAnimationFrame(animate);
 
             if (earthMesh) {
@@ -612,10 +659,7 @@
             virtualScrollY += (targetScrollY - virtualScrollY) * scrollSpeed;
             handleScroll(virtualScrollY);
 
-            if (animationState === 'journeying') {
-                // Lock camera look-at during journey
-                camera.lookAt(targetParticlePosition);
-            } else {
+            if (animationState !== 'journeying') {
                 controls.update();
             }
 
