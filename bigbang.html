@@ -12,7 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  
 
   <!-- Optional: a favicon to silence the 404 -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -150,33 +149,6 @@
     <script>
         // Libraries are loaded globally from the <head>
 
-        // --- hard-override a few Vector3 helpers ------------------------------------
-        {
-        const tmpEuler = new THREE.Euler();
-        const v3 = THREE.Vector3.prototype;
-
-        v3.setEulerFromRotationMatrix = function (m, order = "XYZ") {
-            if (!m || !m.elements) return this;            // <- guard
-            tmpEuler.setFromRotationMatrix(m, order);
-            return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
-        };
-
-        v3.setEulerFromQuaternion = function (q, order = "XYZ") {
-            tmpEuler.setFromQuaternion(q, order);
-            return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
-        };
-
-        // Three’s own helper blows up when m is undefined – patch it too
-        const _setFromMatrixPosition = v3.setFromMatrixPosition;
-        v3.setFromMatrixPosition = function (m) {
-            return (!m || !m.elements) ? this : _setFromMatrixPosition.call(this, m);
-        };
-        }
-        // -----------------------------------------------------------------------------
-
-        // Register GSAP plugins
-        
-
         // --- Basic Setup ---
         let scene, camera, renderer, particles, controls;
         let earthMesh, cloudsMesh, atmosphereMesh;
@@ -248,8 +220,6 @@
             const journeyThreshold = 1500;  // When to trigger camera journey
             const maxZoom = 10;
             const minZoom = 35;
-
-            
 
             // Only control zoom if we are not on the final journey
             if (animationState !== 'journeying' && animationState !== 'focused') {
@@ -617,17 +587,24 @@
                 }
             });
 
-            // Animate camera position along a smooth bezier curve
-            tl.to(camera.position, {
-            duration: 4,
-            ease: "power3.inOut",
-            motionPath: {      // ⬅️ new
-                path: [startPosition, controlPoint, cameraEndPosition],
-                curviness: 1,    // “soft” is the default, so one line is enough
-                autoRotate: false
-            },
+            // Animate a proxy value from 0 to 1 to control the camera's position along the curve.
+            const journeyProxy = { t: 0 };
+            tl.to(journeyProxy, {
+                t: 1,
+                duration: 4,
+                ease: "power3.inOut",
                 onUpdate: () => {
-                    camera.lookAt(journeyLookAtTarget);
+                    // Manually calculate the camera's position on the quadratic Bezier curve.
+                    const t = journeyProxy.t;
+                    const t1 = 1 - t;
+                    const t2 = t * t;
+                    const t12 = t1 * t1;
+
+                    const p = new THREE.Vector3();
+                    p.x = t12 * startPosition.x + 2 * t1 * t * controlPoint.x + t2 * cameraEndPosition.x;
+                    p.y = t12 * startPosition.y + 2 * t1 * t * controlPoint.y + t2 * cameraEndPosition.y;
+                    p.z = t12 * startPosition.z + 2 * t1 * t * controlPoint.z + t2 * cameraEndPosition.z;
+                    camera.position.copy(p);
                 }
             }, 0);
 
@@ -637,7 +614,10 @@
                 y: targetParticlePosition.y,
                 z: targetParticlePosition.z,
                 duration: 4,
-                ease: "power3.inOut"
+                ease: "power3.inOut",
+                onUpdate: () => {
+                    camera.lookAt(journeyLookAtTarget);
+                }
             }, 0);
         }
 
