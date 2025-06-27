@@ -3,22 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Big&nbsp;Bang</title>
+  <title>Big&nbsp;Bang [Fixed]</title>
 
   <!-- Tailwind (just once) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Import-map: Three .js + GSAP 3.12.X (ES-module syntax) -->
-    <script type="importmap">
-    {
-    "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js",
-        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/",
-        "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js",
-        "gsap/MotionPathPlugin": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/MotionPathPlugin.js"
-    }
-    }
-    </script>
+  <!-- Three.js and GSAP Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  
 
   <!-- Optional: a favicon to silence the 404 -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -153,12 +147,8 @@
 
     
 
-    <script type="module">
-        // Import Three.js and OrbitControls as ES modules
-        import * as THREE from 'three'; // Three.js core library
-        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Camera controls
-        import { gsap } from 'gsap';
-        import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+    <script>
+        // Libraries are loaded globally from the <head>
 
         // --- hard-override a few Vector3 helpers ------------------------------------
         {
@@ -185,7 +175,7 @@
         // -----------------------------------------------------------------------------
 
         // Register GSAP plugins
-        gsap.registerPlugin(MotionPathPlugin);
+        
 
         // --- Basic Setup ---
         let scene, camera, renderer, particles, controls;
@@ -259,10 +249,7 @@
             const maxZoom = 10;
             const minZoom = 35;
 
-            if(!handleScroll.first && Math.abs(scrollY) > 5){
-            handleScroll.first = true;
-            gsap.to([captionIntro, scrollArrow], {opacity:0, duration:0.6, ease:"power2.in"});
-            }
+            
 
             // Only control zoom if we are not on the final journey
             if (animationState !== 'journeying' && animationState !== 'focused') {
@@ -304,7 +291,7 @@
             renderer.domElement.style.touchAction = 'none';   // canvas owns all touch gestures
 
             // Orbit Controls
-            controls = new OrbitControls(camera, renderer.domElement);
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.enablePan = false;
@@ -530,9 +517,17 @@
                  setTimeout(() => {
                     document.getElementById('loader').style.display = 'none';
                     // fade in intro caption & arrow
-                    gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out"});
+                    gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out", onComplete: () => {
+                        // Add a one-time event listener to fade out the caption on the first scroll.
+                        window.addEventListener('wheel', handleFirstScroll, { once: true });
+                        window.addEventListener('touchmove', handleFirstScroll, { once: true });
+                    }});
                  }, 500);
             }, 2000); // 2-second simulated load time
+        }
+
+        function handleFirstScroll() {
+            gsap.to([captionIntro, scrollArrow], {opacity: 0, duration: 0.6, ease:"power2.in"});
         }
 
         // --- Transition Animations ---
@@ -681,4 +676,3 @@
     </script>
 </body>
 </html>
-
