@@ -8,6 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
   <div id="preloader"><div class="loader"></div></div>
@@ -30,8 +38,8 @@
 
   <script src="script.js"></script>
   <script src="https://unpkg.com/rellax@1.12.1/rellax.min.js"></script>
-  <script type="module" src="game.js"></script>
-  <script>
+  <script type="module">
+    import './game.js';
     new Rellax('.parallax-layer');
     document.getElementById('start-btn').addEventListener('click', () => {
       document.getElementById('parallax').style.display = 'none';

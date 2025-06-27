@@ -1,3 +1,28 @@
+// --- hard-override a few Vector3 helpers ------------------------------------
+// (No duplicate import of THREE here, assumes it's already imported below)
+{
+  const tmpEuler = new THREE.Euler();
+  const v3 = THREE.Vector3.prototype;
+
+  v3.setEulerFromRotationMatrix = function (m, order = "XYZ") {
+    if (!m || !m.elements) return this;            // <- guard
+    tmpEuler.setFromRotationMatrix(m, order);
+    return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
+  };
+
+  v3.setEulerFromQuaternion = function (q, order = "XYZ") {
+    tmpEuler.setFromQuaternion(q, order);
+    return this.set(tmpEuler.x, tmpEuler.y, tmpEuler.z);
+  };
+
+  // Three’s own helper blows up when m is undefined – patch it too
+  const _setFromMatrixPosition = v3.setFromMatrixPosition;
+  v3.setFromMatrixPosition = function (m) {
+    return (!m || !m.elements) ? this : _setFromMatrixPosition.call(this, m);
+  };
+}
+// -----------------------------------------------------------------------------
+
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
 
@@ -8,7 +33,7 @@ const charBB = new THREE.Box3();
 const tempBB = new THREE.Box3();
 let interactionEl;
 
-window.initThree = function initThree() {
+function initThree() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xa0a0a0);
 
@@ -71,7 +96,7 @@ window.initThree = function initThree() {
 
   window.addEventListener('resize', onWindowResize);
   document.addEventListener('keydown', onKeyDown);
-};
+}
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -132,3 +157,5 @@ function animate() {
   }
   renderer.render(scene, camera);
 }
+
+window.initThree = initThree;
