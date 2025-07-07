@@ -17,7 +17,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- EB Garamond for captions and chart -->
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -116,6 +119,7 @@
           to  {transform:translate(-50%,8px);}   /* gentle bounce */
         }
 
+
         #population-chart-container {
             position: fixed;
             top: 0;
@@ -127,6 +131,11 @@
             transition: opacity 0.5s ease-in-out;
             z-index: 200; /* Ensure it's on top */
         }
+
+        /* Use EB Garamond for all chart text 
+        #population-chart-container, #population-chart-container * {
+            font-family: 'EB Garamond', serif !important;
+        } */
 
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
