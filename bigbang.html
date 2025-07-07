@@ -87,11 +87,21 @@
             opacity:.6;                          /* base transparency */
         }
 
-        #caption-earth{top:85%;}             /* will fade in later */
+        #caption-earth{top:auto; bottom: 12%;}             /* will fade in later */
         #caption-history-1, #caption-history-2 {
-            top: 85%;
+            top: auto;
+            bottom: 12%;
             opacity: 0;
             pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .caption-card {
+                font-size: clamp(12px, 3vw, 16px);
+            }
+            #caption-earth, #caption-history-1, #caption-history-2 {
+                bottom: 15%;
+            }
         }
 
         .scroll-arrow{
@@ -792,6 +802,22 @@ World,OWID_WRL,2100,10180160680
                 const [yDomainMax, setYDomainMax] = useState(INITIAL_Y_MAX);
                 const [industrialRevolutionOpacity, setIndustrialRevolutionOpacity] = useState(0);
                 const [captionState, setCaptionState] = useState('earth');
+                const [chartMargins, setChartMargins] = useState({ top: 20, right: 30, left: 50, bottom: 20 });
+
+                useEffect(() => {
+                    const handleResize = () => {
+                        if (window.innerWidth < 768) {
+                            setChartMargins({ top: 10, right: 10, left: 10, bottom: 10 });
+                        } else {
+                            setChartMargins({ top: 20, right: 30, left: 50, bottom: 20 });
+                        }
+                    };
+
+                    window.addEventListener('resize', handleResize);
+                    handleResize(); // Set initial margins
+
+                    return () => window.removeEventListener('resize', handleResize);
+                }, []);
 
                 const captionEarth = useMemo(() => document.getElementById('caption-earth'), []);
                 const captionHistory1 = useMemo(() => document.getElementById('caption-history-1'), []);
@@ -1010,7 +1036,7 @@ World,OWID_WRL,2100,10180160680
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart
                                     data={displayedData}
-                                    margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+                                    margin={chartMargins}
                                 >
                                     <defs>
                                         <linearGradient id="colorPopulation" x1="0" y1="0" x2="0" y2="1">
