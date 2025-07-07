@@ -807,7 +807,7 @@ World,OWID_WRL,2100,10180160680
                 useEffect(() => {
                     const handleResize = () => {
                         if (window.innerWidth < 768) {
-                            setChartMargins({ top: 10, right: 10, left: 10, bottom: 10 });
+                            setChartMargins({ top: 10, right: 10, left: -30, bottom: 10 });
                         } else {
                             setChartMargins({ top: 20, right: 30, left: 50, bottom: 20 });
                         }
@@ -1024,9 +1024,9 @@ World,OWID_WRL,2100,10180160680
                 };
 
                 return (
-                    <div className="bg-transparent text-white min-h-screen p-4 sm:p-6 md:p-8 flex flex-col items-center justify-center font-sans">
-                        <header className="w-full max-w-7xl text-center mb-8">
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-500">
+                    <div className="bg-transparent text-white min-h-screen p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between font-sans">
+                        <header className="w-full max-w-7xl text-center">
+                            <h1 className="text-2xl sm:text-4xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-500">
                                 World Population Growth
                             </h1>
                             <p className="text-gray-400 mt-2">10,000 BC to {END_YEAR} AD</p>
@@ -1048,7 +1048,7 @@ World,OWID_WRL,2100,10180160680
                                     <XAxis 
                                         dataKey="year" 
                                         stroke="#A0AEC0" 
-                                        tick={{ fill: '#A0AEC0' }}
+                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
                                         domain={[minYear, maxYear]}
                                         type="number"
                                         ticks={xAxisTicks}
@@ -1056,7 +1056,7 @@ World,OWID_WRL,2100,10180160680
                                     />
                                     <YAxis 
                                         stroke="#A0AEC0"
-                                        tick={{ fill: '#A0AEC0' }}
+                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
                                         tickFormatter={formatYAxis}
                                         domain={[0, yDomainMax]}
                                         allowDataOverflow={true}
@@ -1076,9 +1076,9 @@ World,OWID_WRL,2100,10180160680
                                             value="Industrial Revolution" 
                                             position="top"
                                             fill="#38B2AC" 
-                                            fontSize={14}
+                                            fontSize={16}
                                             angle={-90}
-                                            offset={20}
+                                            offset={40}
                                             style={{ textAnchor: 'end', fillOpacity: industrialRevolutionOpacity }}
                                         />
                                     </ReferenceLine>
@@ -1097,17 +1097,17 @@ World,OWID_WRL,2100,10180160680
                             </ResponsiveContainer>
                         </div>
 
-                        <footer className="w-full max-w-4xl mt-8">
-                            <div className="p-4 bg-gray-800/50 rounded-xl shadow-lg border border-gray-700">
+                        <footer className="w-full max-w-4xl">
+                            <div className="p-2 bg-gray-800/50 rounded-xl shadow-lg border border-gray-700">
                                 <div className="flex items-center justify-center space-x-4">
                                     <button
                                         onClick={handlePlayPause}
-                                        className="px-6 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center"
+                                        className="px-4 py-1 rounded-lg bg-sky-400 hover:bg-sky-500 text-white font-semibold opacity-80 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center"
                                     >
                                         {isPlaying ? (
-                                            <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"></path></svg>
+                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"></path></svg>
                                         ) : (
-                                            <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6V4z"></path></svg>
+                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6V4z"></path></svg>
                                         )}
                                         {isPlaying ? 'Pause' : (year >= maxYear ? 'Replay' : 'Play')}
                                     </button>
@@ -1124,7 +1124,7 @@ World,OWID_WRL,2100,10180160680
                                         />
                                          <span className="text-gray-400 text-sm font-mono w-20 text-center">{formatXAxis(maxYear)}</span>
                                     </div>
-                                     <span className="text-xl font-bold text-sky-400 w-28 text-center">{formatXAxis(year)}</span>
+                                     <span className="text-base font-bold text-sky-400 w-28 text-center">{formatXAxis(year)}</span>
                                 </div>
                             </div>
                         </footer>
