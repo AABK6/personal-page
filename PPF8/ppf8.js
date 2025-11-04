@@ -65,9 +65,6 @@
     if (session.published) {
       metaParts.push(`<span>Published: ${escapeHtml(session.published)}</span>`);
     }
-    if (session.views) {
-      metaParts.push(`<span>${escapeHtml(session.views)}</span>`);
-    }
     if (session.link) {
       metaParts.push(`<a href="${session.link}" target="_blank" rel="noopener">Watch the session</a>`);
     }
