@@ -3,87 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Personal Page</title>
+    <title>.</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div id="preloader">
-        <div class="loader"></div>
+    <div id="preloader" aria-hidden="true">
+        <div class="loader">
+            <span class="loader-dot loader-dot--one"></span>
+            <span class="loader-dot loader-dot--two"></span>
+            <span class="loader-dot loader-dot--three"></span>
+        </div>
     </div>
 
-    <canvas id="network-canvas"></canvas>
+    <canvas id="network-canvas" aria-hidden="true"></canvas>
 
-    <div class="container">
-
-        <header class="hero">
-            <h1>Your Name</h1>
-            <p class="tagline">Your Title or Short Tagline</p>
-            <p class="intro-sentence">A brief, impactful sentence about what you do or love.</p>
+    <div class="shell">
+        <header class="hero" role="banner" aria-label="Primary orbit">
+            <div class="hero-field">
+                <div class="orbit orbit--outer"></div>
+                <div class="orbit orbit--middle"></div>
+                <div class="orbit orbit--inner"></div>
+                <div class="hero-core" role="img" aria-label="Signature glyph">
+                    <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                        <circle cx="60" cy="60" r="52" class="glyph-ring"></circle>
+                        <path class="glyph-line" d="M30 78 Q60 24 90 78"></path>
+                        <circle cx="60" cy="60" r="10" class="glyph-node"></circle>
+                    </svg>
+                </div>
+                <button type="button" class="hero-trigger hero-trigger--pulse" aria-label="Toggle pulse trail">
+                    <span class="trigger-core"></span>
+                    <span class="trigger-wave"></span>
+                </button>
+                <button type="button" class="hero-trigger hero-trigger--focus" aria-label="Toggle focus lock">
+                    <span class="trigger-core"></span>
+                    <span class="trigger-wave"></span>
+                </button>
+                <button type="button" class="hero-trigger hero-trigger--ghost" aria-label="Toggle ghost nodes">
+                    <span class="trigger-core"></span>
+                    <span class="trigger-wave"></span>
+                </button>
+            </div>
         </header>
 
-        <main>
-            <section id="focus">
-                <h2>Focus Areas</h2>
-                <div class="card-grid">
-                    <div class="card">
-                        <h3>Area 1 (e.g., Design)</h3>
-                        <p>Short description. Keywords work well here.</p>
-                        </div>
-                    <div class="card">
-                        <h3>Area 2 (e.g., Development)</h3>
-                        <p>Concise text about this core skill or service.</p>
-                         </div>
-                    <div class="card">
-                        <h3>Area 3 (e.g., Strategy)</h3>
-                        <p>Briefly mention expertise or key tools used.</p>
-                         </div>
+        <main class="matrix">
+            <section class="panel panel--showcase" aria-label="Showcase cluster">
+                <div class="panel-surface">
+                    <figure class="card card--primary" aria-label="Primary artifact">
+                        <svg viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+                            <rect x="12" y="12" width="136" height="136" rx="20" class="card-frame"></rect>
+                            <path d="M30 110 Q80 40 130 110" class="card-arc"></path>
+                            <circle cx="80" cy="65" r="12" class="card-node"></circle>
+                        </svg>
+                    </figure>
+                    <figure class="card card--secondary" aria-label="Secondary artifact">
+                        <svg viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+                            <rect x="24" y="24" width="112" height="112" rx="12" class="card-frame"></rect>
+                            <path d="M40 100 L80 50 L120 100" class="card-arc"></path>
+                            <circle cx="80" cy="74" r="9" class="card-node"></circle>
+                        </svg>
+                    </figure>
                 </div>
             </section>
 
-            <section id="work">
-                <h2>Selected Work</h2>
-                 <div class="card-grid">
-                    <div class="card project-card">
-                        <h3>Project Name One</h3>
-                        <p>Minimal description or client name.</p>
-                        <a href="#" target="_blank" rel="noopener noreferrer">View Project &rarr;</a>
+            <section class="panel panel--metrics" aria-label="Signal cluster">
+                <div class="panel-surface">
+                    <div class="signal-grid" role="group" aria-label="Signal gauges">
+                        <div class="signal-bar signal-bar--one">
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                        </div>
+                        <div class="signal-bar signal-bar--two">
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                        </div>
+                        <div class="signal-bar signal-bar--three">
+                            <span class="signal-fill"></span>
+                            <span class="signal-fill"></span>
+                        </div>
                     </div>
-                     <div class="card project-card">
-                        <h3>Another Project</h3>
-                        <p>Type of work (e.g., Website Redesign).</p>
-                        <a href="#" target="_blank" rel="noopener noreferrer">View Project &rarr;</a>
+                    <div class="signal-radar" role="img" aria-label="Signal radar">
+                        <span class="signal-ring signal-ring--outer"></span>
+                        <span class="signal-ring signal-ring--mid"></span>
+                        <span class="signal-ring signal-ring--inner"></span>
+                        <span class="signal-dot signal-dot--one"></span>
+                        <span class="signal-dot signal-dot--two"></span>
+                        <span class="signal-dot signal-dot--three"></span>
                     </div>
-                     <div class="card project-card">
-                        <h3>Client Showcase</h3>
-                        <p>Industry or key result.</p>
-                        <a href="#" target="_blank" rel="noopener noreferrer">View Case Study &rarr;</a>
-                    </div>
-                 </div>
-                 <p class="view-more"><a href="#">View more on Dribbble/GitHub/Portfolio &rarr;</a></p>
+                </div>
             </section>
 
-            <section id="contact">
-                 <h2>Get In Touch</h2>
-                 <div class="card contact-card">
-                    <p>Open to new opportunities and collaborations.</p>
-                    <div class="contact-links">
-                         <a href="mailto:your.email@example.com">Email</a>
-                         <a href="https://www.linkedin.com/in/yourprofile/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                         <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">Twitter</a>
-                         </div>
-                 </div>
-            </section>
-
+            <aside class="panel panel--controls" aria-label="Control cluster">
+                <nav class="control-dials" aria-label="View toggles">
+                    <button type="button" class="dial dial--active" aria-label="Primary view">
+                        <span class="dial-core"></span>
+                        <span class="dial-ring"></span>
+                    </button>
+                    <button type="button" class="dial" aria-label="Secondary view">
+                        <span class="dial-core"></span>
+                        <span class="dial-ring"></span>
+                    </button>
+                    <button type="button" class="dial" aria-label="Experimental view">
+                        <span class="dial-core"></span>
+                        <span class="dial-ring"></span>
+                    </button>
+                </nav>
+                <div class="control-stack" role="group" aria-label="Live toggles">
+                    <button type="button" class="switch" aria-label="Toggle layer one">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </button>
+                    <button type="button" class="switch" aria-label="Toggle layer two">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </button>
+                    <button type="button" class="switch" aria-label="Toggle layer three">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </button>
+                </div>
+                <div class="control-rings" aria-hidden="true">
+                    <span class="control-ring control-ring--one"></span>
+                    <span class="control-ring control-ring--two"></span>
+                    <span class="control-ring control-ring--three"></span>
+                </div>
+            </aside>
         </main>
 
-        <footer>
-            <p>&copy; 2025 Your Name</p>
+        <footer class="status-strip" aria-label="Status indicators">
+            <div class="status-pulse" aria-hidden="true">
+                <span class="status-dot status-dot--one"></span>
+                <span class="status-dot status-dot--two"></span>
+                <span class="status-dot status-dot--three"></span>
+            </div>
+            <div class="status-wave" aria-hidden="true">
+                <span class="status-line status-line--a"></span>
+                <span class="status-line status-line--b"></span>
+                <span class="status-line status-line--c"></span>
+            </div>
         </footer>
-
     </div>
     <script src="script.js"></script>
 </body>
