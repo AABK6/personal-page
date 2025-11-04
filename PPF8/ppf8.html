@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paris Peace Forum 2025 Sessions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ppf8.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="logo" href="https://parispeaceforum.org/2025-forum-homepage/" target="_blank" rel="noopener">
+        <img src="https://parispeaceforum.org/wp-content/uploads/2024/07/Logo-PPF.svg" alt="Paris Peace Forum">
+      </a>
+      <h1>Paris Peace Forum 2025 Sessions</h1>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="list-panel">
+      <h2>Sessions with Articles</h2>
+      <p class="list-panel__hint">Select a session to read the rapporteur article.</p>
+      <ul id="sessionList" class="session-list">
+        <li class="session-list__item">Loading…</li>
+      </ul>
+    </aside>
+
+    <article class="article-panel" id="articlePanel">
+      <div class="article-placeholder">
+        <h3>Select a session</h3>
+        <p>The article will appear here.</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <img src="https://parispeaceforum.org/wp-content/uploads/2024/07/Logo-PPF-white.svg" alt="Paris Peace Forum">
+      <a href="https://www.youtube.com/@ParisPeaceForum" target="_blank" rel="noopener">Watch on YouTube</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" integrity="sha384-6JtYwcmBHQYaWV7k/akdUSHBIgRJetBpHI1ZExUgK8/nS8dj2KF1u9IiiaivGi99" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" integrity="sha384-ZaVXni4eWh05rq6ArlTc95xJMu38xpv8uKXuX4nHCqB6f+GO6zkRgZNpmjQe7YOh" crossorigin="anonymous"></script>
+  <script src="ppf8.js"></script>
+</body>
+</html>
