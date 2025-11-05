@@ -23,18 +23,18 @@ GEMINI_PROMPT_TEMPLATE = """
 **Mandatory Editorial Line:**
 
 * **Intellectual Density:** Every sentence must deliver information or analysis. You must eliminate all "filler," platitudes, and obvious statements.
-* **Analytical Style (Not Descriptive):** Do not simply report *who* spoke and *what* they said. Focus on the *meaning* of what was said, the *implications* of the disagreements, and the *scope* of the proposals.
+* **Analytical Style (Not Descriptive):** Do not simply report *who* spoke and *what* they said. Focus on the *meaning* of what was said, the *implications* of the disagreements, and the *scope* of the proposals. Back up your analysis with direct quotes from the speakers.
 * **Fluid Prose:** **No bullet points.** The final output must be a single, coherent text structured by thematic paragraphs.
 
 **Required Article Format (Strictly enforce for each video):**
 
 ---
 
-**[H1 TITLE: An analytical title that captures the central tension or thesis of the debate]**
+**[H1 TITLE: An analytical title that captures the central tension or thesis of the debate - IT MUST START WITH '## ']**
 **(Leadin / Introduction)**
 [Start with an introductory paragraph (3-4 sentences). Pose the context of the debate and enunciate immediately the primary thesis or the most significant tension that emerged. What did this panel *actually* reveal?]
 **(Body of Analysis: 4 to 5 well-written paragraphs that reflects on the debates and discussions)**
-[Weave the analysis into dense narrative paragraphs. Quote the speakers. *Do not* use bullet points. You could use subtitles as relevant. Remember this has to be extremely well written with full sentences.]
+[Weave the analysis into dense narrative paragraphs. Quote the speakers. *Do not* use bullet points. Use substantive subtitles as relevant. Remember this has to be extremely well written with full sentences.]
 **(Conclusion: end on a strategic takeaway)**
 [A final concluding paragraph (2-3 sentences) that answers the "So what?" question. What is the strategic implication of this discussion?]
 ---
@@ -68,7 +68,7 @@ def get_article_from_gemini(client: genai.Client, video_link: str) -> str:
         logging.info("Sending request to Gemini API (using video chunking)...")
         # 4. Make the call. No timeout options are needed.
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-pro",
             contents=[content_object],
         )
         
