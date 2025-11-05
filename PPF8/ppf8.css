@@ -252,15 +252,14 @@ a:hover {
   z-index: 0;
 }
 
-.article-panel h2 {
+.article-panel > header > h2 {
   margin: 0 0 16px;
   font-family: var(--font-heading);
-  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  font-size: clamp(1rem, 1vw, 1.5rem);
   line-height: 1.15;
   letter-spacing: 0.015em;
   position: relative;
-  z-index: 1;
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .article-panel header {
