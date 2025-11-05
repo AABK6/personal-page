@@ -57,7 +57,7 @@ def get_article_from_gemini(client: genai.Client, video_link: str) -> str:
             file_data=types.FileData(file_uri=video_link),
             video_metadata=types.VideoMetadata(
                 start_offset='0s',
-                end_offset='4000s', # Process first ~66 minutes
+                end_offset='8000s', # Process first ~66 minutes
                 fps=0.05 # 1 frame every 20 seconds
             ) 
         )
