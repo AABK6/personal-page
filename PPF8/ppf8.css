@@ -490,3 +490,7 @@ a:hover {
 .article-panel:focus-within::after {
   opacity: 1;
 }
+
+.article-body p:first-of-type {
+  font-style: italic;
+}
