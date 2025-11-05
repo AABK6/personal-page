@@ -17,7 +17,7 @@ window.addEventListener('load', () => {
 
   const layersConfig = [
     {
-      count: 46,
+      count: 69,
       nodeSize: 1.8,
       connectDist: 110,
       speed: 0.42,
@@ -30,7 +30,7 @@ window.addEventListener('load', () => {
       noise: 0.8,
     },
     {
-      count: 58,
+      count: 87,
       nodeSize: 2.4,
       connectDist: 150,
       speed: 0.65,
@@ -43,7 +43,7 @@ window.addEventListener('load', () => {
       noise: 1,
     },
     {
-      count: 36,
+      count: 54,
       nodeSize: 3.1,
       connectDist: 190,
       speed: 0.9,

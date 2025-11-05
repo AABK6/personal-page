@@ -278,3 +278,20 @@ footer {
         margin: 0 0.5rem 0.5rem; /* Add bottom margin for stacking */
     }
 }
+
+.black-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.black-hole:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
