@@ -12,6 +12,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  
+  <!-- Chart.js Library (No dependencies!) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- Optional: a favicon to silence the 404 -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -132,22 +135,7 @@
             z-index: 200; /* Ensure it's on top */
         }
 
-        /* Use EB Garamond for all chart text 
-        #population-chart-container, #population-chart-container * {
-            font-family: 'EB Garamond', serif !important;
-        } */
-
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- React and Charting Libraries -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/react-is@17/umd/react-is.development.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/recharts@3.0.2/umd/Recharts.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body>
     <!-- Animation 1: The Spinning Loader -->
@@ -195,7 +183,39 @@
 
     <!-- Population Chart Container -->
     <div id="population-chart-container">
-        <div id="root"></div>
+        <!-- Header -->
+        <div class="absolute top-4 left-0 w-full text-center z-10 pointer-events-none">
+            <h1 class="text-3xl sm:text-5xl font-thin text-white tracking-wider" style="font-family: 'EB Garamond', serif;">Humanity</h1>
+            <p class="text-sky-300/70 text-sm sm:text-base mt-1 font-light">The Rise of Population</p>
+        </div>
+
+        <!-- Main Chart Area -->
+        <div class="relative w-full h-full max-w-6xl mx-auto flex flex-col justify-center p-4 sm:p-8">
+            <!-- Glassmorphism Panel -->
+            <div class="absolute inset-4 sm:inset-8 bg-slate-900/30 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl -z-10"></div>
+
+            <div class="relative w-full h-[70vh] sm:h-[80vh]">
+                <canvas id="popChart"></canvas>
+                
+                <!-- Overlay Stat -->
+                <div class="absolute top-4 left-4 sm:left-8 pointer-events-none">
+                    <div class="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Year <span id="stat-year">0</span></div>
+                    <div id="stat-pop" class="text-3xl sm:text-5xl text-white font-medium tabular-nums" style="font-family: 'EB Garamond', serif; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);">
+                        0
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="w-full max-w-2xl mx-auto mt-4 z-10 flex items-center gap-4 bg-slate-900/60 backdrop-blur-md p-3 rounded-full border border-white/10 shadow-xl">
+                <button id="btn-play" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-sky-500 hover:bg-sky-400 text-white rounded-full transition-all shadow-[0_0_15px_rgba(14,165,233,0.5)] hover:scale-105 flex-shrink-0">
+                    <svg id="icon-play" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg id="icon-pause" class="hidden" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                    <svg id="icon-replay" class="hidden" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+                <input type="range" id="slider-year" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-400 hover:accent-sky-300">
+            </div>
+        </div>
     </div>
 
     <!-- Spacer for scrolling -->
@@ -224,7 +244,7 @@
         let targetParticleIndex; // Index of the special particle for the camera journey
         let targetParticlePosition = new THREE.Vector3(); // Position of the target particle
         let canShowChart = false; // Flag to control chart visibility
-        const chartThreshold = 3000; // When to show the population chart
+        const chartThreshold = 2200; // Reduced from 3000 to make chart appear sooner
 
         let virtualScrollY = 0; // Smoothed scroll position
         let targetScrollY = 0;  // Target scroll position (raw input)
@@ -288,7 +308,9 @@
                 animationState = 'chart';
                 chartContainer.style.opacity = 1;
                 chartContainer.style.pointerEvents = 'auto';
-                gsap.to(scrollArrow, {opacity: 0, duration: 0.6, ease:"power2.in"});
+                
+                // Fade out the Earth caption and the scroll arrow
+                gsap.to([captionEarth, scrollArrow], {opacity: 0, duration: 0.6, ease:"power2.in"});
             }
 
             if (animationState === 'chart') {
@@ -334,7 +356,7 @@
             controls.minDistance = 3;
             controls.maxDistance = 40;
 
-            /* --- mobile touch mapping --- */
+            /* --- mobile touch mapping ---
             controls.touches.ONE = THREE.TOUCH.NONE;          // disable 1-finger rotate
             controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;  // 2-fingers = zoom + orbit
             // optional: keep three-finger pan
@@ -356,26 +378,56 @@
                     targetScrollY += dy;
                     e.preventDefault();                      // stop page scroll / rubber-band
                 }
-                // else (2+ pointers) do nothing – OrbitControls is handling the event.
+                // else (2+ pointers) do nothing – OrbitControls no longer handles scroll for zooming.
             }, { passive:false });
 
             ['pointerup','pointercancel','pointerleave','pointerout']
             .forEach(type => canvas.addEventListener(type, e => {
                 pointers.delete(e.pointerId);
-            }));
+            })); */
+
+            // --- Manager & Loaders ---
+            const manager = new THREE.LoadingManager();
+            manager.onLoad = function() {
+                const loaderEl = document.getElementById('loader');
+                const infoEl = document.getElementById('info-panel');
+                if(loaderEl) {
+                    loaderEl.style.opacity = '0';
+                    setTimeout(() => {
+                        loaderEl.style.display = 'none';
+                        if(infoEl) infoEl.classList.remove('opacity-0');
+                        gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out", onComplete: () => {
+                            window.addEventListener('wheel', handleFirstScroll, { once: true });
+                            window.addEventListener('touchmove', handleFirstScroll, { once: true });
+                        }});
+                    }, 500);
+                }
+            };
+
+            // Use manager for textures
+            const textureLoader = new THREE.TextureLoader(manager).setCrossOrigin('anonymous');
+            
+            // Preload Earth textures immediately
+            const earthMap   = textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg', t => t.encoding = THREE.sRGBEncoding);
+            const bumpMap    = textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg');
+            const specMap    = textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg');
+            const cloudsMap  = textureLoader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png');
+
 
             // --- Particle Creation ---
             const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3); // Particle positions
-            const colors = new Float32Array(particleCount * 3);    // Particle colors
-            const sizes = new Float32Array(particleCount);         // Particle sizes
-            const initialColors = new Float32Array(particleCount * 3); // To store original colors
+            const positions = new Float32Array(particleCount * 3); // Sphere positions (Start)
+            const targetPositions = new Float32Array(particleCount * 3); // Grid positions (End)
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const initialColors = new Float32Array(particleCount * 3);
+            const delays = new Float32Array(particleCount); // Animation start delay
 
-            const color = new THREE.Color(); // Helper for color calculations
+            const color = new THREE.Color(); 
 
             // 1. Generate Sphere Positions
             for (let i = 0; i < particleCount; i++) {
-                // Fibonacci sphere algorithm for even distribution
+                // Fibonacci sphere algorithm
                 const phi = Math.acos(-1 + (2 * i) / particleCount);
                 const theta = Math.sqrt(particleCount * Math.PI) * phi;
 
@@ -383,28 +435,26 @@
                 const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
                 const z = sphereRadius * Math.cos(phi);
 
-                spherePositions.push(x, y, z); // Store for later
+                spherePositions.push(x, y, z); 
                 positions[i * 3] = x;
                 positions[i * 3 + 1] = y;
                 positions[i * 3 + 2] = z;
 
-                // Assign color using HSL for a rainbow effect
+                // Assign color using HSL
                 color.setHSL(i / particleCount, 1.0, 0.5);
                 colors[i*3] = color.r;
                 colors[i*3+1] = color.g;
                 colors[i*3+2] = color.b;
 
-                // Store initial color for reset
                 initialColors[i*3] = color.r;
                 initialColors[i*3+1] = color.g;
                 initialColors[i*3+2] = color.b;
 
-                sizes[i] = Math.random() * 0.5 + 0.01; // Random size between 0.01 and 0.5
+                sizes[i] = Math.random() * 0.5 + 0.01; 
             }
 
-            // 2. Generate Grid Positions and Select Target
-            const halfGrid = gridDimensions / 2;
-            targetParticleIndex = Math.floor(Math.random() * particleCount); // Pick a random target
+            // 2. Generate Grid Positions
+            targetParticleIndex = Math.floor(Math.random() * particleCount); 
 
             for (let i = 0; i < particleCount; i++) {
                  // Random grid position within the cube
@@ -413,23 +463,21 @@
                  const z = (Math.random() - 0.5) * gridDimensions;
                  gridPositions.push(x, y, z);
 
-                 // Store the target's position for the camera journey
+                 targetPositions[i * 3] = x;
+                 targetPositions[i * 3 + 1] = y;
+                 targetPositions[i * 3 + 2] = z;
+
+                 // Random delay for the explosion effect (0s to 1.5s)
+                 delays[i] = Math.random() * 1.5; 
+
                  if (i === targetParticleIndex) {
                     targetParticlePosition.set(x, y, z);
                  }
             }
 
-            // --- Create high-fidelity Earth at targetParticlePosition ---
-            const loader = new THREE.TextureLoader().setCrossOrigin('anonymous');
-            const earthMap   = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg', t => t.encoding = THREE.sRGBEncoding);
-            const bumpMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg');
-            const specMap    = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg');
-            const cloudsMap  = loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png');
-
-
-            // Planet
+            // --- Create Earth ---
             earthMesh = new THREE.Mesh(
-            new THREE.SphereGeometry(0.5, 64, 64),           // radius 0.5 world-units
+            new THREE.SphereGeometry(0.5, 64, 64),
             new THREE.MeshPhongMaterial({
                 map: earthMap,
                 bumpMap: bumpMap,
@@ -439,10 +487,10 @@
             })
             );
             earthMesh.position.copy(targetParticlePosition);
-            earthMesh.visible = false;               // ← start hidden
+            earthMesh.visible = false;
             scene.add(earthMesh);
 
-            // Clouds: slightly larger transparent sphere
+            // Clouds
             cloudsMesh = new THREE.Mesh(
             new THREE.SphereGeometry(0.503, 64, 64),
             new THREE.MeshPhongMaterial({
@@ -455,7 +503,7 @@
             cloudsMesh.visible = false;
             scene.add(cloudsMesh);
 
-            // Subtle atmosphere glow (fresnel)
+            // Atmosphere
             const glowMaterial = new THREE.ShaderMaterial({
                 uniforms: { 'c':{value:1.0}, 'p':{value:2.0}, glowColor:{value:new THREE.Color(0x3b8cff)}},
                 vertexShader: `varying vec3 vNormal; void main(){vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);} `,
@@ -470,37 +518,51 @@
             atmosphereMesh.visible = false;
             scene.add(atmosphereMesh);
 
-            // Hide the original point so it doesn’t poke through
+            // Hide target particle
             sizes[targetParticleIndex] = 0;
 
-            // Assign attributes to geometry
+            // Assign attributes
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('aTargetPos', new THREE.BufferAttribute(targetPositions, 3));
             geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            geometry.setAttribute('initialColor', new THREE.BufferAttribute(initialColors, 3)); // Store for reset
+            geometry.setAttribute('initialColor', new THREE.BufferAttribute(initialColors, 3)); 
             geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geometry.setAttribute('aDelay', new THREE.BufferAttribute(delays, 1));
 
-            // Custom shaders for size attenuation and color
+            // Custom Shaders
             const vertexShader = `
                 attribute float size;
+                attribute vec3 aTargetPos;
+                attribute float aDelay;
+                
                 varying vec3 vColor;
                 
                 uniform vec3 uMouse;
                 uniform float uInteractionRadius;
+                uniform float uTransitionProgress;
 
                 varying float vHighlight;
 
                 void main() {
                     vColor = color;
 
-                    // Calculate distance to the mouse uniform
-                    float dist = length(position - uMouse);
+                    // GPU Animation Logic
+                    float duration = 1.5; 
+                    // Calculate normalized time t for this particle based on delay
+                    float t = clamp((uTransitionProgress - aDelay) / duration, 0.0, 1.0);
+                    
+                    // Smooth easing
+                    t = t * t * (3.0 - 2.0 * t); 
 
-                    // Use smoothstep to create a falloff effect.
-                    // It will be 1.0 if dist < uInteractionRadius and 0.0 if dist > uInteractionRadius + falloff
-                    float falloff = 1.0; // How quickly the highlight fades
+                    // Interpolate position
+                    vec3 currentPos = mix(position, aTargetPos, t);
+
+                    // Interaction Logic (Mouse)
+                    float dist = length(currentPos - uMouse);
+                    float falloff = 1.0;
                     vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
 
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                    vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
                     gl_PointSize = size * (300.0 / -mvPosition.z);
                     gl_Position = projectionMatrix * mvPosition;
                 }
@@ -510,22 +572,18 @@
                 varying float vHighlight;
 
                 void main() {
-                    // Discard pixels outside the circular point
                     if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
-                    
-                    // Mix base color with a bright highlight color
-                    vec3 highlightColor = vec3(1.0, 1.0, 1.0); // White
+                    vec3 highlightColor = vec3(1.0, 1.0, 1.0);
                     vec3 finalColor = mix(vColor, highlightColor, vHighlight);
-
                     gl_FragColor = vec4(finalColor, 1.0);
                 }
             `;
 
-            // Shader material for custom particle effects
             const material = new THREE.ShaderMaterial({
                 uniforms: {
-                    uMouse: { value: new THREE.Vector3(-100, -100, 0) }, // Off-screen initially
-                    uInteractionRadius: { value: 1.5 }
+                    uMouse: { value: new THREE.Vector3(-100, -100, 0) },
+                    uInteractionRadius: { value: 1.5 },
+                    uTransitionProgress: { value: 0.0 } // Start at sphere state
                 },
                 vertexShader,
                 fragmentShader,
@@ -535,9 +593,8 @@
                 blending: THREE.AdditiveBlending
             });
 
-            // Create the Points object and add to scene
             particles = new THREE.Points(geometry, material);
-            particles.frustumCulled = false;   // ← stop Three.js from culling the whole cloud
+            particles.frustumCulled = false;
             scene.add(particles);
 
             // --- Event Listeners ---
@@ -545,21 +602,7 @@
             document.addEventListener('mousemove', onMouseMove, false);
             window.addEventListener('wheel', onWheel, { passive: false });
 
-            // --- Initial Transition ---
-            // Hide loader after a delay
-            setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                document.getElementById('info-panel').classList.remove('opacity-0');
-                 setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    // fade in intro caption & arrow
-                    gsap.to([captionIntro, scrollArrow], {opacity:0.6, duration:1.2, ease:"power2.out", onComplete: () => {
-                        // Add a one-time event listener to fade out the caption on the first scroll.
-                        window.addEventListener('wheel', handleFirstScroll, { once: true });
-                        window.addEventListener('touchmove', handleFirstScroll, { once: true });
-                    }});
-                 }, 500);
-            }, 2000); // 2-second simulated load time
+            // (Loader handled by manager.onLoad)
         }
 
         function handleFirstScroll() {
@@ -568,49 +611,30 @@
 
         // --- Transition Animations ---
         function transitionToGrid() {
-            // Transition from sphere to grid layout
+            // Transition from sphere to grid layout (GPU Version)
             animationState = 'exploding';
 
-            // Animate the interaction radius to a larger value for the grid
+            // 1. Expand interaction radius
             gsap.to(particles.material.uniforms.uInteractionRadius, {
-                value: 6.0, // Larger radius for the spread-out grid
+                value: 6.0, 
                 duration: 4,
                 ease: "power3.inOut"
             });
 
-            const positions = particles.geometry.attributes.position.array;
-            let animationsComplete = 0;
-
-            for (let i = 0; i < particleCount; i++) {
-                 // Proxy object for GSAP to animate
-                 const proxy = {
-                    x: positions[i * 3],
-                    y: positions[i * 3 + 1],
-                    z: positions[i * 3 + 2]
-                };
-
-                gsap.to(proxy, {
-                    x: gridPositions[i * 3],
-                    y: gridPositions[i * 3 + 1],
-                    z: gridPositions[i * 3 + 2],
-                    duration: 4,
-                    delay: Math.random() * 1.5, // Staggered start
-                    ease: "power3.inOut",
-                    onUpdate: () => {
-                        // Update geometry position as GSAP animates
-                        positions[i * 3] = proxy.x;
-                        positions[i * 3 + 1] = proxy.y;
-                        positions[i * 3 + 2] = proxy.z;
-                        particles.geometry.attributes.position.needsUpdate = true;
-                    },
-                    onComplete: () => {
-                        animationsComplete++;
-                        if (animationsComplete === particleCount) {
-                            animationState = 'grid';
-                        }
-                    }
-                });
-            }
+            // 2. Animate the uniform "uTransitionProgress"
+            // The shader logic is: t = clamp((uTransitionProgress - aDelay) / duration, 0, 1)
+            // Max delay is 1.5s. Duration is 1.5s.
+            // So for the last particle (delay 1.5), t starts increasing at 1.5 and finishes at 3.0.
+            // We tween uTransitionProgress from 0.0 to 3.5 to be safe.
+            
+            gsap.to(particles.material.uniforms.uTransitionProgress, {
+                value: 3.5,
+                duration: 5.0, // Overall duration of the explosion sequence
+                ease: "power2.inOut",
+                onComplete: () => {
+                    animationState = 'grid';
+                }
+            });
         }
 
         function startJourneyToParticle() {
@@ -650,25 +674,33 @@
                 onComplete: () => {
                     // Finalize the scene
                     gsap.fromTo(captionEarth, { opacity: 0 }, { opacity: .6, duration: 1.2, ease: "power2.out", onComplete: () => {
-                        setTimeout(() => {
-                            canShowChart = true;
-                            // If user hasn't scrolled far enough for the chart, show arrow
-                            if (virtualScrollY < chartThreshold) {
-                                gsap.to(scrollArrow, {opacity: 0.6, duration: 1.2, ease: "power2.out"});
-                            }
-                        }, 2000); // 2-second delay
+                        canShowChart = true;
+                        animationState = 'focused';
+                        controls.enabled = true;
+                        controls.minDistance = EARTH_RADIUS * 1.1;
+                        controls.maxDistance = EARTH_RADIUS * 5;
+                        // Update the official OrbitControls target and sync
+                        controls.target.copy(targetParticlePosition);
+                        controls.update();
+                        
+                        // AUTO-GUIDE: If user hasn't scrolled enough, gently push them to the chart
+                        if (targetScrollY < chartThreshold) {
+                             // Animate the scroll variable itself
+                             const scrollProxy = { val: targetScrollY };
+                             gsap.to(scrollProxy, {
+                                 val: chartThreshold + 100, // Add a bit more buffer
+                                 duration: 1.5,             // Faster transition
+                                 ease: "power2.inOut",
+                                 onUpdate: () => {
+                                     targetScrollY = scrollProxy.val;
+                                 }
+                             });
+                        }
                     }});
-                    animationState = 'focused';
-                    controls.enabled = true;
-                    controls.minDistance = EARTH_RADIUS * 1.1;
-                    controls.maxDistance = EARTH_RADIUS * 5;
-                    // Update the official OrbitControls target and sync
-                    controls.target.copy(targetParticlePosition);
-                    controls.update();
                 }
             });
 
-            // --- PHASE 1: PIVOT --- 
+            // --- PHASE 1: PIVOT ---
             // Animate the look-at target to pivot the camera towards the Earth.
             tl.to(journeyLookAtTarget, {
                 x: targetParticlePosition.x,
@@ -730,17 +762,10 @@
         init(); // Initialize scene and objects
         animate(); // Start animation loop
     </script>
-    <script type="text/babel">
-        // This function will contain the main application logic.
-        function renderApp() {
-            // Destructure necessary components from the global React and Recharts objects
-            const { useState, useEffect, useMemo, useCallback } = React;
-            const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } = Recharts;
-
-            // The main component for the population chart application.
-            function App() {
-                // Hardcoded CSV data for world population over time.
-                const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
+    <script>
+        // --- Chart.js Implementation ---
+        (function() {
+            const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
 World,OWID_WRL,-10000,4501152
 World,OWID_WRL,-9000,5687125
 World,OWID_WRL,-8000,7314623
@@ -801,355 +826,270 @@ World,OWID_WRL,2060,9989232258
 World,OWID_WRL,2070,10189241908
 World,OWID_WRL,2080,10283077976
 World,OWID_WRL,2090,10271565034
-World,OWID_WRL,2100,10180160680
-`;
+World,OWID_WRL,2100,10180160680`;
 
-                // Constants for chart configuration
-                const END_YEAR = 2025;
-                const INITIAL_Y_MAX = 2e9;
-                const INDUSTRIAL_REVOLUTION_YEAR = 1740;
+            // Parse Data
+            const rawData = CSV_DATA.trim().split('\n').slice(1).map(line => {
+                const parts = line.split(',');
+                return { x: parseInt(parts[2]), y: parseInt(parts[3]) };
+            }).filter(d => d.x <= 2025).sort((a, b) => a.x - b.x);
 
-                // State management
-                const [year, setYear] = useState(-10000);
-                const [isPlaying, setIsPlaying] = useState(false);
-                const [yDomainMax, setYDomainMax] = useState(INITIAL_Y_MAX);
-                const [industrialRevolutionOpacity, setIndustrialRevolutionOpacity] = useState(0);
-                const [captionState, setCaptionState] = useState('earth');
-                const [chartMargins, setChartMargins] = useState({ top: 20, right: 30, left: 50, bottom: 20 });
+            const minYear = rawData[0].x;
+            const maxYear = 2025;
+            let currentYear = minYear;
+            let isPlaying = false;
+            let animationFrameId;
+            let chart;
 
-                useEffect(() => {
-                    const handleResize = () => {
-                        if (window.innerWidth < 768) {
-                            setChartMargins({ top: 10, right: 10, left: -30, bottom: 10 });
-                        } else {
-                            setChartMargins({ top: 20, right: 30, left: 50, bottom: 20 });
-                        }
-                    };
-
-                    window.addEventListener('resize', handleResize);
-                    handleResize(); // Set initial margins
-
-                    return () => window.removeEventListener('resize', handleResize);
-                }, []);
-
-                const captionEarth = useMemo(() => document.getElementById('caption-earth'), []);
-                const captionHistory1 = useMemo(() => document.getElementById('caption-history-1'), []);
-                const captionHistory2 = useMemo(() => document.getElementById('caption-history-2'), []);
-
-                const parseCSV = (csvText) => {
-                    const lines = csvText.trim().split('\n');
-                    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-                    const data = [];
-                    for (let i = 1; i < lines.length; i++) {
-                        const values = lines[i].split(',');
-                        const obj = {};
-                        headers.forEach((header, index) => {
-                            let value = values[index] ? values[index].trim() : '';
-                            obj[header] = value;
-                        });
-                        data.push(obj);
-                    }
-                    return data;
-                };
-
-                const formatYAxis = (tickItem) => {
-                    if (tickItem >= 1e9) return `${(tickItem / 1e9).toFixed(0)}B`;
-                    if (tickItem >= 1e6) return `${(tickItem / 1e6).toFixed(0)}M`;
-                    if (tickItem >= 1e3) return `${(tickItem / 1e3).toFixed(0)}K`;
-                    return tickItem.toString();
-                };
-
-                const formatXAxis = (tickItem) => {
-                    const roundedYear = Math.round(tickItem);
-                    if (roundedYear === 0) return '0';
-                    if (roundedYear < 0) return `${Math.abs(roundedYear)} BC`;
-                    return roundedYear.toString();
-                };
-
-                const chartData = useMemo(() => {
-                    const parsedData = parseCSV(CSV_DATA);
-                    return parsedData
-                        .filter(d => d.Entity === 'World' && d['Population (historical estimates and future projections)'] && parseInt(d.Year, 10) <= END_YEAR)
-                        .map(d => ({
-                            year: parseInt(d.Year, 10),
-                            population: parseInt(d['Population (historical estimates and future projections)'], 10)
-                        }))
-                        .sort((a, b) => a.year - b.year);
-                }, []);
-
-                const { minYear, maxYear } = useMemo(() => {
-                    if (!chartData.length) return { minYear: -10000, maxYear: END_YEAR };
-                    return { minYear: chartData[0].year, maxYear: END_YEAR };
-                }, [chartData]);
-
-                const displayedData = useMemo(() => {
-                    if (year <= minYear) return [chartData[0]];
-                    if (year >= maxYear) return chartData.filter(d => d.year <= maxYear);
-
-                    const pastData = chartData.filter(d => d.year <= year);
-                    const nextPoint = chartData.find(d => d.year > year);
-                    const prevPoint = pastData[pastData.length - 1];
-
-                    if (!nextPoint || !prevPoint) return pastData;
-
-                    const yearRange = nextPoint.year - prevPoint.year;
-                    if (yearRange === 0) return pastData;
-
-                    const popRange = nextPoint.population - prevPoint.population;
-                    const progress = (year - prevPoint.year) / yearRange;
-                    const interpolatedPop = prevPoint.population + (popRange * progress);
-
-                    const interpolatedPoint = { year, population: interpolatedPop };
-
-                    return [...pastData, interpolatedPoint];
-                }, [chartData, year, minYear, maxYear]);
-
-                const currentMaxPop = useMemo(() => {
-                    if (!displayedData.length) return 0;
-                    return Math.max(...displayedData.map(d => d.population));
-                }, [displayedData]);
-
-                const yAxisTicks = useMemo(() => {
-                    if (!yDomainMax) return [];
-                    const step = 1e9;
-                    const numLines = Math.floor(yDomainMax / step);
-                    return Array.from({ length: numLines + 1 }, (_, i) => i * step);
-                }, [yDomainMax]);
-
-                const xAxisTicks = useMemo(() => {
-                    const ticks = [];
-                    for (let i = minYear; i <= maxYear; i += 2500) {
-                        ticks.push(i);
-                    }
-                    if (!ticks.includes(0)) ticks.push(0);
-                    if (ticks[ticks.length - 1] > maxYear) ticks.pop();
-                    if (ticks[ticks.length - 1] < maxYear) ticks.push(maxYear);
-                    ticks.sort((a, b) => a - b);
-                    return [...new Set(ticks)];
-                }, [minYear, maxYear]);
-
-                useEffect(() => {
-                    const targetMax = Math.max(INITIAL_Y_MAX, Math.ceil(currentMaxPop / 1e9) * 1e9);
-                    if (targetMax > yDomainMax) {
-                        let animationFrameId;
-                        const animate = () => {
-                            setYDomainMax(prevMax => {
-                                const diff = targetMax - prevMax;
-                                if (diff < 1000) {
-                                    cancelAnimationFrame(animationFrameId);
-                                    return targetMax;
-                                }
-                                const nextMax = prevMax + diff * 0.05;
-                                animationFrameId = requestAnimationFrame(animate);
-                                return nextMax;
-                            });
-                        };
-                        animationFrameId = requestAnimationFrame(animate);
-                        return () => cancelAnimationFrame(animationFrameId);
-                    }
-                }, [currentMaxPop, yDomainMax]);
-
-                useEffect(() => {
-                    if (isPlaying) {
-                        const interval = setInterval(() => {
-                            setYear(prevYear => {
-                                const increment = prevYear < 1800 ? 30 : 1;
-                                const nextYear = prevYear + increment;
-                                if (nextYear >= maxYear) {
-                                    setIsPlaying(false);
-                                    return maxYear;
-                                }
-                                return nextYear;
-                            });
-                        }, 25);
-                        return () => clearInterval(interval);
-                    }
-                }, [isPlaying, maxYear]);
-
-                useEffect(() => {
-                    if (year >= INDUSTRIAL_REVOLUTION_YEAR) {
-                        if (industrialRevolutionOpacity < 1) {
-                            let animationFrameId;
-                            const animate = () => {
-                                setIndustrialRevolutionOpacity(prevOpacity => {
-                                    const nextOpacity = prevOpacity + 0.02;
-                                    if (nextOpacity >= 1) {
-                                        cancelAnimationFrame(animationFrameId);
-                                        return 1;
-                                    }
-                                    animationFrameId = requestAnimationFrame(animate);
-                                    return nextOpacity;
-                                });
-                            };
-                            animationFrameId = requestAnimationFrame(animate);
-                            return () => cancelAnimationFrame(animationFrameId);
-                        }
-                        if (captionState === 'history1') {
-                            setCaptionState('history2');
-                            gsap.to(captionHistory1, { opacity: 0, duration: 0.5, ease: "power2.in" });
-                            gsap.to(captionHistory2, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
-                        }
-                    } else if (year < INDUSTRIAL_REVOLUTION_YEAR && industrialRevolutionOpacity > 0) {
-                        setIndustrialRevolutionOpacity(0);
-                    }
-                }, [year, industrialRevolutionOpacity, captionState, captionHistory1, captionHistory2]);
-
-                const handlePlayPause = useCallback(() => {
-                    if (year >= maxYear) { // Replay
-                        setYear(minYear);
-                        setYDomainMax(INITIAL_Y_MAX);
-                        setIndustrialRevolutionOpacity(0);
-                        setCaptionState('earth');
-                        gsap.to(captionHistory2, { opacity: 0, duration: 0.5, ease: "power2.in" });
-                        gsap.to(captionEarth, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
-                    } else { // Play/Pause
-                        if (!isPlaying && captionState === 'earth') {
-                            setCaptionState('history1');
-                            gsap.to(captionEarth, { opacity: 0, duration: 0.5, ease: "power2.in" });
-                            gsap.to(captionHistory1, { opacity: 0.6, duration: 0.5, ease: "power2.out", delay: 0.5 });
-                        }
-                        setIsPlaying(prev => !prev);
-                    }
-                }, [isPlaying, year, maxYear, captionState, captionEarth, captionHistory1, captionHistory2]);
-
-                const handleSliderChange = (e) => {
-                    const newYear = parseInt(e.target.value, 10);
-                    setYear(newYear);
-                    if (isPlaying) setIsPlaying(false);
-                    const maxPopAtYear = Math.max(1, ...chartData.filter(d => d.year <= newYear).map(d => d.population));
-                    const targetMax = Math.max(INITIAL_Y_MAX, Math.ceil(maxPopAtYear / 1e9) * 1e9);
-                    setYDomainMax(targetMax);
-                };
-
-                const CustomTooltip = ({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                        return (
-                            <div className="p-4 bg-white/80 backdrop-blur-sm border border-gray-300 rounded-lg shadow-lg">
-                                <p className="font-bold text-gray-800">{`Year: ${formatXAxis(label)}`}</p>
-                                <div style={{ color: '#8884d8' }}>
-                                    <span className="font-semibold text-gray-700">Population: </span>
-                                    <span className="font-mono text-gray-900">{`${Math.round(payload[0].value).toLocaleString()}`}</span>
-                                </div>
-                            </div>
-                        );
-                    }
-                    return null;
-                };
-
-                return (
-                    <div className="bg-transparent text-white min-h-screen p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between font-sans">
-                        <header className="w-full max-w-7xl text-center">
-                            <h1 className="text-2xl sm:text-4xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-sky-500">
-                                World Population Growth
-                            </h1>
-                            <p className="text-gray-400 mt-2">10,000 BC to {END_YEAR} AD</p>
-                        </header>
-
-                        <div className="w-full max-w-7xl h-[60vh] md:h-[70vh] p-0 sm:p-4">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart
-                                    data={displayedData}
-                                    margin={chartMargins}
-                                >
-                                    <defs>
-                                        <linearGradient id="colorPopulation" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                                            <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(74, 85, 104, 0.5)" />
-                                    <XAxis 
-                                        dataKey="year" 
-                                        stroke="#A0AEC0" 
-                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
-                                        domain={[minYear, maxYear]}
-                                        type="number"
-                                        ticks={xAxisTicks}
-                                        tickFormatter={formatXAxis}
-                                    />
-                                    <YAxis 
-                                        stroke="#A0AEC0"
-                                        tick={{ fill: '#A0AEC0', className: 'text-sm' }}
-                                        tickFormatter={formatYAxis}
-                                        domain={[0, yDomainMax]}
-                                        allowDataOverflow={true}
-                                        type="number"
-                                        ticks={yAxisTicks}
-                                    />
-                                    <Tooltip content={<CustomTooltip />} />
-                                    <ReferenceLine x={0} stroke="rgba(74, 85, 104, 0.5)" strokeDasharray="3 3" />
-                                    
-                                    <ReferenceLine 
-                                        x={INDUSTRIAL_REVOLUTION_YEAR} 
-                                        stroke="#38B2AC" 
-                                        strokeDasharray="4 4"
-                                        strokeOpacity={industrialRevolutionOpacity}
-                                    >
-                                        <Label 
-                                            value="Industrial Revolution" 
-                                            position="top"
-                                            fill="#38B2AC" 
-                                            fontSize={16}
-                                            angle={-90}
-                                            offset={40}
-                                            style={{ textAnchor: 'end', fillOpacity: industrialRevolutionOpacity }}
-                                        />
-                                    </ReferenceLine>
-
-                                    <Area
-                                        type="monotone"
-                                        dataKey="population"
-                                        name="World Population"
-                                        stroke="#8884d8"
-                                        fillOpacity={1}
-                                        fill="url(#colorPopulation)"
-                                        strokeWidth={2}
-                                        isAnimationActive={false}
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                        </div>
-
-                        <footer className="w-full max-w-4xl">
-                            <div className="p-2 bg-gray-800/50 rounded-xl shadow-lg border border-gray-700">
-                                <div className="flex items-center justify-center space-x-4">
-                                    <button
-                                        onClick={handlePlayPause}
-                                        className="px-4 py-1 rounded-lg bg-sky-400 hover:bg-sky-500 text-white font-semibold opacity-80 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center"
-                                    >
-                                        {isPlaying ? (
-                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"></path></svg>
-                                        ) : (
-                                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6V4z"></path></svg>
-                                        )}
-                                        {isPlaying ? 'Pause' : (year >= maxYear ? 'Replay' : 'Play')}
-                                    </button>
-                                    <div className="flex-grow flex items-center space-x-4">
-                                        <span className="text-gray-400 text-sm font-mono w-20 text-center">{formatXAxis(minYear)}</span>
-                                        <input
-                                            type="range"
-                                            min={minYear}
-                                            max={maxYear}
-                                            step="10"
-                                            value={year}
-                                            onChange={handleSliderChange}
-                                            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                                        />
-                                         <span className="text-gray-400 text-sm font-mono w-20 text-center">{formatXAxis(maxYear)}</span>
-                                    </div>
-                                     <span className="text-base font-bold text-sky-400 w-28 text-center">{formatXAxis(year)}</span>
-                                </div>
-                            </div>
-                        </footer>
-                    </div>
-                );
-            }
+            // Initialize Chart
+            const ctx = document.getElementById('popChart').getContext('2d');
             
-            // Render the React application into the 'root' div
-            ReactDOM.render(<App />, document.getElementById('root'));
-        };
-        // Call the renderApp function to initialize the application
-        renderApp()
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.6)'); // Sky-500
+            gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
+
+            // Custom Plugin for Industrial Revolution Line
+            const industrialRevolutionLine = {
+                id: 'industrialRevolutionLine',
+                afterDraw: (chart) => {
+                    const year = 1760;
+                    // Check if we have reached this year in the animation
+                    const meta = chart.getDatasetMeta(0);
+                    if (!meta || !chart.data.datasets[0].data.length) return;
+                    
+                    const lastDataPoint = chart.data.datasets[0].data[chart.data.datasets[0].data.length - 1];
+                    if (!lastDataPoint || lastDataPoint.x < year) return;
+
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+                    const x = xAxis.getPixelForValue(year);
+                    
+                    // Calculate opacity based on how far past the year we are (fade in effect)
+                    const progress = Math.min(1, (lastDataPoint.x - year) / 50);
+                    if (progress <= 0) return;
+
+                    ctx.save();
+                    ctx.globalAlpha = progress;
+                    ctx.beginPath();
+                    ctx.moveTo(x, yAxis.top);
+                    ctx.lineTo(x, yAxis.bottom);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = '#38bdf8'; // Sky-400
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+
+                    // Label
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'top';
+                    ctx.font = "14px 'EB Garamond'";
+                    ctx.fillText("Industrial Revolution", x - 5, yAxis.top + 10);
+                    ctx.restore();
+                }
+            };
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Population',
+                        data: [rawData[0]], // Start with just the first point
+                        borderColor: '#38bdf8', 
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                plugins: [industrialRevolutionLine],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false, 
+                    interaction: {
+                        mode: 'nearest',
+                        axis: 'x',
+                        intersect: false
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            min: minYear,
+                            max: maxYear,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(val) { return Math.abs(val) + (val < 0 ? ' BC' : ''); }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            min: 0,
+                            max: 10000000000,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(val) { return (val/1e9).toFixed(0) + 'B'; }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#38bdf8',
+                            callbacks: {
+                                title: (items) => 'Year ' + Math.abs(items[0].parsed.x) + (items[0].parsed.x < 0 ? ' BC' : ''),
+                                label: (item) => (item.parsed.y / 1e9).toFixed(2) + ' Billion'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // DOM Elements
+            const slider = document.getElementById('slider-year');
+            const btnPlay = document.getElementById('btn-play');
+            const iconPlay = document.getElementById('icon-play');
+            const iconPause = document.getElementById('icon-pause');
+            const iconReplay = document.getElementById('icon-replay');
+            const statYear = document.getElementById('stat-year');
+            const statPop = document.getElementById('stat-pop');
+
+            slider.min = minYear;
+            slider.max = maxYear;
+            slider.value = minYear;
+
+            function formatPop(n) {
+                if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+                if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+                return n.toLocaleString();
+            }
+
+            // Interpolation Function
+            function getDataAtYear(year) {
+                const nextIndex = rawData.findIndex(d => d.x > year);
+                if (nextIndex === -1) return rawData[rawData.length - 1];
+                if (nextIndex === 0) return rawData[0];
+
+                const prev = rawData[nextIndex - 1];
+                const next = rawData[nextIndex];
+                const ratio = (year - prev.x) / (next.x - prev.x);
+                return {
+                    x: year,
+                    y: prev.y + (next.y - prev.y) * ratio
+                };
+            }
+
+            function updateDisplay(year) {
+                // Update Slider & Text
+                slider.value = year;
+                statYear.innerText = Math.abs(year) + (year < 0 ? ' BC' : '');
+                const currentData = getDataAtYear(year);
+                statPop.innerText = formatPop(currentData.y);
+
+                // Update Chart Viewport
+                // Technique: We filter the dataset itself to simulate "growing"
+                const filteredData = rawData.filter(d => d.x <= year);
+                // Add current interpolated point
+                filteredData.push(currentData);
+                
+                chart.data.datasets[0].data = filteredData;
+                chart.update('none'); // 'none' mode for performance
+            }
+
+            function play() {
+                isPlaying = true;
+                updateIcon();
+                loop();
+            }
+
+            function pause() {
+                isPlaying = false;
+                updateIcon();
+                cancelAnimationFrame(animationFrameId);
+            }
+
+            function updateIcon() {
+                iconPlay.classList.add('hidden');
+                iconPause.classList.add('hidden');
+                iconReplay.classList.add('hidden');
+                
+                if (currentYear >= maxYear) {
+                    iconReplay.classList.remove('hidden');
+                } else if (isPlaying) {
+                    iconPause.classList.remove('hidden');
+                } else {
+                    iconPlay.classList.remove('hidden');
+                }
+            }
+
+            function loop() {
+                if (!isPlaying) return; 
+                
+                // Variable speed logic
+                let step = 0.5; // Base step for slowest part (modern era)
+                if (currentYear < 1700) step = 25;      // Ancient history: Very fast (50 -> 25)
+                else if (currentYear < 1800) step = 2.5;  // Pre-Industrial: Medium (5 -> 2.5)
+                else if (currentYear < 1950) step = 1;  // Industrial: Slower (2 -> 1)
+                else step = 0.5;                        // Modern: Real-time detail (1 -> 0.5)
+
+                currentYear += step;
+
+                if (currentYear >= maxYear) {
+                    currentYear = maxYear;
+                    pause();
+                } else {
+                    animationFrameId = requestAnimationFrame(loop);
+                }
+                updateDisplay(currentYear);
+            }
+
+            // Listeners
+            btnPlay.addEventListener('click', () => {
+                if (currentYear >= maxYear) {
+                    currentYear = minYear;
+                    play();
+                } else if (isPlaying) {
+                    pause();
+                } else {
+                    play();
+                }
+            });
+
+            slider.addEventListener('input', (e) => {
+                pause();
+                currentYear = parseInt(e.target.value);
+                updateDisplay(currentYear);
+            });
+            
+            // SCROLL SYNCHRONIZATION
+            // This links the scroll position (passed from the main script) to the chart year.
+            window.addEventListener('update-chart', (e) => {
+               if (isPlaying) return; // Don't override if user is manually playing
+               
+               const progress = e.detail.progress; // 0 to 1
+               // Map progress to year range
+               let targetYear = minYear + (maxYear - minYear) * progress;
+               targetYear = Math.floor(targetYear);
+               
+               // Clamp
+               if (targetYear < minYear) targetYear = minYear;
+               if (targetYear > maxYear) targetYear = maxYear;
+               
+               currentYear = targetYear;
+               updateDisplay(currentYear);
+            });
+
+            // Initial render
+            updateDisplay(minYear);
+            console.log("Chart.js initialized successfully.");
+
+        })();
     </script>
 </body>
 </html>
