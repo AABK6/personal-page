@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Bang - Immersive (Option A)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
+  
+  <style>
+    body, html { margin: 0; padding: 0; background: #111; color: white; overflow: hidden; }
+    #root { width: 100vw; height: 100vh; }
+    
+    .caption-card {
+        font-family: "EB Garamond", serif;
+        background: rgba(0,0,0,0.25);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        padding: .55rem .9rem;
+        border-radius: .65rem;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        pointer-events: none;
+    }
+
+    .scroll-arrow {
+        font-size: 26px;
+        color: #fff;
+        opacity: .35;
+        animation: arrowPulse 1.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes arrowPulse {
+        from { transform: translateY(0); }
+        to { transform: translateY(8px); }
+    }
+
+    /* Chart specific styles */
+    canvas#popChart { width: 100% !important; height: 100% !important; }
+  </style>
+
+  <!-- Import Map for React + R3F ecosystem -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.2.0",
+      "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+      "three": "https://esm.sh/three@0.160.0",
+      "@react-three/fiber": "https://esm.sh/@react-three/fiber@8.15.12?external=react,react-dom,three",
+      "@react-three/drei": "https://esm.sh/@react-three/drei@9.99.0?external=react,react-dom,three,@react-three/fiber",
+      "xstate": "https://esm.sh/xstate@5.7.0",
+      "@xstate/react": "https://esm.sh/@xstate/react@4.1.0?external=react,xstate",
+      "gsap": "https://esm.sh/gsap@3.12.5",
+      "uuid": "https://esm.sh/uuid@9.0.1",
+      "chart.js/auto": "https://esm.sh/chart.js@4.4.1/auto"
+    }
+  }
+  </script>
+  
+  <!-- PostProcessing needs to be handled carefully in ESM without a bundler. 
+       We will use the standard three.js EffectComposer inside R3F manual render loop or look for a simplified Bloom approach.
+       Given the constraints, we will implement a custom EffectComposer component using three/examples/jsm/... logic or standard R3F extends.
+  -->
+  
+  <!-- Babel for in-browser JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React, { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
+    import { createRoot } from 'react-dom/client';
+    import * as THREE from 'three';
+    import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
+    import { ScrollControls, Scroll, useScroll, Html } from '@react-three/drei';
+    import { createMachine, assign } from 'xstate';
+    import { useMachine } from '@xstate/react';
+    import gsap from 'gsap';
+    import Chart from 'chart.js/auto';
+    
+    // Import Three.js Post-Processing modules directly from standard CDN for usage in "extend"
+    import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+    import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
+
+    extend({ EffectComposer, RenderPass, UnrealBloomPass, ShaderPass });
+
+    // --- CONSTANTS & DATA ---
+    const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
+World,OWID_WRL,-10000,4501152
+World,OWID_WRL,-9000,5687125
+World,OWID_WRL,-8000,7314623
+World,OWID_WRL,-7000,9651703
+World,OWID_WRL,-6000,13278309
+World,OWID_WRL,-5000,19155698
+World,OWID_WRL,-4000,28859174
+World,OWID_WRL,-3000,44577880
+World,OWID_WRL,-2000,72685064
+World,OWID_WRL,-1000,110530464
+World,OWID_WRL,0,232268832
+World,OWID_WRL,100,237052192
+World,OWID_WRL,200,240762160
+World,OWID_WRL,300,227702848
+World,OWID_WRL,400,241697008
+World,OWID_WRL,500,253395808
+World,OWID_WRL,600,271638944
+World,OWID_WRL,700,278346080
+World,OWID_WRL,800,285870176
+World,OWID_WRL,900,311142688
+World,OWID_WRL,1000,323462624
+World,OWID_WRL,1500,503051104
+World,OWID_WRL,1600,516147616
+World,OWID_WRL,1700,595456896
+World,OWID_WRL,1800,954892352
+World,OWID_WRL,1820,1065623616
+World,OWID_WRL,1830,1148205440
+World,OWID_WRL,1840,1209754496
+World,OWID_WRL,1850,1287033856
+World,OWID_WRL,1950,2493092801
+World,OWID_WRL,1951,2536926981
+World,OWID_WRL,1952,2584086282
+World,OWID_WRL,1953,2634106196
+World,OWID_WRL,1954,2685894824
+World,OWID_WRL,1955,2740213742
+World,OWID_WRL,1960,3015470858
+World,OWID_WRL,1965,3334533671
+World,OWID_WRL,1970,3694683753
+World,OWID_WRL,1975,4070735208
+World,OWID_WRL,1980,4447606162
+World,OWID_WRL,1985,4868943409
+World,OWID_WRL,1990,5327803039
+World,OWID_WRL,1995,5758878939
+World,OWID_WRL,2000,6171702952
+World,OWID_WRL,2005,6586970109
+World,OWID_WRL,2010,7021732097
+World,OWID_WRL,2015,7470491849
+World,OWID_WRL,2020,7887001253
+World,OWID_WRL,2021,7954448327
+World,OWID_WRL,2022,8021407128
+World,OWID_WRL,2023,8091734853
+World,OWID_WRL,2024,8161972496
+World,OWID_WRL,2025,8231613055
+World,OWID_WRL,2030,8569124874
+World,OWID_WRL,2040,9177190161
+World,OWID_WRL,2050,9664378554
+World,OWID_WRL,2060,9989232258
+World,OWID_WRL,2070,10189241908
+World,OWID_WRL,2080,10283077976
+World,OWID_WRL,2090,10271565034
+World,OWID_WRL,2100,10180160680`;
+
+    // --- 1. STATE MACHINE ---
+    const storyMachine = createMachine({
+      id: 'story',
+      initial: 'loading',
+      context: {
+        targetParticlePosition: new THREE.Vector3()
+      },
+      states: {
+        loading: { on: { LOADED: 'sphere' } },
+        sphere: { 
+            on: { SCROLL_EXPLODE: 'exploding' } 
+        },
+        exploding: {
+            // Transition: Expand radius and mix positions
+            after: { 8000: 'grid' } 
+        },
+        grid: {
+            on: { SCROLL_JOURNEY: 'journeying' }
+        },
+        journeying: {
+            // Transition: Camera flies to Earth
+            after: { 7000: 'earth' }
+        },
+        earth: {
+            on: { SCROLL_CHART: 'chart' }
+        },
+        chart: {
+            // Final state with interactive chart
+            type: 'final'
+        }
+      }
+    });
+
+    // --- 2. SHADERS (Exact Copies) ---
+    const particleVertexShader = `
+        attribute float size;
+        attribute vec3 aTargetPos;
+        attribute float aDelay;
+        
+        varying vec3 vColor;
+        
+        uniform vec3 uMouse;
+        uniform float uInteractionRadius;
+        uniform float uTransitionProgress;
+
+        varying float vHighlight;
+
+        void main() {
+            vColor = color;
+
+            // GPU Animation Logic
+            float duration = 1.5; 
+            // Calculate normalized time t for this particle based on delay
+            float t = clamp((uTransitionProgress - aDelay) / duration, 0.0, 1.0);
+            
+            // Smooth easing
+            t = t * t * (3.0 - 2.0 * t); 
+
+            // Interpolate position
+            vec3 currentPos = mix(position, aTargetPos, t);
+
+            // Interaction Logic (Mouse)
+            float dist = length(currentPos - uMouse);
+            float falloff = 1.0;
+            vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
+
+            vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
+            gl_PointSize = min(size * (300.0 / -mvPosition.z), 6.0);
+            gl_Position = projectionMatrix * mvPosition;
+        }
+    `;
+
+    const particleFragmentShader = `
+        varying vec3 vColor;
+        varying float vHighlight;
+
+        void main() {
+            if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
+            vec3 highlightColor = vec3(1.0, 1.0, 1.0);
+            // Intensify brightness for bloom
+            vec3 finalColor = mix(vColor, highlightColor, vHighlight) * 1.5; 
+            gl_FragColor = vec4(finalColor, 1.0);
+        }
+    `;
+
+    const atmosphereVertexShader = `
+        varying vec3 vNormal; 
+        void main(){
+            vNormal = normalize(normalMatrix * normal); 
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+        }
+    `;
+
+    const atmosphereFragmentShader = `
+        uniform vec3 glowColor; 
+        uniform float c; 
+        uniform float p; 
+        varying vec3 vNormal;
+        void main(){
+            float intensity = pow(c - dot(vNormal, vec3(0.0,0.0,1.0)), p); 
+            gl_FragColor = vec4(glowColor * intensity, 1.0);
+        }
+    `;
+
+    // --- 3. COMPONENTS ---
+
+    function Effects() {
+        const { gl, scene, camera, size } = useThree();
+        const composer = useRef();
+
+        useEffect(() => {
+            composer.current = new EffectComposer(gl);
+            
+            // Render Pass
+            const renderPass = new RenderPass(scene, camera);
+            composer.current.addPass(renderPass);
+
+            // Bloom Pass (Exact settings from original)
+            // Resolution, strength, radius, threshold
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 1.5, 0.4, 0.85);
+            bloomPass.threshold = 0;
+            bloomPass.strength = 1.0;
+            bloomPass.radius = 0.5;
+            composer.current.addPass(bloomPass);
+
+            return () => {
+                composer.current.dispose();
+            };
+        }, [gl, scene, camera, size]);
+
+        useFrame(() => {
+            if (composer.current) {
+                composer.current.render();
+            }
+        }, 1); // Render priority 1 to override default
+
+        return null;
+    }
+
+    function Particles({ state }) {
+        const count = 15000;
+        const mesh = useRef();
+        const materialRef = useRef();
+        const { mouse, camera } = useThree();
+        
+        // Data Generation (Exactly matching original logic)
+        const { positions, targetPositions, colors, sizes, delays, spherePositions, targetParticleIndex, targetParticlePos } = useMemo(() => {
+            const positions = new Float32Array(count * 3);
+            const targetPositions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            const delays = new Float32Array(count);
+            
+            const sphereRadius = 0.2;
+            const gridDimensions = 160;
+            const color = new THREE.Color();
+            const targetParticleIndex = Math.floor(Math.random() * count);
+            let targetParticlePos = new THREE.Vector3();
+
+            for (let i = 0; i < count; i++) {
+                // Sphere
+                const phi = Math.acos(-1 + (2 * i) / count);
+                const theta = Math.sqrt(count * Math.PI) * phi;
+                const x = sphereRadius * Math.cos(theta) * Math.sin(phi);
+                const y = sphereRadius * Math.sin(theta) * Math.sin(phi);
+                const z = sphereRadius * Math.cos(phi);
+                
+                positions[i*3] = x;
+                positions[i*3+1] = y;
+                positions[i*3+2] = z;
+
+                // Colors (HSL)
+                color.setHSL(i / count, 0.5, 0.7);
+                colors[i*3] = color.r;
+                colors[i*3+1] = color.g;
+                colors[i*3+2] = color.b;
+
+                // Sizes
+                sizes[i] = Math.random() * 0.2 + 0.01;
+
+                // Grid
+                const gx = (Math.random() - 0.5) * gridDimensions;
+                const gy = (Math.random() - 0.5) * gridDimensions;
+                const gz = (Math.random() - 0.5) * gridDimensions;
+                
+                targetPositions[i*3] = gx;
+                targetPositions[i*3+1] = gy;
+                targetPositions[i*3+2] = gz;
+                
+                delays[i] = Math.random() * 1.5;
+
+                if (i === targetParticleIndex) {
+                    targetParticlePos.set(gx, gy, gz);
+                    sizes[i] = 0; // Hide the target particle as it will be replaced by Earth
+                }
+            }
+            return { positions, targetPositions, colors, sizes, delays, targetParticleIndex, targetParticlePos };
+        }, []);
+
+        // Update State Context with Target Position for the Camera to find later
+        useEffect(() => {
+             // We can emit this up, or just store it in a global ref or context.
+             // For simplicity in this file, we'll attach it to the window for the machine to read, 
+             // or better, pass a callback.
+             window.__TARGET_PARTICLE_POS__ = targetParticlePos;
+        }, [targetParticlePos]);
+
+        // Animation Logic
+        useEffect(() => {
+            if (state.matches('exploding')) {
+                // 1. Expand Radius
+                gsap.to(materialRef.current.uniforms.uInteractionRadius, {
+                    value: 6.0, duration: 8, ease: "power3.inOut"
+                });
+                // 2. Transition Progress
+                gsap.to(materialRef.current.uniforms.uTransitionProgress, {
+                    value: 3.5, duration: 10.0, ease: "power2.inOut"
+                });
+            }
+        }, [state.value]);
+
+        useFrame((state) => {
+            // Mouse Interaction
+            // Project mouse onto a plane at z=0.5 (world space) to match original logic
+            if (materialRef.current) {
+                const vec = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+                vec.unproject(camera);
+                const dir = vec.sub(camera.position).normalize();
+                const distance = -camera.position.z / dir.z;
+                const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+                
+                materialRef.current.uniforms.uMouse.value.copy(pos);
+            }
+        });
+
+        return (
+            <points ref={mesh}>
+                <bufferGeometry>
+                    <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+                    <bufferAttribute attach="attributes-aTargetPos" count={count} array={targetPositions} itemSize={3} />
+                    <bufferAttribute attach="attributes-color" count={count} array={colors} itemSize={3} />
+                    <bufferAttribute attach="attributes-size" count={count} array={sizes} itemSize={1} />
+                    <bufferAttribute attach="attributes-aDelay" count={count} array={delays} itemSize={1} />
+                </bufferGeometry>
+                <shaderMaterial
+                    ref={materialRef}
+                    vertexShader={particleVertexShader}
+                    fragmentShader={particleFragmentShader}
+                    uniforms={{
+                        uMouse: { value: new THREE.Vector3(-100, -100, 0) },
+                        uInteractionRadius: { value: 1.5 },
+                        uTransitionProgress: { value: 0.0 }
+                    }}
+                    vertexColors={true}
+                    transparent={true}
+                    depthWrite={false}
+                    blending={THREE.AdditiveBlending}
+                />
+            </points>
+        );
+    }
+
+    function Earth({ visible }) {
+        // Exact textures
+        const [map, normal, specular, clouds] = useMemo(() => {
+             const tl = new THREE.TextureLoader();
+             tl.setCrossOrigin('anonymous');
+             return [
+                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg'),
+                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg'),
+                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg'),
+                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png')
+             ];
+        }, []);
+
+        const group = useRef();
+        const earthRef = useRef();
+        const cloudsRef = useRef();
+
+        // Position Earth at the target particle position
+        useLayoutEffect(() => {
+            if (window.__TARGET_PARTICLE_POS__ && group.current) {
+                group.current.position.copy(window.__TARGET_PARTICLE_POS__);
+            }
+        });
+
+        useFrame(() => {
+            if (earthRef.current) earthRef.current.rotation.y += 0.0005;
+            if (cloudsRef.current) cloudsRef.current.rotation.y += 0.0006;
+        });
+
+        return (
+            <group ref={group} visible={visible}>
+                {/* Earth */}
+                <mesh ref={earthRef}>
+                    <sphereGeometry args={[0.5, 64, 64]} />
+                    <meshPhongMaterial 
+                        map={map} bumpMap={normal} bumpScale={0.005} specularMap={specular} shininess={5} 
+                    />
+                </mesh>
+                {/* Clouds */}
+                <mesh ref={cloudsRef}>
+                    <sphereGeometry args={[0.503, 64, 64]} />
+                    <meshPhongMaterial 
+                        map={clouds} transparent={true} depthWrite={false} side={THREE.FrontSide}
+                    />
+                </mesh>
+                {/* Atmosphere (Glow) */}
+                <mesh>
+                    <sphereGeometry args={[0.53, 64, 64]} />
+                    <shaderMaterial 
+                        vertexShader={atmosphereVertexShader}
+                        fragmentShader={atmosphereFragmentShader}
+                        uniforms={{
+                            c: { value: 1.0 },
+                            p: { value: 2.0 },
+                            glowColor: { value: new THREE.Color(0x3b8cff) }
+                        }}
+                        side={THREE.BackSide}
+                        blending={THREE.AdditiveBlending}
+                        transparent={true}
+                    />
+                </mesh>
+            </group>
+        );
+    }
+
+    function CameraController({ state, controlsRef }) {
+        const { camera, controls } = useThree();
+        
+        useEffect(() => {
+            const targetPos = window.__TARGET_PARTICLE_POS__;
+
+            if (state.matches('journeying') && targetPos) {
+                // --- BEZIER CURVE JOURNEY LOGIC ---
+                const startPos = camera.position.clone();
+                const endPos = targetPos.clone().add(new THREE.Vector3(0, 0.25, 2.0)); // Earth Radius 0.5 * 4 = 2.0 offset
+                
+                // Control Point (Midpoint + Upward Arc)
+                const controlPoint = new THREE.Vector3()
+                    .lerpVectors(startPos, endPos, 0.5)
+                    .add(new THREE.Vector3(0, startPos.distanceTo(endPos) * 0.2, 0));
+
+                const curve = new THREE.QuadraticBezierCurve3(startPos, controlPoint, endPos);
+                
+                // Pivot Logic (Tween a separate object to handle 'lookAt')
+                // In the original, we tween controls.target. Here we assume no controls during flight.
+                const lookAtProxy = { x: 0, y: 0, z: 0 }; // Start looking at 0,0,0 (roughly) 
+                
+                const tl = gsap.timeline();
+                const journeyProxy = { t: 0 };
+
+                tl.to(lookAtProxy, {
+                    x: targetPos.x, y: targetPos.y, z: targetPos.z,
+                    duration: 5,
+                    ease: "power2.inOut",
+                    onUpdate: () => camera.lookAt(lookAtProxy.x, lookAtProxy.y, lookAtProxy.z)
+                }, 0);
+
+                tl.to(journeyProxy, {
+                    t: 1,
+                    duration: 7,
+                    ease: "power3.inOut",
+                    onUpdate: () => {
+                        const pt = curve.getPoint(journeyProxy.t);
+                        camera.position.copy(pt);
+                        // Keep looking at target
+                        camera.lookAt(targetPos);
+                    }
+                }, 0);
+
+            } else if (state.matches('earth') || state.matches('chart')) {
+                 // Hand off to controls if needed, or just sit tight
+                 if (controlsRef.current && targetPos) {
+                     controlsRef.current.target.copy(targetPos);
+                     // controlsRef.current.update();
+                 }
+            }
+
+        }, [state.value]);
+
+        // Scroll Zoom Logic (only when not journeying/chart)
+        const scroll = useScroll();
+        useFrame(() => {
+            if (state.matches('sphere') || state.matches('exploding') || state.matches('grid')) {
+                 // minZoom 35, maxZoom 3
+                 // scroll.offset 0 -> 1
+                 // Original: zoom = 35 - (scrollY / 60)
+                 // Here we map scroll offset to Z
+                 const z = 35 - (scroll.offset * (35-3) * 0.5); // Simplified mapping
+                 camera.position.z = Math.max(z, 3);
+            }
+        });
+
+        return null;
+    }
+
+    // --- 4. REACT CHART COMPONENT ---
+    function PopulationChart({ visible }) {
+        const canvasRef = useRef(null);
+        const chartRef = useRef(null);
+        const [stat, setStat] = useState({ year: 0, pop: 0 });
+
+        useEffect(() => {
+            if (!visible || !canvasRef.current) return;
+            if (chartRef.current) return; // Already initialized
+
+            // Parse Data
+            const rawData = CSV_DATA.trim().split('\n').slice(1).map(line => {
+                const parts = line.split(',');
+                return { x: parseInt(parts[2]), y: parseInt(parts[3]) };
+            }).filter(d => d.x <= 2025).sort((a, b) => a.x - b.x);
+
+            const ctx = canvasRef.current.getContext('2d');
+            
+            // Gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+            gradient.addColorStop(0, 'rgba(147, 51, 234, 0.6)');
+            gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
+
+            // Ind. Rev. Plugin
+            const industrialRevolutionLine = {
+                id: 'industrialRevolutionLine',
+                afterDraw: (chart) => {
+                    const year = 1740; 
+                    const meta = chart.getDatasetMeta(0);
+                    if (!meta || !chart.data.datasets[0].data.length) return;
+                    const lastDataPoint = chart.data.datasets[0].data[chart.data.datasets[0].data.length - 1];
+                    if (!lastDataPoint || lastDataPoint.x < year) return;
+                    
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+                    const x = xAxis.getPixelForValue(year);
+                    
+                    const progress = Math.min(1, (lastDataPoint.x - year) / 50);
+                    if (progress <= 0) return;
+
+                    ctx.save();
+                    ctx.globalAlpha = progress;
+                    ctx.beginPath();
+                    ctx.moveTo(x, yAxis.top);
+                    ctx.lineTo(x, yAxis.bottom);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = '#2dd4bf';
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.fillStyle = '#2dd4bf';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'top';
+                    ctx.font = "14px 'EB Garamond'";
+                    ctx.fillText("Industrial Revolution", x - 5, yAxis.top + 10);
+                    ctx.restore();
+                }
+            };
+
+            chartRef.current = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Population',
+                        data: [rawData[0]],
+                        borderColor: '#c084fc',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                plugins: [industrialRevolutionLine],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                    scales: {
+                        x: { type: 'linear', min: -10000, max: 2025, grid: { display: false }, ticks: { color: '#94a3b8', callback: v => Math.abs(v) + (v<0?' BC':'') } },
+                        y: { type: 'linear', min: 0, max: 2000000000, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8', callback: v => (v/1e9).toFixed(0)+'B' } }
+                    },
+                    plugins: { legend: {display: false} }
+                }
+            });
+
+            // Animation Loop
+            let currentYear = -10000;
+            let currentMaxY = 2000000000;
+            let animId;
+
+            function loop() {
+                let step = (currentYear < 1800) ? 30 : 1;
+                currentYear += step;
+                if (currentYear > 2025) currentYear = 2025;
+
+                // Interpolate
+                const nextIndex = rawData.findIndex(d => d.x > currentYear);
+                let val = 0;
+                if (nextIndex !== -1 && nextIndex !== 0) {
+                    const prev = rawData[nextIndex - 1];
+                    const next = rawData[nextIndex];
+                    const ratio = (currentYear - prev.x) / (next.x - prev.x);
+                    val = prev.y + (next.y - prev.y) * ratio;
+                } else {
+                    val = rawData[rawData.length-1].y;
+                }
+
+                // Update Stat
+                setStat({ year: currentYear, pop: val });
+
+                // Update Chart
+                const filtered = rawData.filter(d => d.x <= currentYear);
+                filtered.push({ x: currentYear, y: val });
+                chartRef.current.data.datasets[0].data = filtered;
+
+                // Scale Y
+                if (val > currentMaxY * 0.8) {
+                    currentMaxY += 50000000;
+                    chartRef.current.options.scales.y.max = currentMaxY;
+                }
+
+                chartRef.current.update('none');
+
+                if (currentYear < 2025) {
+                    animId = requestAnimationFrame(loop);
+                }
+            }
+
+            loop();
+
+            return () => cancelAnimationFrame(animId);
+
+        }, [visible]);
+
+        if (!visible) return null;
+
+        return (
+            <div className="fixed inset-0 z-50 flex flex-col pointer-events-auto animate-fade-in opacity-100 transition-opacity duration-500">
+                 <div className="absolute top-4 left-0 w-full text-center z-10 pointer-events-none">
+                    <h1 className="text-3xl sm:text-5xl font-thin text-white tracking-wider" style={{fontFamily: 'EB Garamond'}}>Humanity</h1>
+                    <p className="text-sky-300/70 text-sm sm:text-base mt-1 font-light">The Rise of Population</p>
+                </div>
+                
+                <div className="relative w-full h-full max-w-6xl mx-auto flex flex-col justify-center p-4 sm:p-8">
+                     <div className="absolute inset-4 sm:inset-8 bg-slate-900/30 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl -z-10"></div>
+                     <div className="relative w-full h-[70vh] sm:h-[80vh]">
+                        <canvas ref={canvasRef} id="popChart"></canvas>
+                        <div className="absolute top-4 left-4 sm:left-8 pointer-events-none">
+                            <div className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">
+                                Year {Math.abs(stat.year)}{stat.year < 0 ? ' BC' : ''}
+                            </div>
+                            <div className="text-3xl sm:text-5xl text-white font-medium tabular-nums" 
+                                 style={{fontFamily: 'EB Garamond', textShadow: '0 0 20px rgba(56, 189, 248, 0.5)'}}>
+                                {stat.pop > 1e9 ? (stat.pop/1e9).toFixed(2) + 'B' : (stat.pop/1e6).toFixed(1) + 'M'}
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    // --- 5. MAIN LAYOUT ---
+
+    function Experience() {
+        const [state, send] = useMachine(storyMachine);
+        const scroll = useScroll();
+        const controlsRef = useRef();
+
+        // Scroll Sync
+        useFrame(() => {
+            // We use raw scroll offset ranges to trigger transitions
+            // These ranges are approximated to match the "feeling" of the original pixel values
+            const offset = scroll.offset; // 0 to 1
+            
+            // Original: > 500px (approx 0.15 of height) -> Explode
+            if (state.matches('sphere') && offset > 0.15) {
+                send({ type: 'SCROLL_EXPLODE' });
+            }
+            // Original: > 1500px (approx 0.45 of height) -> Journey
+            if (state.matches('grid') && offset > 0.45) {
+                send({ type: 'SCROLL_JOURNEY' });
+            }
+            // Original: > 3000px (approx 0.85 of height) -> Chart
+            if (state.matches('earth') && offset > 0.85) {
+                send({ type: 'SCROLL_CHART' });
+            }
+        });
+
+        return (
+            <>
+                <Effects /> {/* POST PROCESSING */}
+
+                <directionalLight position={[5, 3, 5]} intensity={2} />
+                <ambientLight intensity={0.5} />
+                <fog attach="fog" args={['#111', 10, 20]} />
+
+                <Particles state={state} />
+                
+                {/* Only show Earth when flying or arrived */}
+                <Earth visible={state.matches('journeying') || state.matches('earth') || state.matches('chart')} />
+
+                <CameraController state={state} controlsRef={controlsRef} />
+
+                <Scroll html style={{ width: '100%' }}>
+                    
+                    {/* 1. Intro */}
+                    <div className="h-screen flex flex-col items-center justify-center">
+                        <div className={`caption-card transition-opacity duration-700 ${state.matches('sphere') ? 'opacity-100' : 'opacity-0'}`}>
+                            Au début, l’univers tout entier tenait ici.
+                        </div>
+                        <div className={`absolute bottom-[8%] scroll-arrow ${state.matches('sphere') ? 'opacity-100' : 'opacity-0'}`}>
+                            &#x25BD;
+                        </div>
+                    </div>
+
+                    {/* Spacer for Explosion */}
+                    <div className="h-[100vh]"></div>
+
+                    {/* 2. Earth Caption */}
+                    <div className="h-screen flex flex-col items-center justify-center pointer-events-none">
+                        <div className={`caption-card transition-opacity duration-1000 ${state.matches('earth') ? 'opacity-100' : 'opacity-0'}`}>
+                             Maintenant, toute l’humanité se tient là.
+                        </div>
+                    </div>
+                    
+                    {/* Spacer for Chart */}
+                    <div className="h-[100vh]"></div>
+                    <div className="h-[50vh]"></div>
+
+                </Scroll>
+                
+                {/* Chart Overlay (Separate from R3F Scroll to handle its own interaction/layering) */}
+                <Html fullscreen style={{pointerEvents: state.matches('chart') ? 'auto' : 'none'}}>
+                    <PopulationChart visible={state.matches('chart')} />
+                </Html>
+            </>
+        );
+    }
+
+    function App() {
+        return (
+            <Canvas dpr={[1, 2]} gl={{ toneMapping: THREE.ReinhardToneMapping, outputColorSpace: THREE.SRGBColorSpace }}>
+                <ScrollControls pages={3.5} damping={0.2}> 
+                   <Experience />
+                </ScrollControls>
+            </Canvas>
+        );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
