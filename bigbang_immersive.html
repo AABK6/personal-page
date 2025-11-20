@@ -320,8 +320,9 @@ World,OWID_WRL,2100,10180160680`;
 
         // Animation
         useEffect(() => {
-            // Check if we are in exploding OR ANY subsequent state to keep particles expanded
-            if (state.matches('exploding') || state.matches('grid') || state.matches('journeying') || state.matches('earth')) {
+            // Fix: Only trigger the animation sequence ONCE when entering the 'exploding' state.
+            // This prevents the animation from re-starting or extending duration when state changes to 'grid'.
+            if (state.matches('exploding')) {
                 const mat = materialRef.current;
                 if(mat) {
                     gsap.to(mat.uniforms.uInteractionRadius, { value: 6.0, duration: 8, ease: "power3.inOut" });
@@ -547,6 +548,11 @@ World,OWID_WRL,2100,10180160680`;
         const [state, send] = useMachine(storyMachine);
         const scroll = useScroll();
 
+        // Debug Logging
+        useEffect(() => {
+            console.log("Current State:", state.value);
+        }, [state.value]);
+
         // Remove Loader when ready
         useEffect(() => {
             send({ type: 'LOADED' });
@@ -596,7 +602,8 @@ World,OWID_WRL,2100,10180160680`;
                     <div className="h-[150vh]"></div>
                 </Scroll>
 
-                <Html fullscreen style={{pointerEvents: state.matches('chart') ? 'auto' : 'none'}}>
+                <Html fullscreen portal={document.body} style={{pointerEvents: 'none'}}> 
+                    {/* We use portal to ensure it sits on top of everything, but we manage pointer events in the child */}
                     <PopulationChart visible={state.matches('chart')} />
                 </Html>
             </>
