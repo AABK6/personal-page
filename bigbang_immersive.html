@@ -210,7 +210,10 @@ World,OWID_WRL,2100,10180160680`;
         varying vec3 vColor;
         varying float vHighlight;
         void main() {
-            if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
+            // Circular shape logic was missing!
+            vec2 coord = gl_PointCoord - vec2(0.5);
+            if(length(coord) > 0.5) discard;
+            
             vec3 highlightColor = vec3(1.0, 1.0, 1.0);
             vec3 finalColor = mix(vColor, highlightColor, vHighlight) * 1.5; 
             gl_FragColor = vec4(finalColor, 1.0);
@@ -317,10 +320,13 @@ World,OWID_WRL,2100,10180160680`;
 
         // Animation
         useEffect(() => {
-            if (state.matches('exploding')) {
+            // Check if we are in exploding OR ANY subsequent state to keep particles expanded
+            if (state.matches('exploding') || state.matches('grid') || state.matches('journeying') || state.matches('earth')) {
                 const mat = materialRef.current;
-                gsap.to(mat.uniforms.uInteractionRadius, { value: 6.0, duration: 8, ease: "power3.inOut" });
-                gsap.to(mat.uniforms.uTransitionProgress, { value: 3.5, duration: 10.0, ease: "power2.inOut" });
+                if(mat) {
+                    gsap.to(mat.uniforms.uInteractionRadius, { value: 6.0, duration: 8, ease: "power3.inOut" });
+                    gsap.to(mat.uniforms.uTransitionProgress, { value: 3.5, duration: 10.0, ease: "power2.inOut" });
+                }
             }
         }, [state.value]);
 
