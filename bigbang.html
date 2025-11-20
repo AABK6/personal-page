@@ -88,7 +88,7 @@
         }
         .caption-card{
             position:fixed;left:50%;top:15%;transform:translateX(-50%);
-            z-index:150;
+            z-index:250;
             background:rgba(0,0,0,.25);
              -webkit-backdrop-filter:blur(4px);
             backdrop-filter:blur(4px);
@@ -103,8 +103,8 @@
 
         #caption-earth{top:auto; bottom: 12%;}             /* will fade in later */
         #caption-history-1, #caption-history-2 {
-            top: auto;
-            bottom: 12%;
+            top: 25%; /* Adjusted position to appear higher */
+            bottom: auto; /* Remove bottom positioning */
             opacity: 0;
             pointer-events: none;
         }
@@ -162,10 +162,10 @@
     <div id="caption-earth" class="caption-card opacity-0 pointer-events-none">
       Maintenant, toute l’humanité se tient là.
     </div>
-    <div id="caption-history-1" class="caption-card">
+    <div id="caption-history-1" class="caption-card opacity-0 pointer-events-none">
         Pendant longtemps, nous n'étions pas très nombreux.
     </div>
-    <div id="caption-history-2" class="caption-card">
+    <div id="caption-history-2" class="caption-card opacity-0 pointer-events-none">
         Puis soudain, tout changea.
     </div>
 
@@ -214,15 +214,8 @@
                 </div>
             </div>
 
-            <!-- Controls -->
-            <div class="w-full max-w-2xl mx-auto mt-4 z-10 flex items-center gap-4 bg-slate-900/60 backdrop-blur-md p-3 rounded-full border border-white/10 shadow-xl">
-                <button id="btn-play" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-sky-500 hover:bg-sky-400 text-white rounded-full transition-all shadow-[0_0_15px_rgba(14,165,233,0.5)] hover:scale-105 flex-shrink-0">
-                    <svg id="icon-play" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></svg>
-                    <svg id="icon-pause" class="hidden" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                    <svg id="icon-replay" class="hidden" width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></svg>
-                </button>
-                <input type="range" id="slider-year" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-400 hover:accent-sky-300">
-            </div>
+            <!-- Controls REMOVED -->
+
         </div>
     </div>
 
@@ -237,7 +230,7 @@
         let earthMesh, cloudsMesh, atmosphereMesh;
         let mouse = new THREE.Vector2(-100, -100); // Off-screen initially
         const particleCount = 15000; // Number of particles in the system
-        const sphereRadius = 3; // radius of the sphere for initial particle positions
+        const sphereRadius = 0.2; // radius of the sphere for initial particle positions
         const gridDimensions = 160; // size of the grid area
         const EARTH_RADIUS = 0.5;
         const pointers = new Map();
@@ -297,9 +290,9 @@
 
         function handleScroll(scrollY) {
             // Handles scroll-based transitions and camera zoom
-            const explosionThreshold = 500; // When to trigger sphere-to-grid
+            const explosionThreshold = 1500; // When to trigger sphere-to-grid (Increased from 500)
             const journeyThreshold = 1500;  // When to trigger camera journey
-            const maxZoom = 10;
+            const maxZoom = 3;   // Maximum zoom allowed (Reduced from 10)
             const minZoom = 35;
 
             // Only control zoom if we are not on the final journey
@@ -320,15 +313,9 @@
                 
                 // Fade out the Earth caption and the scroll arrow
                 gsap.to([captionEarth, scrollArrow], {opacity: 0, duration: 0.6, ease:"power2.in"});
-            }
 
-            if (animationState === 'chart') {
-                const chartScroll = scrollY - chartThreshold;
-                const progress = Math.min(1, Math.max(0, chartScroll / (document.body.scrollHeight - window.innerHeight - chartThreshold)));
-                
-                // Dispatch a custom event with the progress
-                const event = new CustomEvent('update-chart', { detail: { progress } });
-                window.dispatchEvent(event);
+                // Trigger auto-play for the chart
+                window.dispatchEvent(new Event('start-chart-animation'));
             }
         }
 
@@ -585,7 +572,7 @@
                     vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
 
                     vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
-                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_PointSize = min(size * (300.0 / -mvPosition.z), 6.0);
                     gl_Position = projectionMatrix * mvPosition;
                 }
             `;
@@ -705,20 +692,6 @@
                         // Update the official OrbitControls target and sync
                         controls.target.copy(targetParticlePosition);
                         controls.update();
-                        
-                        // AUTO-GUIDE: If user hasn't scrolled enough, gently push them to the chart
-                        if (targetScrollY < chartThreshold) {
-                             // Animate the scroll variable itself
-                             const scrollProxy = { val: targetScrollY };
-                             gsap.to(scrollProxy, {
-                                 val: chartThreshold + 100, // Add a bit more buffer
-                                 duration: 1.5,             // Faster transition
-                                 ease: "power2.inOut",
-                                 onUpdate: () => {
-                                     targetScrollY = scrollProxy.val;
-                                 }
-                             });
-                        }
                     }});
                 }
             });
@@ -868,22 +841,23 @@ World,OWID_WRL,2100,10180160680`;
             let isPlaying = false;
             let animationFrameId;
             let chart;
+            let currentMaxY = 2000000000; // Start at 2 Billion
+            const captionHistory1 = document.getElementById('caption-history-1');
+            const captionHistory2 = document.getElementById('caption-history-2');
 
             // Initialize Chart
             const ctx = document.getElementById('popChart').getContext('2d');
             
-            // Create gradient
+            // Create gradient (Purple)
             const gradient = ctx.createLinearGradient(0, 0, 0, 600);
-            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.6)'); // Sky-500
-            gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
+            gradient.addColorStop(0, 'rgba(147, 51, 234, 0.6)'); // Purple-600
+            gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
 
             // Custom Plugin for Industrial Revolution Line
             const industrialRevolutionLine = {
                 id: 'industrialRevolutionLine',
                 afterDraw: (chart) => {
-                    const year = 1760;
-                    // Check if we have reached this year in the animation
-                    // We access the dataset directly from the chart object safely
+                    const year = 1740; // Threshold year
                     const meta = chart.getDatasetMeta(0);
                     if (!meta || !chart.data.datasets[0].data.length) return;
                     
@@ -895,7 +869,7 @@ World,OWID_WRL,2100,10180160680`;
                     const yAxis = chart.scales.y;
                     const x = xAxis.getPixelForValue(year);
                     
-                    // Calculate opacity based on how far past the year we are (fade in effect)
+                    // Fade in
                     const progress = Math.min(1, (lastDataPoint.x - year) / 50);
                     if (progress <= 0) return;
 
@@ -905,12 +879,12 @@ World,OWID_WRL,2100,10180160680`;
                     ctx.moveTo(x, yAxis.top);
                     ctx.lineTo(x, yAxis.bottom);
                     ctx.lineWidth = 1;
-                    ctx.strokeStyle = '#38bdf8'; // Sky-400
+                    ctx.strokeStyle = '#2dd4bf'; // Teal-400
                     ctx.setLineDash([5, 5]);
                     ctx.stroke();
 
                     // Label
-                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillStyle = '#2dd4bf';
                     ctx.textAlign = 'right';
                     ctx.textBaseline = 'top';
                     ctx.font = "14px 'EB Garamond'";
@@ -924,8 +898,8 @@ World,OWID_WRL,2100,10180160680`;
                 data: {
                     datasets: [{
                         label: 'Population',
-                        data: [rawData[0]], // Start with just the first point
-                        borderColor: '#38bdf8', 
+                        data: [rawData[0]], 
+                        borderColor: '#c084fc', // Purple-400
                         backgroundColor: gradient,
                         borderWidth: 2,
                         pointRadius: 0,
@@ -957,7 +931,7 @@ World,OWID_WRL,2100,10180160680`;
                         y: {
                             type: 'linear',
                             min: 0,
-                            max: 10000000000,
+                            max: currentMaxY, // Dynamic Max
                             grid: { color: 'rgba(255,255,255,0.1)' },
                             ticks: {
                                 color: '#94a3b8',
@@ -970,7 +944,7 @@ World,OWID_WRL,2100,10180160680`;
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.9)',
                             titleColor: '#94a3b8',
-                            bodyColor: '#38bdf8',
+                            bodyColor: '#c084fc',
                             callbacks: {
                                 title: (items) => 'Year ' + Math.abs(items[0].parsed.x) + (items[0].parsed.x < 0 ? ' BC' : ''),
                                 label: (item) => (item.parsed.y / 1e9).toFixed(2) + ' Billion'
@@ -981,17 +955,8 @@ World,OWID_WRL,2100,10180160680`;
             });
 
             // DOM Elements
-            const slider = document.getElementById('slider-year');
-            const btnPlay = document.getElementById('btn-play');
-            const iconPlay = document.getElementById('icon-play');
-            const iconPause = document.getElementById('icon-pause');
-            const iconReplay = document.getElementById('icon-replay');
             const statYear = document.getElementById('stat-year');
             const statPop = document.getElementById('stat-pop');
-
-            slider.min = minYear;
-            slider.max = maxYear;
-            slider.value = minYear;
 
             function formatPop(n) {
                 if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
@@ -999,7 +964,6 @@ World,OWID_WRL,2100,10180160680`;
                 return n.toLocaleString();
             }
 
-            // Interpolation Function
             function getDataAtYear(year) {
                 const nextIndex = rawData.findIndex(d => d.x > year);
                 if (nextIndex === -1) return rawData[rawData.length - 1];
@@ -1015,108 +979,78 @@ World,OWID_WRL,2100,10180160680`;
             }
 
             function updateDisplay(year) {
-                // Update Slider & Text
-                slider.value = year;
+                // Update Text
                 statYear.innerText = Math.abs(year) + (year < 0 ? ' BC' : '');
                 const currentData = getDataAtYear(year);
                 statPop.innerText = formatPop(currentData.y);
 
-                // Update Chart Viewport
-                // Technique: We filter the dataset itself to simulate "growing"
-                const filteredData = rawData.filter(d => d.x <= year);
-                // Add current interpolated point
-                filteredData.push(currentData);
+                // Subtitles & Events
+                if (year > 1740) {
+                   if (captionHistory1.style.opacity != '0') {
+                       gsap.to(captionHistory1, {opacity: 0, duration: 1});
+                       gsap.to(captionHistory2, {opacity: 0.6, duration: 1, delay: 0.5});
+                   }
+                }
+
+                // Dynamic Y-Axis Breathing
+                // If we approach the top, expand
+                if (currentData.y > currentMaxY * 0.8) {
+                    currentMaxY += 50000000; // Grow smoothly
+                    chart.options.scales.y.max = currentMaxY;
+                }
                 
+                // Update Chart Data
+                const filteredData = rawData.filter(d => d.x <= year);
+                filteredData.push(currentData);
                 chart.data.datasets[0].data = filteredData;
-                chart.update('none'); // 'none' mode for performance
+                
+                chart.update('none'); 
             }
 
             function play() {
+                if (isPlaying) return;
                 isPlaying = true;
-                updateIcon();
-                loop();
-            }
-
-            function pause() {
-                isPlaying = false;
-                updateIcon();
-                cancelAnimationFrame(animationFrameId);
-            }
-
-            function updateIcon() {
-                iconPlay.classList.add('hidden');
-                iconPause.classList.add('hidden');
-                iconReplay.classList.add('hidden');
                 
-                if (currentYear >= maxYear) {
-                    iconReplay.classList.remove('hidden');
-                } else if (isPlaying) {
-                    iconPause.classList.remove('hidden');
-                } else {
-                    iconPlay.classList.remove('hidden');
-                }
+                // Start Subtitles
+                gsap.to(document.getElementById('caption-earth'), {opacity: 0, duration: 1});
+                gsap.to(captionHistory1, {opacity: 0.6, duration: 1, delay: 1});
+
+                loop();
             }
 
             function loop() {
                 if (!isPlaying) return; 
                 
                 // Variable speed logic
-                let step = 0.5; // Base step for slowest part (modern era)
-                if (currentYear < 1700) step = 25;      // Ancient history: Very fast (50 -> 25)
-                else if (currentYear < 1800) step = 2.5;  // Pre-Industrial: Medium (5 -> 2.5)
-                else if (currentYear < 1950) step = 1;  // Industrial: Slower (2 -> 1)
-                else step = 0.5;                        // Modern: Real-time detail (1 -> 0.5)
+                let step;
+                if (currentYear < 1800) {
+                    step = 30; // Fast for history
+                } else {
+                    step = 1;  // Slow for modern era "braking effect"
+                }
 
                 currentYear += step;
 
                 if (currentYear >= maxYear) {
                     currentYear = maxYear;
-                    pause();
+                    updateDisplay(currentYear);
+                    isPlaying = false; // Stop at end
                 } else {
+                    updateDisplay(currentYear);
                     animationFrameId = requestAnimationFrame(loop);
                 }
-                updateDisplay(currentYear);
             }
 
-            // Listeners
-            btnPlay.addEventListener('click', () => {
-                if (currentYear >= maxYear) {
-                    currentYear = minYear;
-                    play();
-                } else if (isPlaying) {
-                    pause();
-                } else {
+            // Listen for Trigger
+            window.addEventListener('start-chart-animation', () => {
+                if(!isPlaying && currentYear < maxYear) {
                     play();
                 }
-            });
-
-            slider.addEventListener('input', (e) => {
-                pause();
-                currentYear = parseInt(e.target.value);
-                updateDisplay(currentYear);
-            });
-            
-            // SCROLL SYNCHRONIZATION
-            // This links the scroll position (passed from the main script) to the chart year.
-            window.addEventListener('update-chart', (e) => {
-               if (isPlaying) return; // Don't override if user is manually playing
-               
-               const progress = e.detail.progress; // 0 to 1
-               // Map progress to year range
-               let targetYear = minYear + (maxYear - minYear) * progress;
-               targetYear = Math.floor(targetYear);
-               
-               // Clamp
-               if (targetYear < minYear) targetYear = minYear;
-               if (targetYear > maxYear) targetYear = maxYear;
-               
-               currentYear = targetYear;
-               updateDisplay(currentYear);
             });
 
             // Initial render
             updateDisplay(minYear);
-            console.log("Chart.js initialized successfully.");
+            console.log("Chart.js configured for cinematic playback.");
 
         })();
     </script>
