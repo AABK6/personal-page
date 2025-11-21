@@ -3,57 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Big Bang - Immersive (Option A)</title>
+  <title>Big&nbsp;Bang</title>
+
+  <!-- Tailwind for quick utility classes -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
-  
+
+  <!-- Chart.js for the population overlay -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- GSAP global (needed by the Chart overlay script) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Optional favicon to silence the 404 -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+
   <style>
-    body, html { margin: 0; padding: 0; background: #111; color: white; overflow: hidden; }
-    #root { width: 100vw; height: 100vh; }
-    
-    /* UI Overlays matching original exactly */
+    body {
+      margin: 0;
+      background-color: #111;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    #root {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      position: sticky;
+      top: 0;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #111;
+      z-index: 100;
+      transition: opacity 0.5s ease-out;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+
+    .info-panel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      max-width: 300px;
+      font-size: 14px;
+      line-height: 1.5;
+      z-index: 90;
+    }
+
     .caption-card {
-        font-family: "EB Garamond", serif;
-        background: rgba(0,0,0,0.25);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        padding: .55rem .9rem;
-        border-radius: .65rem;
-        text-align: center;
-        font-size: clamp(14px, 4vw, 18px);
-        letter-spacing: .2px;
-        line-height: 1.35;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        pointer-events: none;
-        color: white;
-        opacity: 0.6; /* Base opacity from original CSS */
+      position: fixed;
+      left: 50%;
+      top: 15%;
+      transform: translateX(-50%);
+      z-index: 250;
+      background: rgba(0, 0, 0, 0.25);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      padding: .55rem .9rem;
+      border-radius: .65rem;
+      font-family: "EB Garamond", serif;
+      font-size: clamp(14px, 4vw, 18px);
+      font-weight: 400;
+      letter-spacing: .2px;
+      line-height: 1.35;
+      text-align: center;
+      max-width: 88vw;
+      white-space: normal;
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    #caption-earth {
+      top: auto;
+      bottom: 12%;
+    }
+
+    #caption-history-1,
+    #caption-history-2 {
+      top: 25%;
+      bottom: auto;
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+      .caption-card {
+        font-size: clamp(12px, 3vw, 16px);
+      }
+
+      #caption-earth,
+      #caption-history-1,
+      #caption-history-2 {
+        bottom: 15%;
+      }
     }
 
     .scroll-arrow {
-        font-size: 26px;
-        color: #fff;
-        opacity: .35;
-        animation: arrowPulse 1.6s ease-in-out infinite alternate;
+      position: fixed;
+      left: 50%;
+      bottom: 8%;
+      transform: translateX(-50%);
+      z-index: 150;
+      font-size: 26px;
+      color: #fff;
+      opacity: .35;
+      animation: arrowPulse 1.6s ease-in-out infinite alternate;
+      pointer-events: none;
     }
 
     @keyframes arrowPulse {
-        from { transform: translateY(0); }
-        to { transform: translateY(8px); }
+      from {
+        transform: translate(-50%, 0);
+      }
+
+      to {
+        transform: translate(-50%, 8px);
+      }
     }
 
-    /* Loader Styles */
-    #loader {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        display: flex; justify-content: center; align-items: center;
-        background-color: #111; z-index: 9999; transition: opacity 0.5s ease-out;
+    #population-chart-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 200;
     }
-    .animate-spin { animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
 
-    canvas#popChart { width: 100% !important; height: 100% !important; }
+    canvas#popChart {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Primordial dot overlay is now a 3D sprite; CSS reserve for fallback */
   </style>
 
-  <!-- Robust Import Map: All dependencies from esm.sh to ensure shared Three.js instance -->
+  <!-- ESM imports for the Option A + State architecture -->
   <script type="importmap">
   {
     "imports": {
@@ -65,45 +177,690 @@
       "xstate": "https://esm.sh/xstate@5.7.0",
       "@xstate/react": "https://esm.sh/@xstate/react@4.1.0?external=react,xstate",
       "gsap": "https://esm.sh/gsap@3.12.5",
-      "chart.js/auto": "https://esm.sh/chart.js@4.4.1/auto",
       "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/"
     }
   }
   </script>
-  
+
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-  <!-- HTML Loader (Outside React to show immediately) -->
+  <!-- Loader -->
   <div id="loader">
-      <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
-          <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
-      </svg>
+    <svg width="32" height="32" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="animate-spin">
+      <path d="M11.5262 2.4796C11.5262 1.29002 12.4905 0.325683 13.6801 0.325684C14.8696 0.325684 15.834 1.29002 15.834 2.4796C15.834 3.66917 14.8696 4.63352 13.6801 4.63352C13.2211 4.63352 12.7956 4.48996 12.4462 4.24529L9.25663 7.35216C9.13483 7.10737 8.94113 6.90284 8.70224 6.7646L11.8825 3.66673C11.6573 3.32637 11.5262 2.9183 11.5262 2.4796ZM7.40672 6.6878L4.30542 3.66677C4.53068 3.3264 4.66184 2.91832 4.66184 2.4796C4.66184 1.29002 3.6975 0.325683 2.50793 0.325683C1.31835 0.325683 0.354011 1.29002 0.35401 2.4796C0.35401 3.66917 1.31835 4.63352 2.50793 4.63352C2.96689 4.63352 3.39232 4.48997 3.74178 4.24532L6.78254 7.20738C6.93287 6.97972 7.14989 6.79781 7.40672 6.6878ZM6.75617 8.66022L3.74182 11.5964C3.39236 11.3518 2.96691 11.2082 2.50793 11.2082C1.31836 11.2082 0.354016 12.1725 0.354016 13.3621C0.354016 14.5517 1.31836 15.516 2.50793 15.516C3.69751 15.516 4.66185 14.5517 4.66185 13.3621C4.66185 12.9234 4.53069 12.5153 4.30545 12.175L7.35952 9.20009C7.10816 9.0815 6.89814 8.89286 6.75617 8.66022ZM8.74484 9.11888L11.8823 12.1752C11.6571 12.5155 11.5259 12.9236 11.5259 13.3623C11.5259 14.5519 12.4903 15.5163 13.6798 15.5163C14.8694 15.5163 15.8337 14.5519 15.8337 13.3623C15.8337 12.1728 14.8694 11.2084 13.6798 11.2084C13.2209 11.2084 12.7954 11.352 12.446 11.5966L9.27842 8.51105C9.16543 8.76117 8.97861 8.97251 8.74484 9.11888Z" fill="white"></path>
+    </svg>
+  </div>
+
+  <div id="caption-intro" class="caption-card opacity-0 pointer-events-none">
+    Au début, l’univers tout entier tenait ici.
+  </div>
+
+  <div id="caption-earth" class="caption-card opacity-0 pointer-events-none">
+    Maintenant, toute l’humanité se tient là.
+  </div>
+  <div id="caption-history-1" class="caption-card opacity-0 pointer-events-none">
+    Pendant longtemps, nous n'étions pas très nombreux.
+  </div>
+  <div id="caption-history-2" class="caption-card opacity-0 pointer-events-none">
+    Puis soudain, tout changea.
+  </div>
+
+  <div id="scroll-arrow" class="scroll-arrow">
+    &#x25BD;
+  </div>
+
+  <div id="info-panel" class="info-panel opacity-0 transition-opacity duration-500">
+    <h2 class="font-bold text-lg mb-2">Interactive Particle System</h2>
+    <p>This animation replicates the two visual effects you requested from the U x Machina website.</p>
+    <ul class="list-disc list-inside mt-2">
+      <li>Move your mouse to interact with the particles.</li>
+      <li>Click and drag to rotate the camera.</li>
+      <li>Scroll to zoom in and out.</li>
+    </ul>
+    <p class="mt-2 text-xs text-gray-400">This is a simplified replication for demonstration.</p>
   </div>
 
   <div id="root"></div>
 
+  <!-- Population Chart Container -->
+  <div id="population-chart-container">
+    <div class="absolute top-4 left-0 w-full text-center z-10 pointer-events-none">
+      <h1 class="text-3xl sm:text-5xl font-thin text-white tracking-wider" style="font-family: 'EB Garamond', serif;">Humanity</h1>
+      <p class="text-sky-300/70 text-sm sm:text-base mt-1 font-light">The Rise of Population</p>
+    </div>
+
+    <div class="relative w-full h-full max-w-6xl mx-auto flex flex-col justify-center p-4 sm:p-8">
+      <div class="absolute inset-4 sm:inset-8 bg-slate-900/30 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl -z-10"></div>
+
+      <div class="relative w-full h-[70vh] sm:h-[80vh]">
+        <canvas id="popChart"></canvas>
+
+        <div class="absolute top-4 left-4 sm:left-8 pointer-events-none">
+          <div class="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Year <span id="stat-year">0</span></div>
+          <div id="stat-pop" class="text-3xl sm:text-5xl text-white font-medium tabular-nums" style="font-family: 'EB Garamond', serif; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);">
+            0
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 300vh;"></div>
+
   <script type="text/babel" data-type="module">
-    import React, { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
+    import React, { useEffect, useMemo, useRef } from 'react';
     import { createRoot } from 'react-dom/client';
     import * as THREE from 'three';
     import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-    import { ScrollControls, Scroll, useScroll, Html } from '@react-three/drei';
-    import { createMachine, assign } from 'xstate';
+    import { OrbitControls } from '@react-three/drei';
+    import { createMachine } from 'xstate';
     import { useMachine } from '@xstate/react';
     import gsap from 'gsap';
-    import Chart from 'chart.js/auto';
-    
-    // CORRECTLY IMPORT POST-PROCESSING FROM SAME SOURCE (esm.sh)
+
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-    import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
-    // Register with R3F
-    extend({ EffectComposer, RenderPass, UnrealBloomPass, ShaderPass });
+    extend({ EffectComposer, RenderPass, UnrealBloomPass });
 
-    const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
+    const EARTH_RADIUS = 0.5;
+    const EXPLOSION_THRESHOLD = 1500;
+    const JOURNEY_THRESHOLD = 1500;
+    const CHART_THRESHOLD = 2200;
+    const SCROLL_SPEED = 0.07;
+
+    const storyMachine = createMachine({
+      id: 'story',
+      initial: 'loading',
+      states: {
+        loading: { on: { LOADED: 'sphere' } },
+        sphere: { on: { EXPLODE: 'exploding' } },
+        exploding: { on: { GRID: 'grid' } },
+        grid: { on: { JOURNEY: 'journeying' } },
+        journeying: { on: { FOCUSED: 'focused' } },
+        focused: { on: { CHART: 'chart' } },
+        chart: { type: 'final' }
+      }
+    });
+
+    const particleVertexShader = `
+      attribute float size;
+      attribute vec3 aTargetPos;
+      attribute float aDelay;
+      varying vec3 vColor;
+      uniform vec3 uMouse;
+      uniform float uInteractionRadius;
+      uniform float uTransitionProgress;
+      varying float vHighlight;
+      void main() {
+          vColor = color;
+          float duration = 1.5; 
+          float t = clamp((uTransitionProgress - aDelay) / duration, 0.0, 1.0);
+          t = t * t * (3.0 - 2.0 * t); 
+          vec3 currentPos = mix(position, aTargetPos, t);
+          float dist = length(currentPos - uMouse);
+          float falloff = 1.0;
+          vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
+          vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
+          gl_PointSize = min(size * (300.0 / -mvPosition.z), 6.0);
+          gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const particleFragmentShader = `
+      varying vec3 vColor;
+      varying float vHighlight;
+      void main() {
+          // Circular point + soft edge
+          vec2 uv = gl_PointCoord - vec2(0.5);
+          float dist = length(uv);
+          float alpha = 1.0 - smoothstep(0.45, 0.5, dist); // fade to transparent at edge
+          if (alpha <= 0.0) discard;
+          vec3 highlightColor = vec3(1.0, 1.0, 1.0);
+          vec3 finalColor = mix(vColor, highlightColor, vHighlight) * 1.5; 
+          gl_FragColor = vec4(finalColor, alpha);
+      }
+    `;
+
+    const atmosphereVertexShader = `
+      varying vec3 vNormal; 
+      void main(){
+          vNormal = normalize(normalMatrix * normal); 
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+      }
+    `;
+
+    const atmosphereFragmentShader = `
+      uniform vec3 glowColor; uniform float c; uniform float p; varying vec3 vNormal;
+      void main(){
+          float intensity = pow(c - dot(vNormal, vec3(0.0,0.0,1.0)), p); 
+          gl_FragColor = vec4(glowColor * intensity, 1.0);
+      }
+    `;
+
+    const globalStore = {
+      targetPos: new THREE.Vector3()
+    };
+
+    function Effects() {
+      const { gl, scene, camera, size } = useThree();
+      const composer = useRef();
+
+      useEffect(() => {
+        composer.current = new EffectComposer(gl);
+        composer.current.addPass(new RenderPass(scene, camera));
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.0;
+        bloomPass.radius = 0.5;
+        composer.current.addPass(bloomPass);
+        composer.current.setSize(size.width, size.height);
+        return () => composer.current?.dispose();
+      }, [gl, scene, camera, size]);
+
+      useEffect(() => {
+        composer.current?.setSize(size.width, size.height);
+      }, [size]);
+
+      useFrame(() => composer.current?.render(), 1);
+      return null;
+    }
+
+    function Particles({ state, onGridReady }) {
+      const { mouse, camera } = useThree();
+      const pointsRef = useRef();
+      const materialRef = useRef();
+      const geometryRef = useRef();
+      const exploded = useRef(false);
+
+      const uniforms = useMemo(() => ({
+        uMouse: { value: new THREE.Vector3(-100, -100, 0) },
+        uInteractionRadius: { value: 1.5 },
+        uTransitionProgress: { value: 0.0 }
+      }), []);
+
+      const data = useMemo(() => {
+        const particleCount = 15000;
+        const sphereRadius = 0.2;
+        const gridDimensions = 160;
+
+        const positions = new Float32Array(particleCount * 3);
+        const targetPositions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        const delays = new Float32Array(particleCount);
+        const color = new THREE.Color();
+
+        const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+        const targetIdx = Math.floor(Math.random() * particleCount);
+
+        for (let i = 0; i < particleCount; i++) {
+          // Fibonacci sphere on the surface with a micro jitter to avoid banding
+          const t = (i + 0.5) / particleCount;
+          const inclination = Math.acos(1 - 2 * t);
+          const azimuth = goldenAngle * i;
+          const jitter = (Math.random() - 0.5) * 0.004;
+          const r = sphereRadius + jitter;
+
+          const x = r * Math.sin(inclination) * Math.cos(azimuth);
+          const y = r * Math.sin(inclination) * Math.sin(azimuth);
+          const z = r * Math.cos(inclination);
+
+          positions[i * 3] = x;
+          positions[i * 3 + 1] = y;
+          positions[i * 3 + 2] = z;
+
+          const gx = (Math.random() - 0.5) * gridDimensions;
+          const gy = (Math.random() - 0.5) * gridDimensions;
+          const gz = (Math.random() - 0.5) * gridDimensions;
+          targetPositions[i * 3] = gx;
+          targetPositions[i * 3 + 1] = gy;
+          targetPositions[i * 3 + 2] = gz;
+
+          color.setHSL(i / particleCount, 0.5, 0.7);
+          colors[i * 3] = color.r;
+          colors[i * 3 + 1] = color.g;
+          colors[i * 3 + 2] = color.b;
+
+          sizes[i] = Math.random() * 0.2 + 0.01;
+          delays[i] = Math.random() * 1.5;
+
+          if (i === targetIdx) {
+            globalStore.targetPos.set(gx, gy, gz);
+            sizes[i] = 0;
+          }
+        }
+
+        return { particleCount, positions, targetPositions, colors, sizes, delays };
+      }, []);
+
+      useEffect(() => {
+        if (pointsRef.current) {
+          pointsRef.current.frustumCulled = false;
+        }
+        if (geometryRef.current) {
+          geometryRef.current.computeBoundingSphere();
+        }
+        return () => {
+          geometryRef.current?.dispose();
+          materialRef.current?.dispose();
+        };
+      }, []);
+
+      useEffect(() => {
+        if (!state.matches('exploding') || exploded.current || !materialRef.current) return;
+
+        exploded.current = true;
+        gsap.to(materialRef.current.uniforms.uInteractionRadius, { value: 6.0, duration: 8, ease: "power3.inOut" });
+        gsap.to(materialRef.current.uniforms.uTransitionProgress, {
+          value: 3.5,
+          duration: 10.0,
+          ease: "power2.inOut",
+          onComplete: () => onGridReady && onGridReady()
+        });
+      }, [state.value, onGridReady]);
+
+      useFrame(() => {
+        if (!materialRef.current || !pointsRef.current) return;
+
+        const vec = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
+        const dir = vec.sub(camera.position).normalize();
+        const distance = -camera.position.z / dir.z;
+        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+        materialRef.current.uniforms.uMouse.value.copy(pos);
+
+        // gentle drift so the sphere reads as a globe, not a flat patch
+        pointsRef.current.rotation.y += 0.00025;
+        pointsRef.current.rotation.x += 0.00012;
+      });
+
+      return (
+        <points ref={pointsRef} frustumCulled={false}>
+          <bufferGeometry ref={geometryRef}>
+            <bufferAttribute attach="attributes-position" args={[data.positions, 3]} />
+            <bufferAttribute attach="attributes-aTargetPos" args={[data.targetPositions, 3]} />
+            <bufferAttribute attach="attributes-color" args={[data.colors, 3]} />
+            <bufferAttribute attach="attributes-size" args={[data.sizes, 1]} />
+            <bufferAttribute attach="attributes-aDelay" args={[data.delays, 1]} />
+          </bufferGeometry>
+          <shaderMaterial
+            ref={materialRef}
+            vertexShader={particleVertexShader}
+            fragmentShader={particleFragmentShader}
+            uniforms={uniforms}
+            vertexColors
+            transparent
+            depthWrite={false}
+            alphaTest={0.01}
+            blending={THREE.AdditiveBlending}
+          />
+        </points>
+      );
+    }
+
+    function Earth({ visible, fadeIn, loadingManager }) {
+      const group = useRef();
+      const earthRef = useRef();
+      const cloudsRef = useRef();
+      const atmosphereRef = useRef();
+      const fadedRef = useRef(false);
+
+      const [map, normal, specular, clouds] = useMemo(() => {
+        const loader = new THREE.TextureLoader(loadingManager);
+        loader.setCrossOrigin('anonymous');
+
+        const setSRGB = (texture) => {
+          if (!texture) return texture;
+          if ('colorSpace' in texture) {
+            texture.colorSpace = THREE.SRGBColorSpace;
+          } else {
+            texture.encoding = THREE.sRGBEncoding;
+          }
+          return texture;
+        };
+
+        return [
+          setSRGB(loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg')),
+          loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg'),
+          loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg'),
+          loader.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png')
+        ];
+      }, [loadingManager]);
+
+      useEffect(() => {
+        if (group.current) {
+          group.current.position.copy(globalStore.targetPos);
+        }
+      }, [visible]);
+
+      useEffect(() => {
+        if (fadeIn && !fadedRef.current && earthRef.current && cloudsRef.current && atmosphereRef.current) {
+          fadedRef.current = true;
+          const mats = [
+            earthRef.current.material,
+            cloudsRef.current.material,
+            atmosphereRef.current.material
+          ];
+          mats.forEach(m => { m.opacity = 0; m.transparent = true; });
+          gsap.to(mats, { opacity: 1, duration: 1.5, ease: "power2.out" });
+        }
+      }, [fadeIn]);
+
+      return (
+        <group ref={group} visible={visible}>
+          <mesh ref={earthRef}>
+            <sphereGeometry args={[EARTH_RADIUS, 64, 64]} />
+            <meshPhongMaterial map={map} bumpMap={normal} bumpScale={0.005} specularMap={specular} shininess={5} transparent />
+          </mesh>
+          <mesh ref={cloudsRef}>
+            <sphereGeometry args={[EARTH_RADIUS + 0.003, 64, 64]} />
+            <meshPhongMaterial map={clouds} transparent depthWrite={false} side={THREE.FrontSide} />
+          </mesh>
+          <mesh ref={atmosphereRef}>
+            <sphereGeometry args={[EARTH_RADIUS + 0.03, 64, 64]} />
+            <shaderMaterial
+              vertexShader={atmosphereVertexShader}
+              fragmentShader={atmosphereFragmentShader}
+              uniforms={{ c: { value: 1.0 }, p: { value: 2.0 }, glowColor: { value: new THREE.Color(0x3b8cff) } }}
+              side={THREE.BackSide}
+              blending={THREE.AdditiveBlending}
+              transparent
+            />
+          </mesh>
+        </group>
+      );
+    }
+
+    function Experience() {
+      const { camera, gl } = useThree();
+      const [state, send] = useMachine(storyMachine);
+      const orbitRef = useRef();
+      const targetScrollY = useRef(0);
+      const virtualScrollY = useRef(0);
+      const lastTouchY = useRef(0);
+      const chartReadyRef = useRef(false);
+      const loadingManager = useMemo(() => new THREE.LoadingManager(), []);
+
+      useEffect(() => {
+        gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        if ('outputColorSpace' in gl) {
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+        } else {
+          gl.outputEncoding = THREE.sRGBEncoding;
+        }
+        gl.toneMapping = THREE.ReinhardToneMapping;
+      }, [gl]);
+
+      useEffect(() => {
+        const loaderEl = document.getElementById('loader');
+        const infoEl = document.getElementById('info-panel');
+        const captionIntro = document.getElementById('caption-intro');
+        const arrow = document.getElementById('scroll-arrow');
+
+        const handleFirstScroll = () => {
+          gsap.to([captionIntro, arrow], { opacity: 0, duration: 0.6, ease: "power2.in" });
+        };
+
+        const handleLoaded = () => {
+          if (!loaderEl) {
+            send({ type: 'LOADED' });
+            return;
+          }
+          loaderEl.style.opacity = '0';
+          setTimeout(() => {
+            loaderEl.style.display = 'none';
+            if (infoEl) infoEl.classList.remove('opacity-0');
+            gsap.to([captionIntro, arrow], {
+              opacity: 0.6,
+              duration: 1.2,
+              ease: "power2.out",
+              onComplete: () => {
+                window.addEventListener('wheel', handleFirstScroll, { once: true });
+                window.addEventListener('touchmove', handleFirstScroll, { once: true });
+                send({ type: 'LOADED' });
+              }
+            });
+          }, 500);
+        };
+
+        // If the manager already finished before we attached onLoad, fire manually.
+        if (loadingManager.itemsTotal > 0 && loadingManager.itemsLoaded >= loadingManager.itemsTotal) {
+          handleLoaded();
+        } else {
+          loadingManager.onLoad = handleLoaded;
+        }
+
+        // Fallback in case no items registered (defensive)
+        const failSafe = setTimeout(() => {
+          if (loaderEl && loaderEl.style.display !== 'none') handleLoaded();
+        }, 4000);
+
+        return () => {
+          clearTimeout(failSafe);
+          loadingManager.onLoad = null;
+        };
+      }, [loadingManager, send]);
+
+      useEffect(() => {
+        const chartContainer = document.getElementById('population-chart-container');
+        const captionEarth = document.getElementById('caption-earth');
+        const scrollArrow = document.getElementById('scroll-arrow');
+
+        if (!chartContainer || !captionEarth || !scrollArrow) return;
+
+        if (state.matches('chart')) {
+          chartContainer.style.opacity = 1;
+          chartContainer.style.pointerEvents = 'auto';
+          gsap.to([captionEarth, scrollArrow], { opacity: 0, duration: 0.6, ease: "power2.in" });
+
+          const triggerChart = () => {
+            window.dispatchEvent(new Event('start-chart-animation'));
+            if (window.__startChartPlayback) window.__startChartPlayback();
+          };
+          triggerChart();
+          setTimeout(triggerChart, 50);
+          setTimeout(triggerChart, 200);
+        } else {
+          chartContainer.style.opacity = 0;
+          chartContainer.style.pointerEvents = 'none';
+        }
+      }, [state.value]);
+
+      // Capture scroll/touch like the original narrative loop (virtual scroll)
+      useEffect(() => {
+        const onWheel = (event) => {
+          event.preventDefault();
+          targetScrollY.current += event.deltaY * 0.5;
+        };
+        const onTouchStart = (event) => {
+          lastTouchY.current = event.touches[0].clientY;
+        };
+        const onTouchMove = (event) => {
+          event.preventDefault();
+          const currentY = event.touches[0].clientY;
+          const deltaY = lastTouchY.current - currentY;
+          targetScrollY.current += deltaY;
+          lastTouchY.current = currentY;
+        };
+
+        window.addEventListener('wheel', onWheel, { passive: false });
+        window.addEventListener('touchstart', onTouchStart, { passive: false });
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+        return () => {
+          window.removeEventListener('wheel', onWheel);
+          window.removeEventListener('touchstart', onTouchStart);
+          window.removeEventListener('touchmove', onTouchMove);
+        };
+      }, []);
+
+      useEffect(() => {
+        const controls = orbitRef.current;
+        if (!controls) return;
+
+        controls.enabled = !state.matches('journeying');
+        controls.enableZoom = state.matches('focused') || state.matches('chart'); // avoid hijacking scroll before focus
+
+        if (state.matches('focused') || state.matches('chart')) {
+          controls.minDistance = EARTH_RADIUS * 1.1;
+          controls.maxDistance = EARTH_RADIUS * 5;
+          controls.target.copy(globalStore.targetPos);
+        } else {
+          controls.minDistance = 3;
+          controls.maxDistance = 40;
+          controls.target.set(0, 0, 0);
+        }
+        controls.update();
+      }, [state.value]);
+
+      useEffect(() => {
+        if (!state.matches('journeying')) return;
+
+        chartReadyRef.current = false;
+        const captionEarth = document.getElementById('caption-earth');
+        const controls = orbitRef.current;
+        if (controls) controls.enabled = false;
+
+        const cameraEndPosition = globalStore.targetPos.clone().add(new THREE.Vector3(0, EARTH_RADIUS * 0.5, EARTH_RADIUS * 4));
+        const startPosition = camera.position.clone();
+        const controlPoint = new THREE.Vector3()
+          .lerpVectors(startPosition, cameraEndPosition, 0.5)
+          .add(new THREE.Vector3(0, startPosition.distanceTo(cameraEndPosition) * 0.2, 0));
+
+        const curve = new THREE.QuadraticBezierCurve3(
+          startPosition,
+          controlPoint,
+          cameraEndPosition
+        );
+
+        const journeyLookAt = controls ? controls.target.clone() : new THREE.Vector3();
+        const journeyProxy = { t: 0 };
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            gsap.fromTo(captionEarth, { opacity: 0 }, {
+              opacity: 0.6,
+              duration: 1.2,
+              ease: "power2.out",
+              onComplete: () => {
+                chartReadyRef.current = true;
+                send({ type: 'FOCUSED' });
+                if (controls) {
+                  controls.enabled = true;
+                  controls.minDistance = EARTH_RADIUS * 1.1;
+                  controls.maxDistance = EARTH_RADIUS * 5;
+                  controls.target.copy(globalStore.targetPos);
+                  controls.update();
+                }
+              }
+            });
+          }
+        });
+
+        tl.to(journeyLookAt, {
+          x: globalStore.targetPos.x,
+          y: globalStore.targetPos.y,
+          z: globalStore.targetPos.z,
+          duration: 5,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            camera.lookAt(journeyLookAt);
+          }
+        });
+
+        tl.to(journeyProxy, {
+          t: 1,
+          duration: 7,
+          ease: "power3.inOut",
+          onUpdate: () => {
+            curve.getPoint(journeyProxy.t, camera.position);
+            camera.lookAt(globalStore.targetPos);
+          }
+        });
+
+        return () => {
+          tl.kill();
+        };
+      }, [state.value, camera, send]);
+
+      useEffect(() => {
+        chartReadyRef.current = state.matches('focused') || state.matches('chart');
+      }, [state.value]);
+
+      useFrame(() => {
+        virtualScrollY.current += (targetScrollY.current - virtualScrollY.current) * SCROLL_SPEED;
+
+        const scrollY = virtualScrollY.current;
+        if (!state.matches('journeying') && !state.matches('focused') && !state.matches('chart')) {
+          const zoom = 35 - (scrollY / 60);
+          camera.position.z = Math.max(zoom, 3);
+        }
+
+        if (scrollY > EXPLOSION_THRESHOLD && state.matches('sphere')) {
+          send({ type: 'EXPLODE' });
+        } else if (scrollY > JOURNEY_THRESHOLD && state.matches('grid')) {
+          send({ type: 'JOURNEY' });
+        } else if (scrollY > CHART_THRESHOLD && chartReadyRef.current && state.matches('focused')) {
+          send({ type: 'CHART' });
+        }
+
+        if (!state.matches('journeying')) {
+          orbitRef.current?.update();
+        }
+      });
+
+      return (
+        <>
+          <color attach="background" args={['#111111']} />
+          <fog attach="fog" args={[0x111111, 10, 20]} />
+          <directionalLight position={[5, 3, 5]} intensity={2} />
+          <ambientLight color={0x666666} intensity={1} />
+
+          <Particles
+            state={state}
+            onGridReady={() => send({ type: 'GRID' })}
+          />
+          <Earth
+            visible={state.matches('journeying') || state.matches('focused') || state.matches('chart')}
+            fadeIn={state.matches('journeying')}
+            loadingManager={loadingManager}
+          />
+          <Effects />
+          <OrbitControls
+            ref={orbitRef}
+            enableDamping
+            dampingFactor={0.05}
+            enablePan={false}
+            minDistance={3}
+            maxDistance={40}
+            // Match original: do not let wheel zoom steal scroll until focus
+            enableZoom={state.matches('focused') || state.matches('chart')}
+          />
+        </>
+      );
+    }
+
+    function App() {
+      return (
+        <Canvas
+          dpr={[1, 2]}
+          gl={{ antialias: true, toneMapping: THREE.ReinhardToneMapping }}
+          camera={{ fov: 110, position: [0, 0, 40], near: 0.1, far: 1000 }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Experience />
+        </Canvas>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(<App />);
+  </script>
+
+  <!-- Chart.js cinematic playback (identical to bigbang.html) -->
+  <script>
+    (function() {
+        const CSV_DATA = `Entity,Code,Year,Population (historical estimates and future projections)
 World,OWID_WRL,-10000,4501152
 World,OWID_WRL,-9000,5687125
 World,OWID_WRL,-8000,7314623
@@ -166,462 +923,215 @@ World,OWID_WRL,2080,10283077976
 World,OWID_WRL,2090,10271565034
 World,OWID_WRL,2100,10180160680`;
 
-    // --- STATE MACHINE ---
-    const storyMachine = createMachine({
-      id: 'story',
-      initial: 'loading',
-      states: {
-        loading: { on: { LOADED: 'sphere' } },
-        sphere: { on: { EXPLODE: 'exploding' } },
-        exploding: { after: { 8000: 'grid' } },
-        grid: { on: { JOURNEY: 'journeying' } },
-        journeying: { after: { 7000: 'earth' } },
-        earth: { on: { CHART: 'chart' } },
-        chart: { type: 'final' }
-      }
-    });
+        const rawData = CSV_DATA.trim().split('\n').map(line => {
+            const parts = line.split(',');
+            return { x: parseInt(parts[2]), y: parseInt(parts[3]) };
+        }).filter(d => d.x <= 2025).sort((a, b) => a.x - b.x);
 
-    // --- SHADERS (Original) ---
-    const particleVertexShader = `
-        attribute float size;
-        attribute vec3 aTargetPos;
-        attribute float aDelay;
-        varying vec3 vColor;
-        uniform vec3 uMouse;
-        uniform float uInteractionRadius;
-        uniform float uTransitionProgress;
-        varying float vHighlight;
-        void main() {
-            vColor = color;
-            float duration = 1.5; 
-            float t = clamp((uTransitionProgress - aDelay) / duration, 0.0, 1.0);
-            t = t * t * (3.0 - 2.0 * t); 
-            vec3 currentPos = mix(position, aTargetPos, t);
-            float dist = length(currentPos - uMouse);
-            float falloff = 1.0;
-            vHighlight = 1.0 - smoothstep(uInteractionRadius, uInteractionRadius + falloff, dist);
-            vec4 mvPosition = modelViewMatrix * vec4(currentPos, 1.0);
-            gl_PointSize = min(size * (300.0 / -mvPosition.z), 6.0);
-            gl_Position = projectionMatrix * mvPosition;
-        }
-    `;
+        const minYear = rawData[0].x;
+        const maxYear = 2025;
+        let currentYear = minYear;
+        let isPlaying = false;
+        let animationFrameId;
+        let chart;
+        let currentMaxY = 2000000000;
+        const captionHistory1 = document.getElementById('caption-history-1');
+        const captionHistory2 = document.getElementById('caption-history-2');
 
-    const particleFragmentShader = `
-        varying vec3 vColor;
-        varying float vHighlight;
-        void main() {
-            // Circular shape logic was missing!
-            vec2 coord = gl_PointCoord - vec2(0.5);
-            if(length(coord) > 0.5) discard;
-            
-            vec3 highlightColor = vec3(1.0, 1.0, 1.0);
-            vec3 finalColor = mix(vColor, highlightColor, vHighlight) * 1.5; 
-            gl_FragColor = vec4(finalColor, 1.0);
-        }
-    `;
+        const ctx = document.getElementById('popChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+        gradient.addColorStop(0, 'rgba(147, 51, 234, 0.6)');
+        gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
 
-    const atmosphereVertexShader = `
-        varying vec3 vNormal; 
-        void main(){
-            vNormal = normalize(normalMatrix * normal); 
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-        }
-    `;
+        const industrialRevolutionLine = {
+            id: 'industrialRevolutionLine',
+            afterDraw: (chart) => {
+                const year = 1740;
+                const meta = chart.getDatasetMeta(0);
+                if (!meta || !chart.data.datasets[0].data.length) return;
 
-    const atmosphereFragmentShader = `
-        uniform vec3 glowColor; uniform float c; uniform float p; varying vec3 vNormal;
-        void main(){
-            float intensity = pow(c - dot(vNormal, vec3(0.0,0.0,1.0)), p); 
-            gl_FragColor = vec4(glowColor * intensity, 1.0);
-        }
-    `;
+                const lastDataPoint = chart.data.datasets[0].data[chart.data.datasets[0].data.length - 1];
+                if (!lastDataPoint || lastDataPoint.x < year) return;
 
-    // --- GLOBAL STORE (For inter-component communication in simple React setups) ---
-    // We use this to pass the target particle position from Particles -> Camera
-    const globalStore = {
-        targetPos: new THREE.Vector3()
-    };
+                const ctx = chart.ctx;
+                const xAxis = chart.scales.x;
+                const yAxis = chart.scales.y;
+                const x = xAxis.getPixelForValue(year);
 
-    // --- COMPONENT: EFFECTS (Bloom) ---
-    function Effects() {
-        const { gl, scene, camera, size } = useThree();
-        const composer = useRef();
+                const progress = Math.min(1, (lastDataPoint.x - year) / 50);
+                if (progress <= 0) return;
 
-        useEffect(() => {
-            composer.current = new EffectComposer(gl);
-            const renderPass = new RenderPass(scene, camera);
-            composer.current.addPass(renderPass);
+                ctx.save();
+                ctx.globalAlpha = progress;
+                ctx.beginPath();
+                ctx.moveTo(x, yAxis.top);
+                ctx.lineTo(x, yAxis.bottom);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#2dd4bf';
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
 
-            const bloomPass = new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 1.5, 0.4, 0.85);
-            bloomPass.threshold = 0;
-            bloomPass.strength = 1.0;
-            bloomPass.radius = 0.5;
-            composer.current.addPass(bloomPass);
-
-            return () => composer.current.dispose();
-        }, [gl, scene, camera, size]);
-
-        useFrame(() => composer.current?.render(), 1);
-        return null;
-    }
-
-    // --- COMPONENT: PARTICLES ---
-    function Particles({ state }) {
-        const count = 15000; // Original Count
-        const mesh = useRef();
-        const materialRef = useRef();
-        const { mouse, camera } = useThree();
-        
-        const data = useMemo(() => {
-            const positions = new Float32Array(count * 3);
-            const targetPositions = new Float32Array(count * 3);
-            const colors = new Float32Array(count * 3);
-            const sizes = new Float32Array(count);
-            const delays = new Float32Array(count);
-            
-            const sphereRadius = 0.2;
-            const gridDimensions = 160;
-            const color = new THREE.Color();
-            const targetIdx = Math.floor(Math.random() * count);
-            
-            for (let i = 0; i < count; i++) {
-                // Sphere Position
-                const phi = Math.acos(-1 + (2 * i) / count);
-                const theta = Math.sqrt(count * Math.PI) * phi;
-                positions[i*3] = sphereRadius * Math.cos(theta) * Math.sin(phi);
-                positions[i*3+1] = sphereRadius * Math.sin(theta) * Math.sin(phi);
-                positions[i*3+2] = sphereRadius * Math.cos(phi);
-
-                // Color (Rainbow HSL)
-                color.setHSL(i / count, 0.5, 0.7);
-                colors[i*3] = color.r;
-                colors[i*3+1] = color.g;
-                colors[i*3+2] = color.b;
-
-                sizes[i] = Math.random() * 0.2 + 0.01;
-
-                // Grid Position
-                const gx = (Math.random() - 0.5) * gridDimensions;
-                const gy = (Math.random() - 0.5) * gridDimensions;
-                const gz = (Math.random() - 0.5) * gridDimensions;
-                targetPositions[i*3] = gx;
-                targetPositions[i*3+1] = gy;
-                targetPositions[i*3+2] = gz;
-                
-                delays[i] = Math.random() * 1.5;
-
-                if (i === targetIdx) {
-                    globalStore.targetPos.set(gx, gy, gz);
-                    sizes[i] = 0; // Hide target
-                }
+                ctx.fillStyle = '#2dd4bf';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.font = "14px 'EB Garamond'";
+                ctx.fillText("Industrial Revolution", x - 5, yAxis.top + 10);
+                ctx.restore();
             }
-            return { positions, targetPositions, colors, sizes, delays };
-        }, []);
+        };
 
-        // Animation
-        useEffect(() => {
-            // Fix: Only trigger the animation sequence ONCE when entering the 'exploding' state.
-            // This prevents the animation from re-starting or extending duration when state changes to 'grid'.
-            if (state.matches('exploding')) {
-                const mat = materialRef.current;
-                if(mat) {
-                    gsap.to(mat.uniforms.uInteractionRadius, { value: 6.0, duration: 8, ease: "power3.inOut" });
-                    gsap.to(mat.uniforms.uTransitionProgress, { value: 3.5, duration: 10.0, ease: "power2.inOut" });
-                }
-            }
-        }, [state.value]);
-
-        useFrame(() => {
-            if (materialRef.current) {
-                // Raycast for Mouse Interaction
-                const vec = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-                vec.unproject(camera);
-                const dir = vec.sub(camera.position).normalize();
-                const distance = -camera.position.z / dir.z;
-                const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-                materialRef.current.uniforms.uMouse.value.copy(pos);
-            }
-        });
-
-        return (
-            <points ref={mesh}>
-                <bufferGeometry>
-                    <bufferAttribute attach="attributes-position" count={count} array={data.positions} itemSize={3} />
-                    <bufferAttribute attach="attributes-aTargetPos" count={count} array={data.targetPositions} itemSize={3} />
-                    <bufferAttribute attach="attributes-color" count={count} array={data.colors} itemSize={3} />
-                    <bufferAttribute attach="attributes-size" count={count} array={data.sizes} itemSize={1} />
-                    <bufferAttribute attach="attributes-aDelay" count={count} array={data.delays} itemSize={1} />
-                </bufferGeometry>
-                <shaderMaterial
-                    ref={materialRef}
-                    vertexShader={particleVertexShader}
-                    fragmentShader={particleFragmentShader}
-                    uniforms={{
-                        uMouse: { value: new THREE.Vector3(-100, -100, 0) },
-                        uInteractionRadius: { value: 1.5 },
-                        uTransitionProgress: { value: 0.0 }
-                    }}
-                    vertexColors={true} transparent={true} depthWrite={false} blending={THREE.AdditiveBlending}
-                />
-            </points>
-        );
-    }
-
-    // --- COMPONENT: EARTH ---
-    function Earth({ visible }) {
-        const group = useRef();
-        const earthRef = useRef();
-        const cloudsRef = useRef();
-
-        const [map, normal, specular, clouds] = useMemo(() => {
-             const tl = new THREE.TextureLoader();
-             tl.setCrossOrigin('anonymous');
-             return [
-                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_atmos_2048.jpg'),
-                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_normal_2048.jpg'),
-                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_specular_2048.jpg'),
-                 tl.load('https://cs.wellesley.edu/~cs307/threejs/r124/three.js-master/examples/textures/planets/earth_clouds_1024.png')
-             ];
-        }, []);
-
-        useLayoutEffect(() => {
-            if (group.current) group.current.position.copy(globalStore.targetPos);
-        });
-
-        useFrame(() => {
-            if (earthRef.current) earthRef.current.rotation.y += 0.0005;
-            if (cloudsRef.current) cloudsRef.current.rotation.y += 0.0006;
-        });
-
-        return (
-            <group ref={group} visible={visible}>
-                <mesh ref={earthRef}>
-                    <sphereGeometry args={[0.5, 64, 64]} />
-                    <meshPhongMaterial map={map} bumpMap={normal} bumpScale={0.005} specularMap={specular} shininess={5} />
-                </mesh>
-                <mesh ref={cloudsRef}>
-                    <sphereGeometry args={[0.503, 64, 64]} />
-                    <meshPhongMaterial map={clouds} transparent={true} depthWrite={false} side={THREE.FrontSide} />
-                </mesh>
-                <mesh>
-                    <sphereGeometry args={[0.53, 64, 64]} />
-                    <shaderMaterial vertexShader={atmosphereVertexShader} fragmentShader={atmosphereFragmentShader}
-                        uniforms={{ c: { value: 1.0 }, p: { value: 2.0 }, glowColor: { value: new THREE.Color(0x3b8ff) } }}
-                        side={THREE.BackSide} blending={THREE.AdditiveBlending} transparent={true}
-                    />
-                </mesh>
-            </group>
-        );
-    }
-
-    // --- COMPONENT: CAMERA RIG ---
-    function CameraRig({ state }) {
-        const { camera } = useThree();
-        const scroll = useScroll();
-
-        useEffect(() => {
-            if (state.matches('journeying')) {
-                const startPos = camera.position.clone();
-                const endPos = globalStore.targetPos.clone().add(new THREE.Vector3(0, 0.25, 2.0)); // Earth offset
-                
-                const controlPoint = new THREE.Vector3()
-                    .lerpVectors(startPos, endPos, 0.5)
-                    .add(new THREE.Vector3(0, startPos.distanceTo(endPos) * 0.2, 0));
-
-                const curve = new THREE.QuadraticBezierCurve3(startPos, controlPoint, endPos);
-                const lookAtProxy = { x: 0, y: 0, z: 0 }; 
-                const journeyProxy = { t: 0 };
-
-                gsap.to(lookAtProxy, {
-                    x: globalStore.targetPos.x, y: globalStore.targetPos.y, z: globalStore.targetPos.z,
-                    duration: 5, ease: "power2.inOut",
-                    onUpdate: () => camera.lookAt(lookAtProxy.x, lookAtProxy.y, lookAtProxy.z)
-                });
-
-                gsap.to(journeyProxy, {
-                    t: 1, duration: 7, ease: "power3.inOut",
-                    onUpdate: () => {
-                        camera.position.copy(curve.getPoint(journeyProxy.t));
-                        camera.lookAt(globalStore.targetPos);
-                    }
-                });
-            }
-        }, [state.value]);
-
-        useFrame(() => {
-            if (state.matches('sphere') || state.matches('exploding') || state.matches('grid')) {
-                // Zoom Logic: Map scroll 0..1 to Zoom 35..3
-                // Note: We multiply offset to mimic the long scroll distance feeling
-                // In original: zoom = 35 - (scrollY / 60). 
-                // Here we just linear interpolate based on progress.
-                const zoom = 35 - (scroll.offset * 30); 
-                camera.position.z = Math.max(zoom, 3);
-            }
-        });
-        return null;
-    }
-
-    // --- COMPONENT: CHART ---
-    function PopulationChart({ visible }) {
-        const canvasRef = useRef(null);
-        const chartRef = useRef(null);
-        const [stat, setStat] = useState({ year: 0, pop: 0 });
-
-        useEffect(() => {
-            if (!visible || !canvasRef.current) return;
-            if (chartRef.current) return;
-
-            const rawData = CSV_DATA.trim().split('\n').slice(1).map(line => {
-                const p = line.split(','); return { x: parseInt(p[2]), y: parseInt(p[3]) };
-            }).filter(d => d.x <= 2025).sort((a, b) => a.x - b.x);
-
-            const ctx = canvasRef.current.getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
-            gradient.addColorStop(0, 'rgba(147, 51, 234, 0.6)');
-            gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
-
-            chartRef.current = new Chart(ctx, {
-                type: 'line',
-                data: { datasets: [{ label: 'Population', data: [rawData[0]], borderColor: '#c084fc', backgroundColor: gradient, borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 }] },
-                options: {
-                    responsive: true, maintainAspectRatio: false, animation: false,
-                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
-                    scales: {
-                        x: { type: 'linear', min: -10000, max: 2025, grid: { display: false }, ticks: { color: '#94a3b8', callback: v => Math.abs(v) + (v<0?' BC':'') } },
-                        y: { type: 'linear', min: 0, max: 2000000000, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#94a3b8', callback: v => (v/1e9).toFixed(0)+'B' } }
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Population',
+                    data: [rawData[0]],
+                    borderColor: '#c084fc',
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            plugins: [industrialRevolutionLine],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        min: minYear,
+                        max: maxYear,
+                        grid: { display: false },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: function(val) { return Math.abs(val) + (val < 0 ? ' BC' : ''); }
+                        }
                     },
-                    plugins: { legend: {display: false} }
+                    y: {
+                        type: 'linear',
+                        min: 0,
+                        max: currentMaxY,
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: function(val) { return (val/1e9).toFixed(0) + 'B'; }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#94a3b8',
+                        bodyColor: '#c084fc',
+                        callbacks: {
+                            title: (items) => 'Year ' + Math.abs(items[0].parsed.x) + (items[0].parsed.x < 0 ? ' BC' : ''),
+                            label: (item) => (item.parsed.y / 1e9).toFixed(2) + ' Billion'
+                        }
+                    }
                 }
-            });
-
-            let currentYear = -10000, currentMaxY = 2000000000, animId;
-            function loop() {
-                let step = (currentYear < 1800) ? 30 : 1;
-                currentYear += step;
-                if (currentYear > 2025) currentYear = 2025;
-
-                const nextIndex = rawData.findIndex(d => d.x > currentYear);
-                let val = (nextIndex !== -1 && nextIndex !== 0) ? 
-                    rawData[nextIndex-1].y + (rawData[nextIndex].y - rawData[nextIndex-1].y) * ((currentYear - rawData[nextIndex-1].x) / (rawData[nextIndex].x - rawData[nextIndex-1].x)) 
-                    : rawData[rawData.length-1].y;
-
-                setStat({ year: currentYear, pop: val });
-
-                const filtered = rawData.filter(d => d.x <= currentYear);
-                filtered.push({ x: currentYear, y: val });
-                chartRef.current.data.datasets[0].data = filtered;
-                
-                if (val > currentMaxY * 0.8) { currentMaxY += 50000000; chartRef.current.options.scales.y.max = currentMaxY; }
-                chartRef.current.update('none');
-
-                if (currentYear < 2025) animId = requestAnimationFrame(loop);
             }
-            loop();
-            return () => cancelAnimationFrame(animId);
-        }, [visible]);
-
-        if (!visible) return null;
-        return (
-            <div className="fixed inset-0 z-50 flex flex-col pointer-events-auto animate-fade-in opacity-100 transition-opacity duration-500">
-                <div className="absolute top-4 left-0 w-full text-center z-10 pointer-events-none">
-                    <h1 className="text-3xl sm:text-5xl font-thin text-white tracking-wider" style={{fontFamily: 'EB Garamond'}}>Humanity</h1>
-                    <p className="text-sky-300/70 text-sm sm:text-base mt-1 font-light">The Rise of Population</p>
-                </div>
-                <div className="relative w-full h-full max-w-6xl mx-auto flex flex-col justify-center p-4 sm:p-8">
-                    <div className="absolute inset-4 sm:inset-8 bg-slate-900/30 backdrop-blur-sm rounded-xl border border-white/10 shadow-2xl -z-10"></div>
-                    <div className="relative w-full h-[70vh] sm:h-[80vh]">
-                        <canvas ref={canvasRef} id="popChart"></canvas>
-                        <div className="absolute top-4 left-4 sm:left-8 pointer-events-none">
-                            <div className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">Year {Math.abs(stat.year)}{stat.year < 0 ? ' BC' : ''}</div>
-                            <div className="text-3xl sm:text-5xl text-white font-medium tabular-nums" style={{fontFamily: 'EB Garamond', textShadow: '0 0 20px rgba(56, 189, 248, 0.5)'}}>
-                                {stat.pop > 1e9 ? (stat.pop/1e9).toFixed(2) + 'B' : (stat.pop/1e6).toFixed(1) + 'M'}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // --- MAIN APP ---
-    function Experience() {
-        const [state, send] = useMachine(storyMachine);
-        const scroll = useScroll();
-
-        // Debug Logging
-        useEffect(() => {
-            console.log("Current State:", state.value);
-        }, [state.value]);
-
-        // Remove Loader when ready
-        useEffect(() => {
-            send({ type: 'LOADED' });
-            const loader = document.getElementById('loader');
-            if(loader) {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }
-        }, []);
-
-        useFrame(() => {
-            // Trigger calibration roughly matching original pixel depths relative to a 4-page scroll
-            if (state.matches('sphere') && scroll.offset > 0.1) send({ type: 'EXPLODE' });
-            if (state.matches('grid') && scroll.offset > 0.5) send({ type: 'JOURNEY' });
-            if (state.matches('earth') && scroll.offset > 0.9) send({ type: 'CHART' });
         });
 
-        return (
-            <>
-                <Effects />
-                <directionalLight position={[5, 3, 5]} intensity={2} />
-                <ambientLight intensity={0.6} />
-                <fog attach="fog" args={['#111', 10, 20]} />
+        const statYear = document.getElementById('stat-year');
+        const statPop = document.getElementById('stat-pop');
 
-                <Particles state={state} />
-                <Earth visible={state.matches('journeying') || state.matches('earth') || state.matches('chart')} />
-                <CameraRig state={state} />
+        function formatPop(n) {
+            if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+            if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+            return n.toLocaleString();
+        }
 
-                <Scroll html style={{ width: '100%' }}>
-                    {/* INTRO SECTION */}
-                    <div className="h-screen flex flex-col items-center justify-center">
-                        <div className={`caption-card transition-opacity duration-700 ${state.matches('sphere') ? 'opacity-100' : 'opacity-0'}`}>
-                            Au début, l’univers tout entier tenait ici.
-                        </div>
-                        <div className={`absolute bottom-[8%] scroll-arrow ${state.matches('sphere') ? 'opacity-100' : 'opacity-0'}`}>&#x25BD;</div>
-                    </div>
-                    
-                    <div className="h-[100vh]"></div>
+        function getDataAtYear(year) {
+            const nextIndex = rawData.findIndex(d => d.x > year);
+            if (nextIndex === -1) return rawData[rawData.length - 1];
+            if (nextIndex === 0) return rawData[0];
 
-                    {/* EARTH CAPTION */}
-                    <div className="h-screen flex flex-col items-center justify-center pointer-events-none">
-                        <div className={`caption-card transition-opacity duration-1000 ${state.matches('earth') ? 'opacity-100' : 'opacity-0'}`}>
-                            Maintenant, toute l’humanité se tient là.
-                        </div>
-                    </div>
+            const prev = rawData[nextIndex - 1];
+            const next = rawData[nextIndex];
+            const ratio = (year - prev.x) / (next.x - prev.x);
+            return {
+                x: year,
+                y: prev.y + (next.y - prev.y) * ratio
+            };
+        }
 
-                    <div className="h-[150vh]"></div>
-                </Scroll>
+        function updateDisplay(year) {
+            statYear.innerText = Math.abs(year) + (year < 0 ? ' BC' : '');
+            const currentData = getDataAtYear(year);
+            statPop.innerText = formatPop(currentData.y);
 
-                <Html fullscreen portal={document.body} style={{pointerEvents: 'none'}}> 
-                    {/* We use portal to ensure it sits on top of everything, but we manage pointer events in the child */}
-                    <PopulationChart visible={state.matches('chart')} />
-                </Html>
-            </>
-        );
-    }
+            if (year > 1740) {
+              if (captionHistory1.style.opacity != '0') {
+                  gsap.to(captionHistory1, {opacity: 0, duration: 1});
+                  gsap.to(captionHistory2, {opacity: 0.6, duration: 1, delay: 0.5});
+              }
+            }
 
-    function App() {
-        // Match Original Camera: FOV 110, Z 40
-        return (
-            <Canvas dpr={[1, 2]} gl={{ toneMapping: THREE.ReinhardToneMapping }} camera={{ fov: 110, position: [0, 0, 40] }}>
-                <ScrollControls pages={4} damping={0.2}>
-                   <Experience />
-                </ScrollControls>
-            </Canvas>
-        );
-    }
+            if (currentData.y > currentMaxY * 0.8) {
+                currentMaxY += 50000000;
+                chart.options.scales.y.max = currentMaxY;
+            }
 
-    createRoot(document.getElementById('root')).render(<App />);
+            const filteredData = rawData.filter(d => d.x <= year);
+            filteredData.push(currentData);
+            chart.data.datasets[0].data = filteredData;
+
+            chart.update('none'); 
+        }
+
+        function play() {
+            if (isPlaying) return;
+            isPlaying = true;
+
+            gsap.to(document.getElementById('caption-earth'), {opacity: 0, duration: 1});
+            gsap.to(captionHistory1, {opacity: 0.6, duration: 1, delay: 1});
+
+            loop();
+        }
+
+        function loop() {
+            if (!isPlaying) return; 
+
+            let step;
+            if (currentYear < 1800) {
+                step = 30;
+            } else {
+                step = 1;
+            }
+
+            currentYear += step;
+
+            if (currentYear >= maxYear) {
+                currentYear = maxYear;
+                updateDisplay(currentYear);
+                isPlaying = false;
+            } else {
+                updateDisplay(currentYear);
+                animationFrameId = requestAnimationFrame(loop);
+            }
+        }
+
+        window.__startChartPlayback = () => {
+            if(!isPlaying && currentYear < maxYear) {
+                play();
+            }
+        };
+
+        window.addEventListener('start-chart-animation', () => {
+            if (window.__startChartPlayback) window.__startChartPlayback();
+        });
+
+        updateDisplay(minYear);
+    })();
   </script>
 </body>
 </html>
