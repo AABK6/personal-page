@@ -1,0 +1,1655 @@
+<!-- WEEK 2 - PART 4: The Collision of Frames — Navigating the Tradeoffs -->
+<section id="week2-part4" class="relative bg-slate-950 min-h-screen">
+  
+  <!-- Background Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 opacity-90"></div>
+  
+  <!-- Animated Grid Pattern -->
+  <div class="absolute inset-0 opacity-5">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(99,102,241,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.3) 1px, transparent 1px); background-size: 60px 60px;"></div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="relative z-10 px-6 py-20 lg:px-16 lg:py-28">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Section Header -->
+      <div class="tradeoff-hero text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 mb-6">
+          <i data-lucide="git-compare" class="w-4 h-4 text-indigo-400"></i>
+          <span class="text-sm font-medium text-indigo-300 uppercase tracking-wider">Week 2 · Part 4</span>
+        </div>
+        
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+          The Collision of <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Frames</span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-8">
+          Navigating the Tradeoffs
+        </p>
+        
+        <div class="w-32 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mx-auto rounded-full"></div>
+      </div>
+
+      <!-- Introduction Card -->
+      <div class="intro-card bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 lg:p-12 mb-20">
+        <div class="flex items-start gap-6">
+          <div class="hidden lg:flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <i data-lucide="scale" class="w-8 h-8 text-white"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl lg:text-3xl font-bold text-white mb-4">The Governance Paradox</h2>
+            <p class="text-lg text-slate-300 leading-relaxed mb-6">
+              Most actors in the AI governance landscape are <strong class="text-indigo-400">pro-development</strong>—they want powerful AI systems to be built and deployed. Yet they disagree profoundly on <em class="text-purple-400">how</em> development should proceed. These disagreements aren't simply about values or ideology. They stem from <strong class="text-pink-400">unknown parameters</strong> that will determine whether different governance strategies succeed or fail.
+            </p>
+            <p class="text-lg text-slate-300 leading-relaxed">
+              The result is five fundamental <strong class="text-amber-400">tradeoff axes</strong> that cut across the landscape, creating tensions that no single actor can resolve alone. Understanding these tradeoffs is essential for navigating the emerging governance terrain.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Five Axes Overview -->
+      <div class="axes-overview mb-20">
+        <h3 class="text-2xl font-bold text-white text-center mb-10">The Five Tradeoff Axes</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Axis 1 -->
+          <div class="axis-card group bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover:border-indigo-500/50 transition-all duration-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                <i data-lucide="share-2" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500 uppercase">Axis 1</span>
+                <h4 class="text-lg font-bold text-white">Diffusion</h4>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-3">Enclosing Capability <span class="text-slate-600">vs</span> Distributing Power</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              <span>Strategic asset vs open access</span>
+            </div>
+          </div>
+
+          <!-- Axis 2 -->
+          <div class="axis-card group bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover:border-purple-500/50 transition-all duration-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <i data-lucide="target" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500 uppercase">Axis 2</span>
+                <h4 class="text-lg font-bold text-white">Alignment</h4>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-3">Patriotic Machines <span class="text-slate-600">vs</span> Humanity-First</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              <span>National vs global constraints</span>
+            </div>
+          </div>
+
+          <!-- Axis 3 -->
+          <div class="axis-card group bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover:border-amber-500/50 transition-all duration-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+                <i data-lucide="clock" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500 uppercase">Axis 3</span>
+                <h4 class="text-lg font-bold text-white">Time</h4>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-3">Acceleration <span class="text-slate-600">vs</span> Deceleration</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              <span>Speed as security vs caution</span>
+            </div>
+          </div>
+
+          <!-- Axis 4 -->
+          <div class="axis-card group bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover:border-emerald-500/50 transition-all duration-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                <i data-lucide="user-cog" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500 uppercase">Axis 4</span>
+                <h4 class="text-lg font-bold text-white">Delegation</h4>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-3">Human Control <span class="text-slate-600">vs</span> Agentic Autonomy</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              <span>OODA loops vs safety</span>
+            </div>
+          </div>
+
+          <!-- Axis 5 -->
+          <div class="axis-card group bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover:border-rose-500/50 transition-all duration-300 md:col-span-2 lg:col-span-2">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center">
+                <i data-lucide="users" class="w-6 h-6 text-white"></i>
+              </div>
+              <div>
+                <span class="text-xs font-medium text-slate-500 uppercase">Axis 5</span>
+                <h4 class="text-lg font-bold text-white">Legitimacy</h4>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-3">Productivity Dividend <span class="text-slate-600">vs</span> Social Fracture</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              <span>Growth capacity vs distributional conflict</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AXIS 1: DIFFUSION -->
+  <div class="axis-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-blue-950/20 to-transparent"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Axis Header -->
+        <div class="axis-header flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold text-white">1</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium uppercase tracking-wider">Tradeoff Axis</span>
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-2">Diffusion</h2>
+            <p class="text-xl text-slate-400">Enclosing Capability <span class="text-slate-600">·</span> Distributing Power</p>
+          </div>
+        </div>
+
+        <!-- Visual Diagram -->
+        <div class="diffusion-diagram bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <!-- Concentration Side -->
+            <div class="flex-1 text-center lg:text-left">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-500/30 mb-4">
+                <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
+                <span class="text-sm font-medium text-blue-300">Concentration Logic</span>
+              </div>
+              <h4 class="text-xl font-bold text-white mb-2">Strategic Enclosure</h4>
+              <p class="text-slate-400 text-sm">Frontier capability as controlled asset</p>
+            </div>
+
+            <!-- Central Visual -->
+            <div class="relative w-48 h-24 flex items-center justify-center">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full h-1 bg-gradient-to-r from-blue-500 via-slate-500 to-cyan-500 rounded-full"></div>
+              </div>
+              <div class="relative w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center">
+                <i data-lucide="scale" class="w-8 h-8 text-slate-400"></i>
+              </div>
+            </div>
+
+            <!-- Proliferation Side -->
+            <div class="flex-1 text-center lg:text-right">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-500/30 mb-4">
+                <i data-lucide="unlock" class="w-4 h-4 text-cyan-400"></i>
+                <span class="text-sm font-medium text-cyan-300">Proliferation Logic</span>
+              </div>
+              <h4 class="text-xl font-bold text-white mb-2">Open Distribution</h4>
+              <p class="text-slate-400 text-sm">Capability widely accessible</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          
+          <!-- Concentration Logic -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-blue-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="shield" class="w-6 h-6 text-blue-400"></i>
+              Concentration Logic
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-blue-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Frontier capability as strategic asset</strong>
+                  <p class="text-slate-400 text-sm mt-1">Advanced AI models provide competitive advantage in economic, military, and diplomatic domains</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-blue-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Excludability = rents, leverage, control</strong>
+                  <p class="text-slate-400 text-sm mt-1">Restricted access creates economic returns and geopolitical bargaining power</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-blue-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Compounding advantage through learning loops</strong>
+                  <p class="text-slate-400 text-sm mt-1">Leading labs accumulate data and feedback that widens the capability gap</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Dual-use risk: open weights cannot be revoked</strong>
+                  <p class="text-slate-400 text-sm mt-1">Once released, dangerous capabilities are permanently available</p>
+                </div>
+              </li>
+            </ul>
+
+            <div class="mt-6 p-4 bg-blue-950/30 rounded-lg border border-blue-500/20">
+              <p class="text-sm text-blue-300 italic">
+                "Selective enclosure: open 'good enough', guard frontier"
+              </p>
+              <p class="text-xs text-blue-400/60 mt-2">— Strategic approach</p>
+            </div>
+          </div>
+
+          <!-- Proliferation Logic -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-cyan-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="globe" class="w-6 h-6 text-cyan-400"></i>
+              Proliferation Logic
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-cyan-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Main danger is monopoly, not proliferation</strong>
+                  <p class="text-slate-400 text-sm mt-1">Concentrated power poses greater risks than distributed access</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-cyan-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Small labs as governance layer above society</strong>
+                  <p class="text-slate-400 text-sm mt-1">Distributed actors can provide oversight and accountability</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3 text-cyan-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Open weights as constitutional principle</strong>
+                  <p class="text-slate-400 text-sm mt-1">Transparency and auditability are prerequisites for democratic oversight</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i data-lucide="eye" class="w-3 h-3 text-cyan-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">"Many eyes" security argument</strong>
+                  <p class="text-slate-400 text-sm mt-1">Open scrutiny finds vulnerabilities faster than closed review</p>
+                </div>
+              </li>
+            </ul>
+
+            <div class="mt-6 p-4 bg-cyan-950/30 rounded-lg border border-cyan-500/20">
+              <p class="text-sm text-cyan-300 italic">
+                "Alibaba's Qwen releases demonstrate open-source offensives"
+              </p>
+              <p class="text-xs text-cyan-400/60 mt-2">— Market dynamic</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Unknowns -->
+        <div class="unknowns-section bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8">
+          <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+            <i data-lucide="help-circle" class="w-6 h-6 text-amber-400"></i>
+            Critical Unknowns
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="trending-up" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Catch-up Speed</h4>
+              <p class="text-sm text-slate-400">How quickly can competitors replicate frontier capabilities?</p>
+            </div>
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="alert-octagon" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Misuse Threshold</h4>
+              <p class="text-sm text-slate-400">At what capability level does open release become dangerous?</p>
+            </div>
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="sliders" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Governability</h4>
+              <p class="text-sm text-slate-400">Can weights be governed more effectively than deployment?</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- AXIS 2: ALIGNMENT -->
+  <div class="axis-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-purple-950/20 to-transparent"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Axis Header -->
+        <div class="axis-header flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold text-white">2</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-medium uppercase tracking-wider">Tradeoff Axis</span>
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-2">Alignment</h2>
+            <p class="text-xl text-slate-400">Patriotic Machines <span class="text-slate-600">·</span> Humanity-First Constraints</p>
+          </div>
+        </div>
+
+        <!-- Visual Diagram -->
+        <div class="alignment-diagram bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            <!-- Sovereign Side -->
+            <div class="text-center">
+              <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-red-500/30 to-orange-500/30 border-2 border-red-500/50 flex items-center justify-center mb-4">
+                <i data-lucide="flag" class="w-10 h-10 text-red-400"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white mb-2">Sovereign Alignment</h4>
+              <p class="text-slate-400 text-sm">National values & priorities</p>
+            </div>
+
+            <!-- Center Conflict -->
+            <div class="relative flex items-center justify-center">
+              <div class="absolute inset-x-0 h-0.5 bg-gradient-to-r from-red-500 via-purple-500 to-emerald-500"></div>
+              <div class="relative z-10 w-20 h-20 rounded-full bg-slate-800 border-2 border-purple-500 flex items-center justify-center">
+                <i data-lucide="git-merge" class="w-10 h-10 text-purple-400"></i>
+              </div>
+            </div>
+
+            <!-- Humanity Side -->
+            <div class="text-center">
+              <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-emerald-500/30 to-teal-500/30 border-2 border-emerald-500/50 flex items-center justify-center mb-4">
+                <i data-lucide="globe-2" class="w-10 h-10 text-emerald-400"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white mb-2">Humanity-First</h4>
+              <p class="text-slate-400 text-sm">Global & species-level</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          
+          <!-- Sovereign Alignment -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-red-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="landmark" class="w-6 h-6 text-red-400"></i>
+              Sovereign Alignment
+            </h3>
+            
+            <div class="space-y-6">
+              <div class="p-4 bg-red-950/20 rounded-lg border border-red-500/20">
+                <p class="text-red-300 font-medium mb-2">"Patriotic AI" Concept</p>
+                <p class="text-slate-400 text-sm">AI systems aligned with national interests, values, and strategic objectives</p>
+              </div>
+
+              <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                  <i data-lucide="map-pin" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">Chinese variant:</strong>
+                    <p class="text-slate-400 text-sm">AI must "uphold socialist core values"</p>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="shield-check" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">US variant:</strong>
+                    <p class="text-slate-400 text-sm">Support national security priorities</p>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="link" class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">Couples with:</strong>
+                    <p class="text-slate-400 text-sm">Diffusion control and delegation preferences</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Humanity-First -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-emerald-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="heart-handshake" class="w-6 h-6 text-emerald-400"></i>
+              Humanity-First Alignment
+            </h3>
+            
+            <div class="space-y-6">
+              <div class="p-4 bg-emerald-950/20 rounded-lg border border-emerald-500/20">
+                <p class="text-emerald-300 font-medium mb-2">Transboundary, Species-Level Risks</p>
+                <p class="text-slate-400 text-sm">AI safety concerns transcend national boundaries</p>
+              </div>
+
+              <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                  <i data-lucide="alert-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">National optimization becomes self-defeating</strong>
+                    <p class="text-slate-400 text-sm">Competitive pressure undermines collective safety</p>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="file-check" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">Internationalized evaluation standards</strong>
+                    <p class="text-slate-400 text-sm">Shared frameworks for capability assessment</p>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <i data-lucide="building-2" class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="text-slate-200">"CERN for AI" proposals</strong>
+                    <p class="text-slate-400 text-sm">International collaboration on frontier research</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote Block -->
+        <div class="quote-block bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8 mb-8">
+          <div class="flex items-start gap-6">
+            <div class="hidden lg:flex w-16 h-16 rounded-full bg-emerald-500/20 items-center justify-center flex-shrink-0">
+              <i data-lucide="quote" class="w-8 h-8 text-emerald-400"></i>
+            </div>
+            <div>
+              <blockquote class="text-xl lg:text-2xl text-slate-200 italic leading-relaxed mb-4">
+                "The Bletchley Declaration acknowledged AI safety as a shared problem requiring international cooperation—yet each signatory continues to pursue sovereign advantage in AI development."
+              </blockquote>
+              <cite class="text-slate-500 not-italic">
+                — Bletchley Park Summit, November 2023
+              </cite>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- AXIS 3: TIME -->
+  <div class="axis-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-amber-950/20 to-transparent"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Axis Header -->
+        <div class="axis-header flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold text-white">3</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-medium uppercase tracking-wider">Tradeoff Axis</span>
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-2">Time</h2>
+            <p class="text-xl text-slate-400">Acceleration <span class="text-slate-600">·</span> Deceleration</p>
+          </div>
+        </div>
+
+        <!-- Visual Timeline Diagram -->
+        <div class="time-diagram bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <div class="relative">
+            <!-- Timeline Bar -->
+            <div class="absolute left-0 right-0 top-1/2 h-2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 via-slate-600 to-rose-500 rounded-full"></div>
+            
+            <!-- Points -->
+            <div class="relative grid grid-cols-3 gap-4">
+              <!-- Deceleration -->
+              <div class="text-center">
+                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center mb-4 relative z-10">
+                  <i data-lucide="pause-circle" class="w-8 h-8 text-emerald-400"></i>
+                </div>
+                <h4 class="text-lg font-bold text-emerald-300 mb-1">Deceleration</h4>
+                <p class="text-slate-400 text-sm">Gates & thresholds</p>
+              </div>
+
+              <!-- Center -->
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-slate-800 border-2 border-slate-500 flex items-center justify-center mb-4 relative z-10">
+                  <i data-lucide="clock" class="w-10 h-10 text-slate-400"></i>
+                </div>
+                <h4 class="text-lg font-bold text-slate-300 mb-1">Current Pace</h4>
+                <p class="text-slate-400 text-sm">Deployment speed</p>
+              </div>
+
+              <!-- Acceleration -->
+              <div class="text-center">
+                <div class="w-16 h-16 mx-auto rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center mb-4 relative z-10">
+                  <i data-lucide="zap" class="w-8 h-8 text-rose-400"></i>
+                </div>
+                <h4 class="text-lg font-bold text-rose-300 mb-1">Acceleration</h4>
+                <p class="text-slate-400 text-sm">Compounding returns</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          
+          <!-- Acceleration -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-rose-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="fast-forward" class="w-6 h-6 text-rose-400"></i>
+              Acceleration Logic
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="trending-up" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Compounding returns</strong>
+                  <p class="text-slate-400 text-sm mt-1">Earlier deployment creates more data, feedback, and economic value</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="shield" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Speed is security</strong>
+                  <p class="text-slate-400 text-sm mt-1">If rivals don't slow, unilateral deceleration is strategic loss</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="radio" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Diffusion as tempo</strong>
+                  <p class="text-slate-400 text-sm mt-1">Open weights flood zone with standards, establishing dominance</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Deceleration -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-emerald-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="shield-alert" class="w-6 h-6 text-emerald-400"></i>
+              Deceleration Logic
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="help-circle" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Unknown unknowns</strong>
+                  <p class="text-slate-400 text-sm mt-1">We cannot anticipate all failure modes at current capability levels</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="gate" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Gates & thresholds</strong>
+                  <p class="text-slate-400 text-sm mt-1">Evaluation checkpoints and staged deployment protocols</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="anchor" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Credibility trap</strong>
+                  <p class="text-slate-400 text-sm mt-1">Unilateral slowing = strategic loss without coordination</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Critical Unknowns -->
+        <div class="unknowns-section bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8">
+          <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+            <i data-lucide="help-circle" class="w-6 h-6 text-amber-400"></i>
+            Critical Unknowns
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="activity" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Smooth vs Cliff Scaling</h4>
+              <p class="text-sm text-slate-400">Do capabilities emerge gradually or through sudden phase transitions?</p>
+            </div>
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="building" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Institutional Speed</h4>
+              <p class="text-sm text-slate-400">Can governance institutions move at deployment speed?</p>
+            </div>
+            <div class="unknown-item p-4 bg-slate-950/50 rounded-lg">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+                <i data-lucide="shield-question" class="w-5 h-5 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">Tempo & Safety</h4>
+              <p class="text-sm text-slate-400">Does faster tempo create safety or fragility?</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- AXIS 4: DELEGATION -->
+  <div class="axis-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-emerald-950/20 to-transparent"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Axis Header -->
+        <div class="axis-header flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold text-white">4</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium uppercase tracking-wider">Tradeoff Axis</span>
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-2">Delegation</h2>
+            <p class="text-xl text-slate-400">Human Control <span class="text-slate-600">·</span> Agentic Autonomy</p>
+          </div>
+        </div>
+
+        <!-- Visual Control Diagram -->
+        <div class="delegation-diagram bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+            <!-- Human Control -->
+            <div class="text-center">
+              <div class="relative mx-auto w-28 h-32 mb-4">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-b from-indigo-500/30 to-indigo-600/30 border-2 border-indigo-500/50 flex flex-col items-center justify-center">
+                  <i data-lucide="user" class="w-10 h-10 text-indigo-400 mb-2"></i>
+                  <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                  </div>
+                </div>
+              </div>
+              <h4 class="text-lg font-bold text-indigo-300 mb-2">Human-in-the-Loop</h4>
+              <p class="text-slate-400 text-sm">Explicit approval for actions</p>
+            </div>
+
+            <!-- Spectrum -->
+            <div class="relative py-8">
+              <div class="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 rounded-full"></div>
+              <div class="relative flex justify-between">
+                <div class="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-800"></div>
+                <div class="w-6 h-6 rounded-full bg-purple-500 border-2 border-slate-800"></div>
+                <div class="w-6 h-6 rounded-full bg-rose-500 border-2 border-slate-800"></div>
+              </div>
+              <div class="mt-4 text-center">
+                <span class="text-sm text-slate-500">Delegation Spectrum</span>
+              </div>
+            </div>
+
+            <!-- Agentic Autonomy -->
+            <div class="text-center">
+              <div class="relative mx-auto w-28 h-32 mb-4">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-b from-rose-500/30 to-rose-600/30 border-2 border-rose-500/50 flex flex-col items-center justify-center">
+                  <i data-lucide="bot" class="w-10 h-10 text-rose-400 mb-2"></i>
+                  <div class="flex gap-1">
+                    <div class="w-8 h-1 bg-rose-400 rounded"></div>
+                  </div>
+                </div>
+              </div>
+              <h4 class="text-lg font-bold text-rose-300 mb-2">Agentic Autonomy</h4>
+              <p class="text-slate-400 text-sm">Self-directed action chains</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          
+          <!-- Why Delegation is Tempting -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-indigo-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="zap" class="w-6 h-6 text-indigo-400"></i>
+              Why Delegation is Tempting
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="rotate-ccw" class="w-4 h-4 text-indigo-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Closing the OODA loop</strong>
+                  <p class="text-slate-400 text-sm mt-1">Observe-Orient-Decide-Act cycles at machine speed</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="compress" class="w-4 h-4 text-indigo-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Compress decision cycles</strong>
+                  <p class="text-slate-400 text-sm mt-1">From hours to seconds in time-critical domains</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="dollar-sign" class="w-4 h-4 text-indigo-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">"Human-in-the-loop" as strategic cost</strong>
+                  <p class="text-slate-400 text-sm mt-1">Latency disadvantage in competitive environments</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="link-2" class="w-4 h-4 text-indigo-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Chaining actions through tools</strong>
+                  <p class="text-slate-400 text-sm mt-1">APIs enable autonomous multi-step workflows</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Why Delegation is Dangerous -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-rose-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="alert-triangle" class="w-6 h-6 text-rose-400"></i>
+              Why Delegation is Dangerous
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="eye-off" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Strategic deception becomes rational</strong>
+                  <p class="text-slate-400 text-sm mt-1">Systems may learn to appear aligned while pursuing other goals</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="power-off" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Control not a single kill switch</strong>
+                  <p class="text-slate-400 text-sm mt-1">Distributed systems resist centralized shutdown</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="bomb" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Crisis stability erosion</strong>
+                  <p class="text-slate-400 text-sm mt-1">Machine-speed escalation reduces time for human judgment</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="fingerprint" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Attribution collapse</strong>
+                  <p class="text-slate-400 text-sm mt-1">Autonomous actions blur lines of responsibility</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Threshold Question -->
+        <div class="threshold-section bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8">
+          <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+            <i data-lucide="git-branch" class="w-6 h-6 text-amber-400"></i>
+            The Threshold Question
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="threshold-item p-5 bg-slate-950/50 rounded-lg border border-slate-700/50">
+              <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="list-checks" class="w-6 h-6 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">What actions require human control?</h4>
+              <p class="text-sm text-slate-400">Defining the boundaries of autonomous decision-making</p>
+            </div>
+            <div class="threshold-item p-5 bg-slate-950/50 rounded-lg border border-slate-700/50">
+              <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="cpu" class="w-6 h-6 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">What architectures enforce it?</h4>
+              <p class="text-sm text-slate-400">Technical mechanisms for maintaining human oversight</p>
+            </div>
+            <div class="threshold-item p-5 bg-slate-950/50 rounded-lg border border-slate-700/50">
+              <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="radar" class="w-6 h-6 text-amber-400"></i>
+              </div>
+              <h4 class="font-semibold text-slate-200 mb-2">What monitoring detects deception?</h4>
+              <p class="text-sm text-slate-400">Surveillance systems for identifying misaligned behavior</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- AXIS 5: LEGITIMACY -->
+  <div class="axis-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-rose-950/20 to-transparent"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Axis Header -->
+        <div class="axis-header flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-rose-500 to-red-500 flex items-center justify-center flex-shrink-0">
+            <span class="text-3xl font-bold text-white">5</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-medium uppercase tracking-wider">Tradeoff Axis</span>
+            </div>
+            <h2 class="text-3xl lg:text-5xl font-bold text-white mb-2">Legitimacy</h2>
+            <p class="text-xl text-slate-400">Productivity Dividend <span class="text-slate-600">·</span> Social Fracture</p>
+          </div>
+        </div>
+
+        <!-- Visual Distribution Diagram -->
+        <div class="legitimacy-diagram bg-slate-900/40 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Productivity Side -->
+            <div class="relative">
+              <div class="flex items-center justify-center mb-6">
+                <div class="relative w-48 h-48">
+                  <!-- Concentric circles representing growth -->
+                  <div class="absolute inset-0 rounded-full border-4 border-emerald-500/20"></div>
+                  <div class="absolute inset-4 rounded-full border-4 border-emerald-500/40"></div>
+                  <div class="absolute inset-8 rounded-full border-4 border-emerald-500/60"></div>
+                  <div class="absolute inset-12 rounded-full bg-emerald-500/80 flex items-center justify-center">
+                    <i data-lucide="trending-up" class="w-12 h-12 text-white"></i>
+                  </div>
+                  <!-- Growth arrows -->
+                  <div class="absolute -top-2 left-1/2 -translate-x-1/2">
+                    <i data-lucide="arrow-up" class="w-6 h-6 text-emerald-400"></i>
+                  </div>
+                  <div class="absolute top-1/2 -right-2 -translate-y-1/2">
+                    <i data-lucide="arrow-up" class="w-6 h-6 text-emerald-400 rotate-45"></i>
+                  </div>
+                  <div class="absolute -bottom-2 left-1/2 -translate-x-1/2">
+                    <i data-lucide="arrow-up" class="w-6 h-6 text-emerald-400 rotate-180"></i>
+                  </div>
+                  <div class="absolute top-1/2 -left-2 -translate-y-1/2">
+                    <i data-lucide="arrow-up" class="w-6 h-6 text-emerald-400 -rotate-45"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <h4 class="text-xl font-bold text-emerald-300 mb-2">Productivity Dividend</h4>
+                <p class="text-slate-400 text-sm">Growth as capacity for all priorities</p>
+              </div>
+            </div>
+
+            <!-- Fracture Side -->
+            <div class="relative">
+              <div class="flex items-center justify-center mb-6">
+                <div class="relative w-48 h-48">
+                  <!-- Fragmented representation -->
+                  <div class="absolute top-4 left-4 w-16 h-16 rounded-lg bg-rose-500/60 rotate-12"></div>
+                  <div class="absolute top-8 right-6 w-14 h-14 rounded-lg bg-rose-500/50 -rotate-6"></div>
+                  <div class="absolute bottom-6 left-8 w-12 h-12 rounded-lg bg-rose-500/40 rotate-45"></div>
+                  <div class="absolute bottom-8 right-8 w-10 h-10 rounded-lg bg-rose-500/30 -rotate-12"></div>
+                  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-rose-500/70 flex items-center justify-center">
+                    <i data-lucide="users" class="w-10 h-10 text-white"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <h4 class="text-xl font-bold text-rose-300 mb-2">Social Fracture</h4>
+                <p class="text-slate-400 text-sm">Redistribution of status and pathways</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-Column Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          
+          <!-- Productivity Dividend -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-emerald-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="chart-line" class="w-6 h-6 text-emerald-400"></i>
+              Productivity Dividend
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="rocket" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Growth as capacity</strong>
+                  <p class="text-slate-400 text-sm mt-1">Economic expansion enables all other policy objectives</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="landmark" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Fiscal room, military procurement</strong>
+                  <p class="text-slate-400 text-sm mt-1">Revenue expansion supports state capabilities</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="zap" class="w-4 h-4 text-emerald-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Deployment urgency</strong>
+                  <p class="text-slate-400 text-sm mt-1">First-mover advantage in productivity gains</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Social Fracture Risk -->
+          <div class="comparison-card bg-slate-900/60 backdrop-blur-sm rounded-xl border-l-4 border-rose-500 p-6">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+              <i data-lucide="alert-circle" class="w-6 h-6 text-rose-400"></i>
+              Social Fracture Risk
+            </h3>
+            
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="award" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Redistribution of status, not just income</strong>
+                  <p class="text-slate-400 text-sm mt-1">Professional identity and social standing at risk</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="stairs" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Entry-level collapse</strong>
+                  <p class="text-slate-400 text-sm mt-1">Junior positions automated before senior roles</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="volume-x" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Silent crisis of middle-class pathways</strong>
+                  <p class="text-slate-400 text-sm mt-1">Career ladders disappear without public recognition</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="divide" class="w-4 h-4 text-rose-400"></i>
+                </div>
+                <div>
+                  <strong class="text-slate-200">Benefits captured by capital, costs to electorates</strong>
+                  <p class="text-slate-400 text-sm mt-1">Asymmetric distribution of AI's economic impact</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Legitimacy Constraints -->
+        <div class="constraints-section bg-gradient-to-r from-slate-900/80 to-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8">
+          <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+            <i data-lucide="gavel" class="w-6 h-6 text-amber-400"></i>
+            Legitimacy Constraints Shape All Other Axes
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="constraint-item p-5 bg-slate-950/50 rounded-lg border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                  <i data-lucide="sliders-horizontal" class="w-5 h-5 text-amber-400"></i>
+                </div>
+                <h4 class="font-semibold text-slate-200">Tempo Tradeoffs</h4>
+              </div>
+              <p class="text-sm text-slate-400">Slower tempo + labor protections vs faster deployment with adjustment support</p>
+            </div>
+            <div class="constraint-item p-5 bg-slate-950/50 rounded-lg border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                  <i data-lucide="globe" class="w-5 h-5 text-amber-400"></i>
+                </div>
+                <h4 class="font-semibold text-slate-200">Enclosure Dilemmas</h4>
+              </div>
+              <p class="text-sm text-slate-400">Nationalist enclosure for domestic benefit vs structural reform for global equity</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATING THE TENSIONS -->
+  <div class="navigating-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-indigo-950/30 via-slate-950 to-slate-950"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 mb-6">
+            <i data-lucide="compass" class="w-4 h-4 text-indigo-400"></i>
+            <span class="text-sm font-medium text-indigo-300 uppercase tracking-wider">Synthesis</span>
+          </div>
+          <h2 class="text-3xl lg:text-5xl font-bold text-white mb-4">Navigating the Tensions</h2>
+          <p class="text-xl text-slate-400 max-w-3xl mx-auto">
+            The five axes don't exist in isolation—they intersect and compound, creating a complex strategic landscape
+          </p>
+        </div>
+
+        <!-- State vs Firm Sovereignty -->
+        <div class="sovereignty-comparison bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <i data-lucide="swords" class="w-7 h-7 text-amber-400"></i>
+            State Sovereignty vs Firm Sovereignty
+          </h3>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- State Leverage -->
+            <div class="p-6 bg-slate-950/50 rounded-xl border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <i data-lucide="landmark" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white">State Leverage</h4>
+              </div>
+              <ul class="space-y-3">
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
+                  <span>Export controls on chips and technology</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
+                  <span>Visa restrictions on talent</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
+                  <span>Government procurement preferences</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
+                  <span>Policing and enforcement powers</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Firm Leverage -->
+            <div class="p-6 bg-slate-950/50 rounded-xl border border-slate-700/50">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                  <i data-lucide="building-2" class="w-6 h-6 text-purple-400"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white">Firm Leverage</h4>
+              </div>
+              <ul class="space-y-3">
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
+                  <span>Model release decisions</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
+                  <span>Training know-how and expertise</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
+                  <span>Cloud distribution infrastructure</span>
+                </li>
+                <li class="flex items-center gap-3 text-slate-300">
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
+                  <span>Energy contracting and data center access</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Bargaining Areas -->
+          <div class="mt-8 p-6 bg-gradient-to-r from-indigo-950/30 to-purple-950/30 rounded-xl border border-indigo-500/20">
+            <h4 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <i data-lucide="handshake" class="w-5 h-5 text-indigo-400"></i>
+              Key Bargaining Areas
+            </h4>
+            <div class="flex flex-wrap gap-3">
+              <span class="px-4 py-2 rounded-full bg-slate-800 text-slate-300 text-sm">Evaluation gates</span>
+              <span class="px-4 py-2 rounded-full bg-slate-800 text-slate-300 text-sm">Safety certification</span>
+              <span class="px-4 py-2 rounded-full bg-slate-800 text-slate-300 text-sm">Liability frameworks</span>
+              <span class="px-4 py-2 rounded-full bg-slate-800 text-slate-300 text-sm">Wartime access agreements</span>
+              <span class="px-4 py-2 rounded-full bg-slate-800 text-slate-300 text-sm">Compute allocation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Multipolar Strategies -->
+        <div class="multipolar-section bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8">
+          <h3 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <i data-lucide="globe-2" class="w-7 h-7 text-emerald-400"></i>
+            Multipolar Strategies: Middle Powers
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="shield" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Dependence Management</h4>
+              <p class="text-slate-400 text-sm">Avoid over-reliance on any single AI ecosystem</p>
+            </div>
+
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="git-branch" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Hedge Between Ecosystems</h4>
+              <p class="text-slate-400 text-sm">Maintain relationships with US, Chinese, and European providers</p>
+            </div>
+
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="clock" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Buy Time Through Localization</h4>
+              <p class="text-slate-400 text-sm">Develop domestic capabilities to reduce external dependence</p>
+            </div>
+
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="arrow-right-left" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Trade Market Access for Technology</h4>
+              <p class="text-slate-400 text-sm">Use domestic market size as bargaining chip</p>
+            </div>
+
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="ruler" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Standard-Set in Niches</h4>
+              <p class="text-slate-400 text-sm">Develop expertise in specific domains to influence global standards</p>
+            </div>
+
+            <div class="strategy-card p-5 bg-slate-950/50 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                <i data-lucide="server" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <h4 class="font-bold text-white mb-2">Exploit Infrastructure Politics</h4>
+              <p class="text-slate-400 text-sm">Leverage data center locations, energy access, and connectivity</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="conclusion-section relative py-20 lg:py-28 border-t border-slate-800/50">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900 via-indigo-950/20 to-slate-950"></div>
+    
+    <div class="relative z-10 px-6 lg:px-16">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/30 mb-6">
+            <i data-lucide="flag" class="w-4 h-4 text-indigo-400"></i>
+            <span class="text-sm font-medium text-indigo-300 uppercase tracking-wider">Conclusion</span>
+          </div>
+          <h2 class="text-3xl lg:text-5xl font-bold text-white mb-4">The Landscape is Coalitions, Not Camps</h2>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          <div class="insight-card p-6 bg-slate-900/60 backdrop-blur-sm rounded-xl border border-slate-700/50 text-center">
+            <div class="w-14 h-14 mx-auto rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="users" class="w-7 h-7 text-indigo-400"></i>
+            </div>
+            <h4 class="font-bold text-white mb-2">Coalitions, Not Camps</h4>
+            <p class="text-slate-400 text-sm">Actors form shifting alliances based on specific tradeoffs, not fixed blocs</p>
+          </div>
+
+          <div class="insight-card p-6 bg-slate-900/60 backdrop-blur-sm rounded-xl border border-slate-700/50 text-center">
+            <div class="w-14 h-14 mx-auto rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="help-circle" class="w-7 h-7 text-purple-400"></i>
+            </div>
+            <h4 class="font-bold text-white mb-2">Unknown Parameters</h4>
+            <p class="text-slate-400 text-sm">Disagreement stems from uncertainty about key variables, not just values</p>
+          </div>
+
+          <div class="insight-card p-6 bg-slate-900/60 backdrop-blur-sm rounded-xl border border-slate-700/50 text-center">
+            <div class="w-14 h-14 mx-auto rounded-xl bg-amber-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="scale" class="w-7 h-7 text-amber-400"></i>
+            </div>
+            <h4 class="font-bold text-white mb-2">Structural Tradeoffs</h4>
+            <p class="text-slate-400 text-sm">Tensions are built into the technology, not just cultural conflicts</p>
+          </div>
+
+          <div class="insight-card p-6 bg-slate-900/60 backdrop-blur-sm rounded-xl border border-slate-700/50 text-center">
+            <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
+              <i data-lucide="network" class="w-7 h-7 text-emerald-400"></i>
+            </div>
+            <h4 class="font-bold text-white mb-2">Actor Geometry</h4>
+            <p class="text-slate-400 text-sm">Who can move which axis determines governance outcomes</p>
+          </div>
+        </div>
+
+        <!-- Summary Visualization -->
+        <div class="summary-visualization bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-8 mb-12">
+          <h3 class="text-xl font-bold text-white mb-8 text-center">The Five Axes at a Glance</h3>
+          
+          <div class="space-y-4">
+            <!-- Axis 1 Summary -->
+            <div class="axis-summary flex items-center gap-4 p-4 bg-slate-950/50 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="share-2" class="w-6 h-6 text-blue-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-semibold text-white">Diffusion</span>
+                  <span class="text-xs text-slate-500">Axis 1</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm">
+                  <span class="text-blue-300">Enclosure</span>
+                  <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full w-1/2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                  </div>
+                  <span class="text-cyan-300">Proliferation</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Axis 2 Summary -->
+            <div class="axis-summary flex items-center gap-4 p-4 bg-slate-950/50 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="target" class="w-6 h-6 text-purple-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-semibold text-white">Alignment</span>
+                  <span class="text-xs text-slate-500">Axis 2</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm">
+                  <span class="text-red-300">Patriotic</span>
+                  <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full w-1/2 bg-gradient-to-r from-red-500 to-emerald-500"></div>
+                  </div>
+                  <span class="text-emerald-300">Humanity-First</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Axis 3 Summary -->
+            <div class="axis-summary flex items-center gap-4 p-4 bg-slate-950/50 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-6 h-6 text-amber-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-semibold text-white">Time</span>
+                  <span class="text-xs text-slate-500">Axis 3</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm">
+                  <span class="text-emerald-300">Deceleration</span>
+                  <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full w-1/2 bg-gradient-to-r from-emerald-500 to-rose-500"></div>
+                  </div>
+                  <span class="text-rose-300">Acceleration</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Axis 4 Summary -->
+            <div class="axis-summary flex items-center gap-4 p-4 bg-slate-950/50 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="user-cog" class="w-6 h-6 text-emerald-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-semibold text-white">Delegation</span>
+                  <span class="text-xs text-slate-500">Axis 4</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm">
+                  <span class="text-indigo-300">Human Control</span>
+                  <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full w-1/2 bg-gradient-to-r from-indigo-500 to-rose-500"></div>
+                  </div>
+                  <span class="text-rose-300">Agentic Autonomy</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Axis 5 Summary -->
+            <div class="axis-summary flex items-center gap-4 p-4 bg-slate-950/50 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="users" class="w-6 h-6 text-rose-400"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-semibold text-white">Legitimacy</span>
+                  <span class="text-xs text-slate-500">Axis 5</span>
+                </div>
+                <div class="flex items-center gap-4 text-sm">
+                  <span class="text-emerald-300">Productivity</span>
+                  <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full w-1/2 bg-gradient-to-r from-emerald-500 to-rose-500"></div>
+                  </div>
+                  <span class="text-rose-300">Social Fracture</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Final Quote -->
+        <div class="final-quote bg-gradient-to-r from-indigo-900/40 via-purple-900/40 to-pink-900/40 backdrop-blur-sm rounded-2xl border border-indigo-500/30 p-10">
+          <div class="flex items-start gap-6">
+            <div class="hidden lg:flex w-20 h-20 rounded-full bg-indigo-500/20 items-center justify-center flex-shrink-0">
+              <i data-lucide="quote" class="w-10 h-10 text-indigo-400"></i>
+            </div>
+            <div>
+              <blockquote class="text-2xl lg:text-3xl text-white italic leading-relaxed mb-6">
+                "The question is not which frame is correct, but which coalitions can form around which positions on which axes—and what that means for the governance that emerges."
+              </blockquote>
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-0.5 bg-indigo-400"></div>
+                <cite class="text-indigo-300 not-italic font-medium">
+                  Understanding the AI Governance Landscape
+                </cite>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sources -->
+        <div class="sources-section mt-16 pt-8 border-t border-slate-800/50">
+          <h3 class="text-lg font-bold text-slate-400 mb-6 flex items-center gap-2">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+            Sources & References
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="source-item p-4 bg-slate-900/40 rounded-lg">
+              <p class="text-slate-300">Bletchley Declaration on AI Safety (November 2023)</p>
+              <p class="text-slate-500 mt-1">International agreement on AI risk assessment and cooperation</p>
+            </div>
+            <div class="source-item p-4 bg-slate-900/40 rounded-lg">
+              <p class="text-slate-300">US Export Control Regulations (October 2023)</p>
+              <p class="text-slate-500 mt-1">Bureau of Industry and Security advanced computing controls</p>
+            </div>
+            <div class="source-item p-4 bg-slate-900/40 rounded-lg">
+              <p class="text-slate-300">China's Algorithmic Recommendation Regulations (2022)</p>
+              <p class="text-slate-500 mt-1">Requirements for AI to uphold socialist core values</p>
+            </div>
+            <div class="source-item p-4 bg-slate-900/40 rounded-lg">
+              <p class="text-slate-300">Alibaba Qwen Model Releases (2023-2024)</p>
+              <p class="text-slate-500 mt-1">Open-source offensives in the foundation model market</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- GSAP ScrollTrigger Animations -->
+  <script>
+    (function() {
+      // Wait for GSAP and ScrollTrigger to be available
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        console.warn('GSAP or ScrollTrigger not loaded');
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero Animation
+      gsap.from('.tradeoff-hero > *', {
+        scrollTrigger: {
+          trigger: '.tradeoff-hero',
+          start: 'top 80%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out'
+      });
+
+      // Intro Card Animation
+      gsap.from('.intro-card', {
+        scrollTrigger: {
+          trigger: '.intro-card',
+          start: 'top 80%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+
+      // Axis Cards Stagger
+      gsap.from('.axis-card', {
+        scrollTrigger: {
+          trigger: '.axes-overview',
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      // Axis Section Headers
+      document.querySelectorAll('.axis-header').forEach(header => {
+        gsap.from(header, {
+          scrollTrigger: {
+            trigger: header,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          },
+          x: -50,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out'
+        });
+      });
+
+      // Comparison Cards
+      document.querySelectorAll('.comparison-card').forEach((card, index) => {
+        gsap.from(card, {
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          x: index % 2 === 0 ? -40 : 40,
+          opacity: 0,
+          duration: 0.7,
+          ease: 'power3.out'
+        });
+      });
+
+      // Unknowns Sections
+      document.querySelectorAll('.unknowns-section, .threshold-section, .constraints-section').forEach(section => {
+        gsap.from(section, {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          y: 40,
+          opacity: 0,
+          duration: 0.7,
+          ease: 'power3.out'
+        });
+      });
+
+      // Unknown Items Stagger
+      document.querySelectorAll('.unknown-item, .threshold-item, .constraint-item').forEach((item, index) => {
+        gsap.from(item, {
+          scrollTrigger: {
+            trigger: item.parentElement,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          },
+          y: 30,
+          opacity: 0,
+          duration: 0.5,
+          delay: index * 0.1,
+          ease: 'power3.out'
+        });
+      });
+
+      // Quote Blocks
+      document.querySelectorAll('.quote-block').forEach(quote => {
+        gsap.from(quote, {
+          scrollTrigger: {
+            trigger: quote,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          },
+          scale: 0.95,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out'
+        });
+      });
+
+      // Strategy Cards
+      gsap.from('.strategy-card', {
+        scrollTrigger: {
+          trigger: '.multipolar-section',
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power3.out'
+      });
+
+      // Insight Cards
+      gsap.from('.insight-card', {
+        scrollTrigger: {
+          trigger: '.conclusion-section',
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      // Axis Summaries
+      gsap.from('.axis-summary', {
+        scrollTrigger: {
+          trigger: '.summary-visualization',
+          start: 'top 75%',
+          toggleActions: 'play none none reverse'
+        },
+        x: -30,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power3.out'
+      });
+
+      // Final Quote
+      gsap.from('.final-quote', {
+        scrollTrigger: {
+          trigger: '.final-quote',
+          start: 'top 80%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+      });
+
+      // Parallax effect for diagrams
+      document.querySelectorAll('.diffusion-diagram, .alignment-diagram, .time-diagram, .delegation-diagram, .legitimacy-diagram').forEach(diagram => {
+        gsap.to(diagram, {
+          scrollTrigger: {
+            trigger: diagram,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1
+          },
+          y: -20,
+          ease: 'none'
+        });
+      });
+
+    })();
+  </script>
+
+</section>

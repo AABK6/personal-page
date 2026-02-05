@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Geopolitics of Artificial Intelligence - Hero</title>
+    
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="../shared/design-system.css">
+    
+    <style>
+        /* Custom Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --color-primary: #0f172a;
+            --color-secondary: #1e293b;
+            --color-accent: #3b82f6;
+            --color-accent-glow: rgba(59, 130, 246, 0.3);
+            --color-text-primary: #f8fafc;
+            --color-text-secondary: #94a3b8;
+            --color-text-muted: #64748b;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-primary);
+            color: var(--color-text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Background Image with Parallax */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-image: url('../images/hero-background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            will-change: transform;
+            z-index: 0;
+        }
+        
+        /* Dark Overlay Gradient */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(15, 23, 42, 0.7) 0%,
+                rgba(15, 23, 42, 0.85) 50%,
+                rgba(15, 23, 42, 0.95) 100%
+            );
+            z-index: 1;
+        }
+        
+        /* Animated Grid Pattern */
+        .hero-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        /* Glowing Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 1;
+            animation: pulse-glow 8s ease-in-out infinite;
+        }
+        
+        .glow-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+        
+        .glow-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+            bottom: 20%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+        
+        .glow-orb-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+            top: 50%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.2); opacity: 0.25; }
+        }
+        
+        /* Content Container */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1400px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        /* Badge */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #60a5fa;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .hero-badge i {
+            width: 14px;
+            height: 14px;
+        }
+        
+        /* Main Title */
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--color-text-primary);
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-title-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(40px);
+            clip-path: inset(100% 0 0 0);
+        }
+        
+        .hero-title-accent {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #22d3ee 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Subtitle */
+        .hero-subtitle {
+            font-family: var(--font-display);
+            font-size: clamp(1.25rem, 3vw, 2rem);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--color-text-secondary);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        /* Opening Statement */
+        .hero-statement {
+            max-width: 800px;
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            line-height: 1.8;
+            color: var(--color-text-secondary);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .hero-statement strong {
+            color: var(--color-text-primary);
+            font-weight: 600;
+        }
+        
+        /* Core Question Box */
+        .core-question-box {
+            position: relative;
+            max-width: 900px;
+            padding: 2rem 3rem;
+            margin-bottom: 3rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        
+        .core-question-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            border-radius: 1rem 1rem 0 0;
+        }
+        
+        .core-question-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+        
+        .core-question-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--color-text-primary);
+        }
+        
+        /* Instructors */
+        .hero-instructors {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .instructor-avatars {
+            display: flex;
+        }
+        
+        .instructor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+            border: 2px solid var(--color-primary);
+            margin-left: -8px;
+        }
+        
+        .instructor-avatar:first-child {
+            margin-left: 0;
+        }
+        
+        .instructor-info {
+            text-align: left;
+        }
+        
+        .instructor-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+        
+        .instructor-names {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+        
+        /* Course Structure Preview */
+        .course-preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .course-unit {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .course-unit:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .course-unit-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+        
+        /* Key Themes */
+        .key-themes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .theme-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #a78bfa;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-tag:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        
+        .theme-tag i {
+            width: 14px;
+            height: 14px;
+        }
+        
+        /* CTA Button */
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: none;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            text-decoration: none;
+        }
+        
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5);
+        }
+        
+        .hero-cta i {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+        
+        .hero-cta:hover i {
+            transform: translateX(4px);
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10;
+            opacity: 0;
+        }
+        
+        .scroll-indicator-text {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+        
+        .scroll-indicator-icon {
+            width: 24px;
+            height: 40px;
+            border: 2px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+        }
+        
+        .scroll-indicator-dot {
+            width: 4px;
+            height: 8px;
+            background: #3b82f6;
+            border-radius: 2px;
+            animation: scroll-bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes scroll-bounce {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(8px); opacity: 0.5; }
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 1.5rem;
+            }
+            
+            .core-question-box {
+                padding: 1.5rem;
+            }
+            
+            .course-preview {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .course-unit {
+                justify-content: flex-start;
+            }
+            
+            .scroll-indicator {
+                bottom: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .core-question-box {
+                padding: 1.25rem;
+            }
+            
+            .hero-cta {
+                padding: 0.875rem 2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <!-- Background with Parallax -->
+        <div class="hero-background" id="heroBg"></div>
+        
+        <!-- Dark Overlay -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Grid Pattern -->
+        <div class="hero-grid"></div>
+        
+        <!-- Glowing Orbs -->
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+        <div class="glow-orb glow-orb-3"></div>
+        
+        <!-- Main Content -->
+        <div class="hero-content">
+            <!-- Badge -->
+            <div class="hero-badge" id="heroBadge">
+                <i data-lucide="globe"></i>
+                <span>Sciences Po Executive Education</span>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="hero-title">
+                <span class="hero-title-line" id="titleLine1">The Geopolitics of</span>
+                <span class="hero-title-line hero-title-accent" id="titleLine2">Artificial Intelligence</span>
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="hero-subtitle" id="heroSubtitle">
+                Sovereignty, Power, and the Future of World Order
+            </p>
+            
+            <!-- Opening Statement -->
+            <p class="hero-statement" id="heroStatement">
+                From the <strong>cyber-utopianism</strong> of the 1990s to the era of <strong>techno-nationalism</strong>—
+                witness the dramatic transformation of how nations compete, cooperate, and conflict in the digital age.
+            </p>
+            
+            <!-- Core Question -->
+            <div class="core-question-box" id="coreQuestion">
+                <div class="core-question-label">
+                    <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i>
+                    <span>The Central Question</span>
+                </div>
+                <p class="core-question-text">
+                    How did the internet transform from a borderless "Liberation Technology" in the 1990s 
+                    into the primary battlefield of 21st-century state sovereignty?
+                </p>
+            </div>
+            
+            <!-- Instructors -->
+            <div class="hero-instructors" id="heroInstructors">
+                <div class="instructor-avatars">
+                    <div class="instructor-avatar">AA</div>
+                    <div class="instructor-avatar">AM</div>
+                </div>
+                <div class="instructor-info">
+                    <div class="instructor-label">Course Instructors</div>
+                    <div class="instructor-names">Adrien Abecassis & Alexandre Mirlesse</div>
+                </div>
+            </div>
+            
+            <!-- Course Structure Preview -->
+            <div class="course-preview" id="coursePreview">
+                <div class="course-unit">
+                    <span class="course-unit-number">1</span>
+                    <span>The Sovereignty Paradox</span>
+                </div>
+                <div class="course-unit">
+                    <span class="course-unit-number">2</span>
+                    <span>The Stack as Territory</span>
+                </div>
+                <div class="course-unit">
+                    <span class="course-unit-number">3</span>
+                    <span>Industrial Policy & Power</span>
+                </div>
+                <div class="course-unit">
+                    <span class="course-unit-number">4</span>
+                    <span>Ideological Frames</span>
+                </div>
+            </div>
+            
+            <!-- Key Themes -->
+            <div class="key-themes" id="keyThemes">
+                <span class="theme-tag">
+                    <i data-lucide="shield"></i>
+                    Sovereignty
+                </span>
+                <span class="theme-tag">
+                    <i data-lucide="layers"></i>
+                    The Stack
+                </span>
+                <span class="theme-tag">
+                    <i data-lucide="factory"></i>
+                    Industrial Policy
+                </span>
+                <span class="theme-tag">
+                    <i data-lucide="message-square"></i>
+                    Ideological Frames
+                </span>
+            </div>
+            
+            <!-- CTA Button -->
+            <a href="#section-1" class="hero-cta" id="heroCta">
+                <span>Begin the Journey</span>
+                <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" id="scrollIndicator">
+            <span class="scroll-indicator-text">Scroll to Explore</span>
+            <div class="scroll-indicator-icon">
+                <div class="scroll-indicator-dot"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Shared Scripts -->
+    <script src="../shared/scripts.js"></script>
+    
+    <script>
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            
+            // Register GSAP ScrollTrigger
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // =====================
+            // ENTRANCE ANIMATIONS
+            // =====================
+            
+            const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+            
+            // Badge entrance
+            tl.to('#heroBadge', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: 0.3
+            });
+            
+            // Title lines reveal with stagger
+            tl.to('#titleLine1', {
+                opacity: 1,
+                y: 0,
+                clipPath: 'inset(0% 0 0 0)',
+                duration: 1,
+                ease: 'power4.out'
+            }, '-=0.4');
+            
+            tl.to('#titleLine2', {
+                opacity: 1,
+                y: 0,
+                clipPath: 'inset(0% 0 0 0)',
+                duration: 1,
+                ease: 'power4.out'
+            }, '-=0.7');
+            
+            // Subtitle entrance
+            tl.to('#heroSubtitle', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8
+            }, '-=0.5');
+            
+            // Opening statement
+            tl.to('#heroStatement', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8
+            }, '-=0.5');
+            
+            // Core question box
+            tl.to('#coreQuestion', {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.8,
+                ease: 'back.out(1.2)'
+            }, '-=0.4');
+            
+            // Instructors
+            tl.to('#heroInstructors', {
+                opacity: 1,
+                y: 0,
+                duration: 0.6
+            }, '-=0.4');
+            
+            // Course preview with stagger
+            tl.to('#coursePreview', {
+                opacity: 1,
+                y: 0,
+                duration: 0.6
+            }, '-=0.3');
+            
+            tl.from('#coursePreview .course-unit', {
+                opacity: 0,
+                y: 15,
+                stagger: 0.1,
+                duration: 0.5
+            }, '-=0.3');
+            
+            // Key themes with stagger
+            tl.to('#keyThemes', {
+                opacity: 1,
+                y: 0,
+                duration: 0.6
+            }, '-=0.3');
+            
+            tl.from('#keyThemes .theme-tag', {
+                opacity: 0,
+                scale: 0.9,
+                stagger: 0.08,
+                duration: 0.4,
+                ease: 'back.out(1.5)'
+            }, '-=0.3');
+            
+            // CTA button
+            tl.to('#heroCta', {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'back.out(1.5)'
+            }, '-=0.2');
+            
+            // Scroll indicator
+            tl.to('#scrollIndicator', {
+                opacity: 1,
+                duration: 0.6,
+                delay: 0.5
+            });
+            
+            // =====================
+            // PARALLAX EFFECT
+            // =====================
+            
+            // Background parallax on scroll
+            gsap.to('#heroBg', {
+                yPercent: 20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+            
+            // Content fade out on scroll
+            gsap.to('.hero-content', {
+                opacity: 0,
+                y: -50,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: '60% top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+            
+            // Scroll indicator fade out
+            gsap.to('#scrollIndicator', {
+                opacity: 0,
+                scrollTrigger: {
+                    trigger: '#hero',
+                    start: '20% top',
+                    end: '40% top',
+                    scrub: true
+                }
+            });
+            
+            // =====================
+            // MOUSE PARALLAX (Subtle)
+            // =====================
+            
+            const heroSection = document.getElementById('hero');
+            const glowOrbs = document.querySelectorAll('.glow-orb');
+            
+            heroSection.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                const { innerWidth, innerHeight } = window;
+                
+                const xPercent = (clientX / innerWidth - 0.5) * 2;
+                const yPercent = (clientY / innerHeight - 0.5) * 2;
+                
+                glowOrbs.forEach((orb, index) => {
+                    const intensity = (index + 1) * 10;
+                    gsap.to(orb, {
+                        x: xPercent * intensity,
+                        y: yPercent * intensity,
+                        duration: 1,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+            
+            // =====================
+            // SMOOTH SCROLL FOR CTA
+            // =====================
+            
+            document.getElementById('heroCta').addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector('#section-1');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

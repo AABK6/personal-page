@@ -1,0 +1,1776 @@
+<!--
+  ============================================================================
+  WEEK 1 - PART I: THE STRATEGIC CONVERGENCE (1990-2000)
+  The Construction of the Liberal Digital Order
+  ============================================================================
+  
+  Section ID: week1-part1
+  Course: The Geopolitics of Artificial Intelligence
+  
+  Content Structure:
+  1. Chapter Header with Week/Part Labels
+  2. Introduction - The Intellectual Climate
+  3. Timeline Visualization (1990-2000)
+  4. The Grand Strategy: Global Information Infrastructure
+  5. The Clipper Chip Wars (1993-1996)
+  6. Telecom Act of 1996 & WTO Agreement
+  7. Barlow's Declaration (1996)
+  8. Clinton's Trojan Horse Thesis (2000)
+  9. Key Insights & Sources
+  
+  Technical Stack:
+  - Tailwind CSS v4 via CDN
+  - GSAP + ScrollTrigger for scroll animations
+  - Lucide icons
+  - Design System: ../shared/design-system.css
+  ============================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 Part I: The Strategic Convergence (1990-2000)</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS v4 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Design System -->
+  <link rel="stylesheet" href="../shared/design-system.css">
+  
+  <style>
+    /* ==========================================================================
+       SECTION-SPECIFIC STYLES
+       ========================================================================== */
+    
+    /* Part I Hero Background Pattern */
+    .hero-pattern {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at 20% 30%, rgba(234, 88, 12, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(21, 128, 61, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+      pointer-events: none;
+    }
+    
+    /* Year Badge Styling */
+    .year-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600));
+      color: white;
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      border-radius: var(--radius-md);
+      letter-spacing: var(--tracking-wide);
+    }
+    
+    /* Three Convictions Grid */
+    .conviction-card {
+      position: relative;
+      padding: var(--space-6);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: var(--border-width) solid var(--color-border-light);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+    
+    .conviction-card:hover {
+      border-color: var(--color-secondary-300);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    
+    .conviction-number {
+      position: absolute;
+      top: -12px;
+      left: var(--space-6);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-secondary-500);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+      border-radius: var(--radius-full);
+    }
+    
+    /* GII Principles Cards */
+    .gii-principle {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border-left: 3px solid var(--color-secondary-500);
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+    
+    .gii-principle:hover {
+      background: var(--color-secondary-100);
+      transform: translateX(4px);
+    }
+    
+    .gii-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-secondary-100);
+      border-radius: var(--radius-lg);
+      color: var(--color-secondary-600);
+    }
+    
+    /* Clipper Chip Timeline */
+    .clipper-phase {
+      position: relative;
+      padding-left: var(--space-8);
+      padding-bottom: var(--space-8);
+    }
+    
+    .clipper-phase::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 32px;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border-light);
+    }
+    
+    .clipper-phase:last-child::before {
+      display: none;
+    }
+    
+    .clipper-dot {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-surface);
+      border: 2px solid var(--color-secondary-500);
+      border-radius: var(--radius-full);
+    }
+    
+    .clipper-dot i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-secondary-500);
+    }
+    
+    /* Section 230 Highlight */
+    .section-230-box {
+      position: relative;
+      padding: var(--space-8);
+      background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 100%);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    
+    .section-230-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(234, 88, 12, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .section-230-number {
+      font-family: var(--font-heading);
+      font-size: var(--text-6xl);
+      font-weight: var(--font-bold);
+      color: var(--color-secondary-500);
+      line-height: 1;
+    }
+    
+    /* Barlow Quote Special Styling */
+    .barlow-quote {
+      position: relative;
+      padding: var(--space-12) var(--space-8);
+      background: linear-gradient(135deg, var(--color-primary-900) 0%, #1a365d 100%);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    
+    .barlow-quote::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(234, 88, 12, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(21, 128, 61, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+    }
+    
+    .barlow-quote-text {
+      position: relative;
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-style: italic;
+      line-height: var(--leading-relaxed);
+      color: white;
+    }
+    
+    @media (min-width: 768px) {
+      .barlow-quote-text {
+        font-size: var(--text-3xl);
+      }
+    }
+    
+    /* Trojan Horse Visual */
+    .trojan-visual {
+      position: relative;
+      padding: var(--space-8);
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-xl);
+      border: 2px dashed var(--color-border-medium);
+    }
+    
+    .trojan-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .trojan-icon i {
+      width: 40px;
+      height: 40px;
+      color: var(--color-secondary-500);
+    }
+    
+    /* Key Stat Cards */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+    }
+    
+    /* Scroll Progress Indicator */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-secondary-500), var(--color-secondary-300));
+      z-index: 9999;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+    
+    /* Animation Initial States */
+    .gsap-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .gsap-fade {
+      opacity: 0;
+    }
+    
+    .gsap-slide-left {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    
+    .gsap-slide-right {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    
+    .gsap-scale {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="bg-[#faf9f7]">
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  
+  <!-- ==========================================================================
+       CHAPTER HEADER / HERO SECTION
+       ========================================================================== -->
+  <header class="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <div class="hero-pattern"></div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-[15%] right-[8%] w-64 h-64 rounded-full bg-gradient-to-br from-orange-200/30 to-transparent blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-[20%] left-[5%] w-48 h-48 rounded-full bg-gradient-to-br from-green-200/20 to-transparent blur-3xl pointer-events-none"></div>
+    
+    <div class="relative z-10 container mx-auto px-6 py-20">
+      <div class="max-w-4xl mx-auto text-center">
+        <!-- Week/Part Labels -->
+        <div class="gsap-fade mb-8">
+          <div class="inline-flex items-center gap-4">
+            <span class="chapter-label">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              Week 1
+            </span>
+            <span class="text-slate-400">|</span>
+            <span class="chapter-label">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              Part I
+            </span>
+          </div>
+        </div>
+        
+        <!-- Main Title -->
+        <h1 class="gsap-reveal heading-1 mb-6">
+          The Strategic Convergence
+        </h1>
+        
+        <!-- Subtitle -->
+        <p class="gsap-reveal text-xl md:text-2xl text-slate-600 leading-relaxed max-w-3xl mx-auto mb-10" style="font-family: var(--font-body);">
+          The Construction of the Liberal Digital Order <span class="year-badge ml-2">1990-2000</span>
+        </p>
+        
+        <!-- Opening Statement -->
+        <div class="gsap-reveal max-w-2xl mx-auto">
+          <p class="text-lg text-slate-500 leading-relaxed italic border-l-4 border-orange-500 pl-6">
+            How three intellectual currents fused into a decade of techno-liberal optimism, 
+            shaping the architecture of the internet and the geopolitical assumptions that would 
+            define the digital age.
+          </p>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="gsap-fade mt-16">
+          <div class="flex flex-col items-center gap-2 text-slate-400">
+            <span class="text-sm uppercase tracking-widest">Begin Reading</span>
+            <i data-lucide="chevron-down" class="w-6 h-6 animate-bounce"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- ==========================================================================
+       MAIN CONTENT
+       ========================================================================== -->
+  <main class="relative">
+    
+    <!-- ========================================================================
+         SECTION 1: THE INTELLECTUAL CLIMATE
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#faf9f7]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">Foundations</span>
+            <h2 class="heading-2">The Intellectual Climate</h2>
+          </div>
+          
+          <!-- Lead Paragraph -->
+          <div class="gsap-reveal mb-12">
+            <p class="lead-text text-slate-700">
+              The 1990s were shaped by a convergence of three powerful intellectual currents. 
+              Each emerged from different disciplines—political philosophy, economics, and 
+              technology policy—but together they formed an ideological foundation for what 
+              would become the liberal digital order.
+            </p>
+          </div>
+          
+          <!-- Three Convictions Grid -->
+          <div class="grid md:grid-cols-3 gap-6 mb-16">
+            
+            <!-- Conviction 1: Fukuyama -->
+            <div class="gsap-reveal conviction-card">
+              <span class="conviction-number">1</span>
+              <div class="mt-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <i data-lucide="flag" class="w-5 h-5 text-orange-500"></i>
+                  <span class="text-sm font-mono text-orange-600">1992</span>
+                </div>
+                <h3 class="heading-4 text-lg mb-3">The End of History</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                  Francis Fukuyama declared liberal democracy as the "final form of human government," 
+                  suggesting the ideological battles of the 20th century had been won.
+                </p>
+                <div class="pt-4 border-t border-slate-200">
+                  <p class="text-xs text-slate-500 italic">
+                    "What we may be witnessing is not just the end of the Cold War, but the end of 
+                    history as such."
+                  </p>
+                  <p class="text-xs text-slate-400 mt-2">— Francis Fukuyama</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conviction 2: Hayek -->
+            <div class="gsap-reveal conviction-card">
+              <span class="conviction-number">2</span>
+              <div class="mt-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <i data-lucide="cpu" class="w-5 h-5 text-orange-500"></i>
+                  <span class="text-sm font-mono text-orange-600">1945 / 1990s</span>
+                </div>
+                <h3 class="heading-4 text-lg mb-3">Knowledge & Computing</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                  Hayek's 1945 essay on distributed knowledge was reinterpreted: the personal 
+                  computer became an anti-Soviet tool for decentralizing information.
+                </p>
+                <div class="pt-4 border-t border-slate-200">
+                  <p class="text-xs text-slate-500 italic">
+                    "The Use of Knowledge in Society" — the price system as a mechanism for 
+                    communicating information.
+                  </p>
+                  <p class="text-xs text-slate-400 mt-2">— F.A. Hayek</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Conviction 3: Romer -->
+            <div class="gsap-reveal conviction-card">
+              <span class="conviction-number">3</span>
+              <div class="mt-4">
+                <div class="flex items-center gap-2 mb-3">
+                  <i data-lucide="lightbulb" class="w-5 h-5 text-orange-500"></i>
+                  <span class="text-sm font-mono text-orange-600">1990</span>
+                </div>
+                <h3 class="heading-4 text-lg mb-3">Ideas as Non-Rival Goods</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                  Paul Romer's endogenous growth theory: ideas are non-rival goods that can be 
+                  shared without being depleted, creating infinite growth potential.
+                </p>
+                <div class="pt-4 border-t border-slate-200">
+                  <p class="text-xs text-slate-500 italic">
+                    "Endogenous Technological Change" — the economics of infinite replication 
+                    and network effects.
+                  </p>
+                  <p class="text-xs text-slate-400 mt-2">— Paul Romer</p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          <!-- Key Insight Card -->
+          <div class="gsap-reveal insight-card insight-card--highlight">
+            <div class="insight-label">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              Key Insight
+            </div>
+            <h3 class="insight-title">The Fusion of Optimism</h3>
+            <p class="insight-content">
+              These three convictions fused into a powerful narrative: <strong>technology + markets + openness = inevitable progress.</strong> 
+              The internet was not merely a communication tool—it was the material embodiment of liberal 
+              democratic values, destined to spread freedom and prosperity globally. This ideological 
+              framework would shape every major policy decision of the decade.
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 2: TIMELINE VISUALIZATION (1990-2000)
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#f5f3f0]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">Chronology</span>
+            <h2 class="heading-2">A Decade of Digital Transformation</h2>
+            <p class="chapter-subtitle">
+              The pivotal moments that constructed the liberal digital order, from the fall of the 
+              Berlin Wall to the dot-com bubble's peak.
+            </p>
+          </div>
+          
+          <!-- Timeline -->
+          <div class="timeline gsap-fade" id="mainTimeline">
+            
+            <!-- 1990 -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">1990</span>
+              <h3 class="timeline-title">Endogenous Technological Change</h3>
+              <p class="timeline-content">
+                Paul Romer publishes his seminal paper establishing the economic theory that would 
+                justify the information economy. Ideas, unlike physical goods, can be shared without 
+                being depleted—creating the theoretical foundation for infinite growth through 
+                knowledge sharing.
+              </p>
+            </div>
+            
+            <!-- 1991 -->
+            <div class="timeline-item">
+              <span class="timeline-date">August 1991</span>
+              <h3 class="timeline-title">World Wide Web Goes Public</h3>
+              <p class="timeline-content">
+                Tim Berners-Lee releases the first web browser and server software on the internet. 
+                The web's open architecture—built on HTTP, HTML, and URL standards—embodies the 
+                decentralized, non-proprietary ethos that would define the era.
+              </p>
+            </div>
+            
+            <!-- 1992 -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">1992</span>
+              <h3 class="timeline-title">The End of History</h3>
+              <p class="timeline-content">
+                Francis Fukuyama's book declares liberal democracy victorious. The ideological 
+                battles of the 20th century are over; free markets and democratic governance 
+                represent humanity's endpoint. Technology becomes a vehicle for this inevitable 
+                historical trajectory.
+              </p>
+            </div>
+            
+            <!-- 1993 -->
+            <div class="timeline-item">
+              <span class="timeline-date">April 1993</span>
+              <h3 class="timeline-title">The Clipper Chip Proposal</h3>
+              <p class="timeline-content">
+                The Clinton administration proposes the Clipper Chip—a hardware encryption standard 
+                with government backdoor access. The proposal reveals the first major tension: 
+                openness versus surveillance in the digital realm.
+              </p>
+            </div>
+            
+            <!-- 1994 -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">March 21, 1994</span>
+              <h3 class="timeline-title">Al Gore's Buenos Aires Speech</h3>
+              <p class="timeline-content">
+                Vice President Gore announces the Global Information Infrastructure (GII) initiative, 
+                outlining five principles that would guide U.S. digital policy: private sector leadership, 
+                competition, open access, universal service, and flexible regulation.
+              </p>
+            </div>
+            
+            <!-- 1994b -->
+            <div class="timeline-item">
+              <span class="timeline-date">May 1994</span>
+              <h3 class="timeline-title">Matt Blaze's Discovery</h3>
+              <p class="timeline-content">
+                AT&T researcher Matt Blaze discovers a critical vulnerability in the Clipper Chip's 
+                escrow system. The technical failure accelerates the shift from hardware-based 
+                surveillance to market-based dominance strategies.
+              </p>
+            </div>
+            
+            <!-- 1996 -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">February 8, 1996</span>
+              <h3 class="timeline-title">Barlow's Declaration</h3>
+              <p class="timeline-content">
+                John Perry Barlow publishes "A Declaration of the Independence of Cyberspace" in Davos, 
+                proclaiming: "Governments of the Industrial World, you weary giants of flesh and steel, 
+                I come from Cyberspace, the new home of Mind."
+              </p>
+            </div>
+            
+            <!-- 1996b -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">February 1996</span>
+              <h3 class="timeline-title">Telecommunications Act</h3>
+              <p class="timeline-content">
+                The most significant overhaul of U.S. communications law in 62 years. Title I vs Title II 
+                classification debates begin. Section 230 is inserted—"the 26 words that created the Internet"—
+                providing liability protection for online platforms.
+              </p>
+            </div>
+            
+            <!-- 1997 -->
+            <div class="timeline-item">
+              <span class="timeline-date">February 1997</span>
+              <h3 class="timeline-title">WTO Basic Telecom Agreement</h3>
+              <p class="timeline-content">
+                69 countries commit to opening their telecommunications markets to foreign competition. 
+                The agreement institutionalizes the liberal approach to digital infrastructure globally, 
+                embedding market principles in international trade law.
+              </p>
+            </div>
+            
+            <!-- 1998 -->
+            <div class="timeline-item">
+              <span class="timeline-date">1998</span>
+              <h3 class="timeline-title">ICANN Formation</h3>
+              <p class="timeline-content">
+                The Internet Corporation for Assigned Names and Numbers is created to manage domain names 
+                and IP addresses. The U.S. government retains ultimate authority, establishing a model 
+                of private governance with public oversight.
+              </p>
+            </div>
+            
+            <!-- 2000 -->
+            <div class="timeline-item timeline-item--milestone">
+              <span class="timeline-date">March 2000</span>
+              <h3 class="timeline-title">Clinton's Trojan Horse</h3>
+              <p class="timeline-content">
+                President Clinton admits the difficulty of regulating the internet: "It's like trying to 
+                nail Jell-O to the wall." The comment reveals both the hubris of the hegemon and a 
+                fundamental category error—treating the internet as merely "information" rather than 
+                infrastructure.
+              </p>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 3: THE GRAND STRATEGY - GLOBAL INFORMATION INFRASTRUCTURE
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#faf9f7]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">Policy Architecture</span>
+            <h2 class="heading-2">The Grand Strategy: Global Information Infrastructure</h2>
+          </div>
+          
+          <!-- Lead -->
+          <div class="gsap-reveal mb-12">
+            <p class="lead-text text-slate-700">
+              On March 21, 1994, Vice President Al Gore delivered a speech in Buenos Aires that would 
+              define American digital policy for a generation. The Global Information Infrastructure (GII) 
+              initiative was more than a technical proposal—it was a geopolitical strategy dressed in 
+              technological clothing.
+            </p>
+          </div>
+          
+          <!-- Quote Block -->
+          <div class="gsap-reveal quote-block mb-16">
+            <p class="quote-text">
+              The GII will not only be a metaphor for a functioning democracy, it will in fact 
+              promote the functioning of democracy by greatly enhancing the participation of 
+              citizens in decision-making.
+            </p>
+            <div class="quote-attribution">
+              <div>
+                <p class="quote-author">Al Gore</p>
+                <p class="quote-role">Vice President, United States</p>
+              </div>
+              <span class="quote-source">Buenos Aires, March 21, 1994</span>
+            </div>
+          </div>
+          
+          <!-- Strategic Intent -->
+          <div class="gsap-reveal insight-card insight-card--accent mb-12">
+            <div class="insight-label">
+              <i data-lucide="target" class="w-4 h-4"></i>
+              Strategic Intent
+            </div>
+            <h3 class="insight-title">Liberal Hegemony via Connectivity</h3>
+            <p class="insight-content">
+              The GII was designed as a <strong>trojan horse for American values</strong>. By building 
+              the infrastructure of global communication, the U.S. would embed its principles—free speech, 
+              market competition, open access—into the very architecture of the digital world. Connectivity 
+              became a form of soft power, spreading liberal democratic norms through technical standards 
+              rather than political coercion.
+            </p>
+          </div>
+          
+          <!-- Five Principles -->
+          <div class="gsap-reveal mb-8">
+            <h3 class="heading-3 mb-8 text-center">The Five Principles of GII</h3>
+          </div>
+          
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+            
+            <!-- Principle 1 -->
+            <div class="gsap-reveal gii-principle">
+              <div class="gii-icon">
+                <i data-lucide="building-2" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-1">Private Sector Leadership</h4>
+                <p class="text-sm text-slate-600">Government facilitates; industry builds and operates.</p>
+              </div>
+            </div>
+            
+            <!-- Principle 2 -->
+            <div class="gsap-reveal gii-principle">
+              <div class="gii-icon">
+                <i data-lucide="trending-up" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-1">Competition</h4>
+                <p class="text-sm text-slate-600">Multiple providers ensure innovation and lower costs.</p>
+              </div>
+            </div>
+            
+            <!-- Principle 3 -->
+            <div class="gsap-reveal gii-principle">
+              <div class="gii-icon">
+                <i data-lucide="unlock" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-1">Open Access</h4>
+                <p class="text-sm text-slate-600">Networks must interconnect; no walled gardens.</p>
+              </div>
+            </div>
+            
+            <!-- Principle 4 -->
+            <div class="gsap-reveal gii-principle">
+              <div class="gii-icon">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-1">Universal Service</h4>
+                <p class="text-sm text-slate-600">Affordable access for all, bridging the digital divide.</p>
+              </div>
+            </div>
+            
+            <!-- Principle 5 -->
+            <div class="gsap-reveal gii-principle md:col-span-2 lg:col-span-1">
+              <div class="gii-icon">
+                <i data-lucide="scale" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-1">Flexible Regulation</h4>
+                <p class="text-sm text-slate-600">Light-touch approach that adapts to rapid change.</p>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 4: THE CLIPPER CHIP WARS (1993-1996)
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#f5f3f0]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">The Internal Contradiction</span>
+            <h2 class="heading-2">The Clipper Chip Wars</h2>
+            <p class="chapter-subtitle">
+              The first major battle over encryption revealed a fundamental tension in the liberal 
+              digital order: openness versus surveillance, freedom versus security.
+            </p>
+          </div>
+          
+          <!-- Two Column Layout -->
+          <div class="grid lg:grid-cols-2 gap-12 mb-16">
+            
+            <!-- Left: The Proposal -->
+            <div class="gsap-slide-left">
+              <div class="bg-white rounded-xl p-8 shadow-md border border-slate-200 h-full">
+                <div class="flex items-center gap-3 mb-6">
+                  <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center">
+                    <i data-lucide="chip" class="w-6 h-6 text-orange-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="heading-4 text-xl">The Proposal</h3>
+                    <p class="text-sm text-slate-500">April 1993</p>
+                  </div>
+                </div>
+                
+                <p class="text-slate-700 leading-relaxed mb-6">
+                  The Clinton administration proposed the Clipper Chip—a hardware encryption standard 
+                  for voice and data communications that included a "key escrow" system. The government 
+                  would hold copies of encryption keys, allowing law enforcement to decrypt communications 
+                  with a warrant.
+                </p>
+                
+                <div class="bg-slate-50 rounded-lg p-4 border-l-4 border-orange-500">
+                  <p class="text-sm text-slate-600 italic">
+                    The goal: enable strong encryption for commercial use while preserving law 
+                    enforcement's ability to intercept communications.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right: The Backlash -->
+            <div class="gsap-slide-right">
+              <div class="bg-white rounded-xl p-8 shadow-md border border-slate-200 h-full">
+                <div class="flex items-center gap-3 mb-6">
+                  <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center">
+                    <i data-lucide="shield-alert" class="w-6 h-6 text-red-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="heading-4 text-xl">The Backlash</h3>
+                    <p class="text-sm text-slate-500">1993-1996</p>
+                  </div>
+                </div>
+                
+                <p class="text-slate-700 leading-relaxed mb-6">
+                  Civil liberties groups, technology companies, and cryptographers united in opposition. 
+                  The core argument: any backdoor accessible to "good guys" would eventually be found 
+                  by "bad guys." Trust in government key escrow was impossible in a networked world.
+                </p>
+                
+                <div class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500">
+                  <p class="text-sm text-slate-600 italic">
+                    The Electronic Frontier Foundation and industry leaders argued that mandating 
+                    weakened encryption would harm U.S. competitiveness and civil liberties.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          <!-- Matt Blaze Discovery -->
+          <div class="gsap-reveal mb-16">
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-8 text-white relative overflow-hidden">
+              <!-- Decorative -->
+              <div class="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl"></div>
+              
+              <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-6">
+                  <i data-lucide="key" class="w-6 h-6 text-orange-400"></i>
+                  <span class="text-orange-400 font-mono text-sm">May 1994</span>
+                </div>
+                
+                <h3 class="heading-3 text-white mb-4">Matt Blaze's Discovery</h3>
+                
+                <p class="text-slate-300 leading-relaxed mb-6 max-w-2xl">
+                  AT&T Bell Labs researcher Matt Blaze published a paper demonstrating a critical 
+                  vulnerability in the Clipper Chip's escrow system. He showed that the protocol's 
+                  authentication mechanism could be subverted, potentially allowing users to bypass 
+                  the government backdoor entirely.
+                </p>
+                
+                <div class="flex items-start gap-4 bg-white/10 rounded-lg p-4">
+                  <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5"></i>
+                  <p class="text-sm text-slate-300">
+                    <strong class="text-white">The technical failure became political:</strong> Blaze's 
+                    discovery proved that the Clipper Chip couldn't deliver on its promises. The 
+                    hardware-based surveillance model was fundamentally flawed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Key Insight -->
+          <div class="gsap-reveal insight-card insight-card--info">
+            <div class="insight-label">
+              <i data-lucide="git-branch" class="w-4 h-4"></i>
+              Strategic Pivot
+            </div>
+            <h3 class="insight-title">From Hardware to Market Dominance</h3>
+            <p class="insight-content">
+              The Clipper Chip's failure forced a strategic shift. Rather than mandating surveillance 
+              through technical standards, the U.S. pivoted to <strong>market dominance</strong>. If American 
+              companies controlled the platforms, servers, and infrastructure of the global internet, 
+              surveillance could happen through corporate cooperation rather than technical mandate. 
+              The NSA's budget shifted from trying to weaken encryption standards to breaking into 
+              systems directly—culminating in programs like PRISM revealed by Edward Snowden in 2013.
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 5: TELECOM ACT OF 1996 & WTO AGREEMENT
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#faf9f7]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">Legislative Milestones</span>
+            <h2 class="heading-2">The Telecom Act of 1996</h2>
+          </div>
+          
+          <!-- Lead -->
+          <div class="gsap-reveal mb-12">
+            <p class="lead-text text-slate-700">
+              Signed into law on February 8, 1996, the Telecommunications Act was the most significant 
+              overhaul of American communications law in 62 years. It rewrote the rules for the internet 
+              age—and embedded decisions that would shape digital governance for decades.
+            </p>
+          </div>
+          
+          <!-- Title I vs Title II -->
+          <div class="gsap-reveal mb-16">
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+              <div class="bg-slate-800 text-white px-6 py-4">
+                <h3 class="heading-4 text-lg flex items-center gap-3">
+                  <i data-lucide="scale" class="w-5 h-5 text-orange-400"></i>
+                  The Classification Debate: Title I vs Title II
+                </h3>
+              </div>
+              
+              <div class="p-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                  
+                  <!-- Title I -->
+                  <div class="border-r-0 md:border-r border-slate-200 pr-0 md:pr-6">
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">Title I</span>
+                      <span class="text-sm text-slate-500">Information Service</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Light-touch regulation</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"></i>
+                        <span>No common carrier obligations</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Freedom to prioritize traffic</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Minimal FCC oversight</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <!-- Title II -->
+                  <div class="pl-0 md:pl-6 pt-6 md:pt-0 border-t md:border-t-0 border-slate-200">
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">Title II</span>
+                      <span class="text-sm text-slate-500">Telecommunications Service</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Common carrier regulation</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Non-discrimination requirements</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Net neutrality obligations</span>
+                      </li>
+                      <li class="flex items-start gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0"></i>
+                        <span>Universal service contributions</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Section 230 Highlight -->
+          <div class="gsap-reveal mb-16">
+            <div class="section-230-box text-white">
+              <div class="relative z-10">
+                <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-12">
+                  
+                  <div class="flex-shrink-0">
+                    <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">Section</p>
+                    <p class="section-230-number">230</p>
+                  </div>
+                  
+                  <div class="flex-1">
+                    <h3 class="heading-3 text-white mb-4">"The 26 Words That Created the Internet"</h3>
+                    <div class="bg-white/10 rounded-lg p-4 mb-4">
+                      <p class="font-mono text-sm leading-relaxed text-slate-200">
+                        "No provider or user of an interactive computer service shall be treated as 
+                        the publisher or speaker of any information provided by another information 
+                        content provider."
+                      </p>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                      These 26 words established liability protection for online platforms, enabling 
+                      the user-generated content model that would power social media, search engines, 
+                      and the entire Web 2.0 ecosystem. Platforms could moderate content without becoming 
+                      legally responsible for everything users posted.
+                    </p>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- WTO Agreement -->
+          <div class="gsap-reveal mb-12">
+            <div class="bg-white rounded-xl p-8 shadow-md border border-slate-200">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <i data-lucide="globe-2" class="w-6 h-6 text-blue-600"></i>
+                </div>
+                <div>
+                  <h3 class="heading-4 text-xl">WTO Basic Telecommunications Agreement</h3>
+                  <p class="text-sm text-slate-500">February 1997</p>
+                </div>
+              </div>
+              
+              <p class="text-slate-700 leading-relaxed mb-6">
+                One year after the Telecom Act, the World Trade Organization cemented the liberal 
+                approach to digital infrastructure globally. 69 countries representing over 90% of 
+                global telecommunications revenues committed to opening their markets to foreign 
+                competition.
+              </p>
+              
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-slate-50 rounded-lg p-4 text-center">
+                  <p class="text-3xl font-bold text-slate-800 mb-1">69</p>
+                  <p class="text-sm text-slate-500">Countries</p>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-4 text-center">
+                  <p class="text-3xl font-bold text-slate-800 mb-1">90%+</p>
+                  <p class="text-sm text-slate-500">Global Telecom Revenue</p>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-4 text-center">
+                  <p class="text-3xl font-bold text-slate-800 mb-1">$1T</p>
+                  <p class="text-sm text-slate-500">Market Value</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 6: BARLOW'S DECLARATION (1996)
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#0f172a] relative overflow-hidden">
+      <!-- Background Effects -->
+      <div class="absolute inset-0">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Date Badge -->
+          <div class="gsap-fade mb-8 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-orange-400 text-sm font-mono">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              February 8, 1996 — Davos, Switzerland
+            </span>
+          </div>
+          
+          <!-- Main Quote -->
+          <div class="gsap-reveal barlow-quote mb-12">
+            <div class="relative z-10">
+              <p class="barlow-quote-text mb-8">
+                "Governments of the Industrial World, you weary giants of flesh and steel, I come 
+                from Cyberspace, the new home of Mind. On behalf of the future, I ask you of the 
+                past to leave us alone. You are not welcome among us. You have no sovereignty where 
+                we gather."
+              </p>
+              
+              <div class="flex items-center gap-4 pt-6 border-t border-white/20">
+                <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                  <i data-lucide="user" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                  <p class="text-white font-semibold">John Perry Barlow</p>
+                  <p class="text-slate-400 text-sm">Co-founder, Electronic Frontier Foundation</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Context -->
+          <div class="gsap-reveal grid md:grid-cols-2 gap-8 mb-12">
+            
+            <div class="bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10">
+              <h3 class="text-white heading-4 text-lg mb-4 flex items-center gap-2">
+                <i data-lucide="feather" class="w-5 h-5 text-orange-400"></i>
+                The Manifesto
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Barlow's "Declaration of the Independence of Cyberspace" was written in response to 
+                the Telecommunications Act. It articulated a vision of the internet as a separate 
+                realm—immaterial, borderless, and beyond the reach of traditional governments. The 
+                language echoed the American Declaration of Independence, positioning cyberspace as 
+                a new frontier for human liberation.
+              </p>
+            </div>
+            
+            <div class="bg-white/5 backdrop-blur rounded-xl p-6 border border-white/10">
+              <h3 class="text-white heading-4 text-lg mb-4 flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-400"></i>
+                The Myth of Immateriality
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                Barlow's declaration rested on a fundamental misconception: that cyberspace was 
+                somehow separate from physical reality. In fact, the internet depends entirely on 
+                material infrastructure—servers, cables, data centers, and the electricity that 
+                powers them. All of this exists within territorial jurisdictions, subject to 
+                national laws and sovereign control.
+              </p>
+            </div>
+            
+          </div>
+          
+          <!-- Key Insight -->
+          <div class="gsap-reveal bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl p-6 border border-orange-500/30">
+            <div class="flex items-start gap-4">
+              <i data-lucide="lightbulb" class="w-6 h-6 text-orange-400 flex-shrink-0 mt-1"></i>
+              <div>
+                <h4 class="text-white font-semibold mb-2">The Ideological Function</h4>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                  Barlow's declaration served a crucial ideological purpose: it naturalized American 
+                  dominance of the internet as "freedom" rather than hegemony. By framing cyberspace 
+                  as a realm beyond government, it obscured the very real power structures—corporate 
+                  control, infrastructure ownership, and technical standards—that concentrated influence 
+                  in American hands. The myth of immateriality became a shield for material interests.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 7: CLINTON'S TROJAN HORSE THESIS (2000)
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#faf9f7]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal section-header mb-12">
+            <span class="heading-6 text-orange-600 mb-3 block">The Hubris of the Hegemon</span>
+            <h2 class="heading-2">Clinton's Trojan Horse Thesis</h2>
+          </div>
+          
+          <!-- The Quote -->
+          <div class="gsap-reveal mb-16">
+            <div class="trojan-visual">
+              <div class="trojan-icon">
+                <i data-lucide="box" class="w-10 h-10"></i>
+              </div>
+              
+              <div class="text-center max-w-2xl mx-auto">
+                <p class="heading-2 text-3xl md:text-4xl text-slate-800 mb-6 italic">
+                  "It's like trying to nail Jell-O to the wall."
+                </p>
+                <p class="text-slate-500">
+                  — President Bill Clinton, March 2000
+                </p>
+                <p class="text-sm text-slate-400 mt-2">
+                  On the difficulty of regulating the internet
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Analysis -->
+          <div class="gsap-reveal grid md:grid-cols-2 gap-8 mb-16">
+            
+            <!-- The Hubris -->
+            <div class="bg-white rounded-xl p-8 shadow-md border border-slate-200">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                  <i data-lucide="crown" class="w-5 h-5 text-orange-600"></i>
+                </div>
+                <h3 class="heading-4 text-lg">The Hubris</h3>
+              </div>
+              
+              <p class="text-slate-700 leading-relaxed mb-4">
+                Clinton's comment reflected a particular kind of American confidence—the belief that 
+                the internet was inherently ungovernable, that its distributed architecture made 
+                traditional regulation impossible.
+              </p>
+              
+              <p class="text-slate-600 text-sm leading-relaxed">
+                This hubris served American interests: if the internet couldn't be regulated, then 
+                U.S. companies could operate globally without interference from foreign governments. 
+                The "ungovernability" of cyberspace became a justification for laissez-faire policies 
+                that benefited Silicon Valley.
+              </p>
+            </div>
+            
+            <!-- The Category Error -->
+            <div class="bg-white rounded-xl p-8 shadow-md border border-slate-200">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
+                  <i data-lucide="alert-triangle" class="w-5 h-5 text-red-600"></i>
+                </div>
+                <h3 class="heading-4 text-lg">The Category Error</h3>
+              </div>
+              
+              <p class="text-slate-700 leading-relaxed mb-4">
+                Clinton's statement reveals a fundamental misunderstanding: treating the internet as 
+                merely "information" rather than infrastructure.
+              </p>
+              
+              <p class="text-slate-600 text-sm leading-relaxed">
+                Information may be hard to regulate, but infrastructure is not. The cables, servers, 
+                data centers, and corporate entities that constitute the internet are all eminently 
+                regulable. China would prove this within years, demonstrating that sovereign control 
+                over digital infrastructure was not only possible but effective.
+              </p>
+            </div>
+            
+          </div>
+          
+          <!-- Key Insight Card -->
+          <div class="gsap-reveal insight-card insight-card--highlight mb-16">
+            <div class="insight-label">
+              <i data-lucide="eye" class="w-4 h-4"></i>
+              Critical Reflection
+            </div>
+            <h3 class="insight-title">The Blind Spot of Liberal Hegemony</h3>
+            <p class="insight-content">
+              The 1990s consensus assumed that American values would spread naturally through technology, 
+              that connectivity would inevitably produce liberalization. This assumption blinded policymakers 
+              to alternative possibilities: that the same infrastructure could be used for surveillance, 
+              that platforms could become instruments of control, that authoritarian states could adapt 
+              the internet to their own purposes. The Trojan Horse thesis assumed the horse would only 
+              work in one direction—outward. It didn't account for what might climb back in.
+            </p>
+          </div>
+          
+          <!-- Looking Forward -->
+          <div class="gsap-reveal bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 text-white">
+            <div class="flex items-center gap-3 mb-6">
+              <i data-lucide="arrow-right" class="w-6 h-6 text-orange-400"></i>
+              <h3 class="heading-4 text-lg text-white">Looking Ahead</h3>
+            </div>
+            
+            <p class="text-slate-300 leading-relaxed mb-6">
+              By 2000, the architecture of the liberal digital order was in place: open markets, 
+              light-touch regulation, corporate leadership, and the assumption that technology would 
+              spread democratic values. But the contradictions were already visible—the surveillance 
+              debates, the platform power concentrations, the gap between rhetoric and reality.
+            </p>
+            
+            <p class="text-slate-300 leading-relaxed">
+              The next decade would test these foundations. The dot-com crash, 9/11, the rise of 
+              social media, and the emergence of alternative models—particularly from China—would 
+              challenge the assumptions that had seemed so certain in the 1990s. The liberal digital 
+              order was about to face its first serious crises.
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 8: KEY INSIGHTS SUMMARY
+         ======================================================================== -->
+    <section class="py-20 md:py-28 bg-[#f5f3f0]">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <!-- Section Header -->
+          <div class="gsap-reveal text-center mb-16">
+            <span class="heading-6 text-orange-600 mb-3 block">Summary</span>
+            <h2 class="heading-2">Key Insights from Part I</h2>
+          </div>
+          
+          <!-- Insights Grid -->
+          <div class="grid md:grid-cols-2 gap-6 mb-16">
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="git-merge" class="w-4 h-4"></i>
+                Convergence
+              </div>
+              <p class="insight-content">
+                Three intellectual currents—Fukuyama's end of history, Hayek's distributed knowledge, 
+                and Romer's endogenous growth—fused into a powerful narrative that shaped 1990s digital policy.
+              </p>
+            </div>
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="globe" class="w-4 h-4"></i>
+                Hegemony
+              </div>
+              <p class="insight-content">
+                The GII was designed as a vehicle for American values, embedding liberal democratic 
+                principles into the technical architecture of the global internet.
+              </p>
+            </div>
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="shield" class="w-4 h-4"></i>
+                Contradiction
+              </div>
+              <p class="insight-content">
+                The Clipper Chip wars revealed the tension between openness and surveillance, 
+                forcing a strategic shift from hardware mandates to market-based dominance.
+              </p>
+            </div>
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Legislation
+              </div>
+              <p class="insight-content">
+                The Telecom Act of 1996 and Section 230 established the legal framework for the 
+                platform economy, with consequences still debated today.
+              </p>
+            </div>
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="cloud" class="w-4 h-4"></i>
+                Mythology
+              </div>
+              <p class="insight-content">
+                Barlow's declaration articulated the myth of cyberspace as immaterial and borderless, 
+                obscuring the material infrastructure and power structures that enabled American dominance.
+              </p>
+            </div>
+            
+            <div class="gsap-reveal insight-card">
+              <div class="insight-label">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                Blind Spot
+              </div>
+              <p class="insight-content">
+                Clinton's "Jell-O" comment revealed a category error—treating the internet as mere 
+                information rather than regulable infrastructure—and a dangerous hubris about American 
+                technological supremacy.
+              </p>
+            </div>
+            
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+    <!-- ========================================================================
+         SECTION 9: SOURCES & CITATIONS
+         ======================================================================== -->
+    <section class="py-16 bg-[#faf9f7] border-t border-slate-200">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          
+          <div class="source-list">
+            <h3 class="source-list-title flex items-center gap-2">
+              <i data-lucide="book-marked" class="w-4 h-4"></i>
+              Sources & References
+            </h3>
+            
+            <div class="space-y-1">
+              
+              <div class="source-item">
+                <span class="source-number">[1]</span>
+                <p class="source-text">
+                  Fukuyama, Francis. <em>The End of History and the Last Man</em>. Free Press, 1992.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[2]</span>
+                <p class="source-text">
+                  Hayek, F.A. "The Use of Knowledge in Society." <em>American Economic Review</em>, 
+                  Vol. 35, No. 4, 1945, pp. 519-530.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[3]</span>
+                <p class="source-text">
+                  Romer, Paul M. "Endogenous Technological Change." <em>Journal of Political Economy</em>, 
+                  Vol. 98, No. 5, 1990, pp. S71-S102.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[4]</span>
+                <p class="source-text">
+                  Gore, Al. "Remarks at the International Telecommunications Union." Buenos Aires, 
+                  Argentina, March 21, 1994.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[5]</span>
+                <p class="source-text">
+                  Blaze, Matt. "Protocol Failure in the Escrowed Encryption Standard." 
+                  <em>Proceedings of the 2nd ACM Conference on Computer and Communications Security</em>, 1994.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[6]</span>
+                <p class="source-text">
+                  Telecommunications Act of 1996. Pub. L. No. 104-104, 110 Stat. 56 (1996).
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[7]</span>
+                <p class="source-text">
+                  47 U.S.C. § 230 — Protection for private blocking and screening of offensive material.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[8]</span>
+                <p class="source-text">
+                  WTO Agreement on Basic Telecommunications. Geneva, February 15, 1997.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[9]</span>
+                <p class="source-text">
+                  Barlow, John Perry. "A Declaration of the Independence of Cyberspace." 
+                  Electronic Frontier Foundation, February 8, 1996.
+                </p>
+              </div>
+              
+              <div class="source-item">
+                <span class="source-number">[10]</span>
+                <p class="source-text">
+                  Clinton, William J. Remarks on Internet Policy. March 2000.
+                </p>
+              </div>
+              
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+    
+  </main>
+  
+  <!-- ========================================================================
+       FOOTER / NAVIGATION
+       ======================================================================== -->
+  <footer class="bg-slate-900 text-white py-12">
+    <div class="container mx-auto px-6">
+      <div class="max-w-4xl mx-auto">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          
+          <div class="text-center md:text-left">
+            <p class="text-slate-400 text-sm mb-2">Week 1 — Part I</p>
+            <p class="text-white font-semibold">The Strategic Convergence (1990-2000)</p>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <a href="#" class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors text-sm flex items-center gap-2">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              Previous
+            </a>
+            <a href="#" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors text-sm flex items-center gap-2">
+              Next Part
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+          
+        </div>
+        
+        <div class="mt-8 pt-8 border-t border-white/10 text-center">
+          <p class="text-slate-500 text-sm">
+            The Geopolitics of Artificial Intelligence — Course Materials
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </footer>
+  
+  <!-- ========================================================================
+       SCRIPTS
+       ======================================================================== -->
+  <script>
+    // Initialize Lucide Icons
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+      
+      // Register GSAP ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger);
+      
+      // Scroll Progress Bar
+      gsap.to('#scrollProgress', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: 'body',
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.3
+        }
+      });
+      
+      // Reveal Animations - Fade Up
+      gsap.utils.toArray('.gsap-reveal').forEach((element, i) => {
+        gsap.fromTo(element, 
+          { 
+            opacity: 0, 
+            y: 40 
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+      
+      // Fade Animations
+      gsap.utils.toArray('.gsap-fade').forEach((element) => {
+        gsap.fromTo(element,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+      
+      // Slide Left Animations
+      gsap.utils.toArray('.gsap-slide-left').forEach((element) => {
+        gsap.fromTo(element,
+          { opacity: 0, x: -50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+      
+      // Slide Right Animations
+      gsap.utils.toArray('.gsap-slide-right').forEach((element) => {
+        gsap.fromTo(element,
+          { opacity: 0, x: 50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: element,
+              start: 'top 85%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+      
+      // Timeline Items Stagger
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      gsap.fromTo(timelineItems,
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '#mainTimeline',
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // Timeline Line Draw
+      gsap.fromTo('#mainTimeline::before',
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          duration: 1.5,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#mainTimeline',
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // Conviction Cards Stagger
+      const convictionCards = document.querySelectorAll('.conviction-card');
+      gsap.fromTo(convictionCards,
+        { opacity: 0, y: 30, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: 'back.out(1.2)',
+          scrollTrigger: {
+            trigger: convictionCards[0],
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // GII Principles Stagger
+      const giiPrinciples = document.querySelectorAll('.gii-principle');
+      gsap.fromTo(giiPrinciples,
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: giiPrinciples[0],
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // Insight Cards Stagger
+      const insightCards = document.querySelectorAll('.insight-card');
+      gsap.fromTo(insightCards,
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: insightCards[0],
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // Quote Block Special Animation
+      const quoteBlocks = document.querySelectorAll('.quote-block');
+      quoteBlocks.forEach((block) => {
+        gsap.fromTo(block,
+          { opacity: 0, scale: 0.95, y: 30 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: block,
+              start: 'top 80%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+      
+      // Barlow Quote Dramatic Entrance
+      gsap.fromTo('.barlow-quote',
+        { opacity: 0, scale: 0.9 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.barlow-quote',
+            start: 'top 75%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+      
+      // Section 230 Counter Animation
+      ScrollTrigger.create({
+        trigger: '.section-230-number',
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.fromTo('.section-230-number',
+            { scale: 0.5, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.8, ease: 'back.out(1.7)' }
+          );
+        },
+        once: true
+      });
+      
+      // Parallax Effects for Decorative Elements
+      gsap.to('.hero-pattern', {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: 'header',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+      
+    });
+  </script>
+  
+</body>
+</html>

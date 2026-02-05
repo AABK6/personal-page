@@ -1,0 +1,226 @@
+<!--
+  ============================================================================
+  AI GEOPOLITICS - NAVIGATION COMPONENT
+  ============================================================================
+  Fixed navigation with scroll progress indicator and mobile hamburger menu.
+  
+  Usage:
+  1. Copy this HTML into your page after the opening <body> tag
+  2. Include scripts.js for functionality
+  3. The nav will auto-highlight the current section
+  ============================================================================
+-->
+
+<!-- Skip Link for Accessibility -->
+<a href="#main-content" class="skip-link sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1000] focus:bg-white focus:text-black focus:px-4 focus:py-2 focus:rounded">
+  Skip to main content
+</a>
+
+<!-- Main Navigation -->
+<nav 
+  id="main-nav" 
+  class="fixed top-0 left-0 right-0 z-[var(--z-nav)] transition-all duration-300"
+  role="navigation" 
+  aria-label="Main navigation"
+>
+  <!-- Progress Bar (Scroll Indicator) -->
+  <div class="progress-container absolute bottom-0 left-0 right-0 h-[2px] bg-transparent">
+    <div 
+      id="scroll-progress" 
+      class="h-full bg-gradient-to-r from-[var(--color-tech-cyan)] to-[var(--color-power-purple)] w-0 transition-all duration-100"
+      aria-hidden="true"
+    ></div>
+  </div>
+
+  <!-- Nav Content -->
+  <div class="nav-content backdrop-blur-xl bg-[var(--color-bg-primary)]/80 border-b border-[var(--border-color)]">
+    <div class="container flex items-center justify-between h-16 md:h-20">
+      
+      <!-- Logo / Site Title -->
+      <a 
+        href="#hero" 
+        class="flex items-center gap-3 group"
+        aria-label="Go to homepage"
+      >
+        <!-- Logo Icon -->
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--color-tech-cyan)] to-[var(--color-power-purple)] flex items-center justify-center group-hover:shadow-[var(--shadow-glow-cyan)] transition-shadow duration-300">
+          <i data-lucide="globe" class="w-5 h-5 text-white" aria-hidden="true"></i>
+        </div>
+        
+        <!-- Site Title (Hidden on small mobile) -->
+        <div class="hidden sm:block">
+          <span class="font-display font-semibold text-[var(--color-text-primary)] text-sm md:text-base tracking-tight">
+            AI Geopolitics
+          </span>
+          <span class="hidden md:block text-[var(--color-text-tertiary)] text-xs">
+            Sovereignty & Power
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <div class="hidden lg:flex items-center gap-1">
+        <a 
+          href="#week1" 
+          class="nav-link px-4 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          data-section="week1"
+        >
+          Week 1
+        </a>
+        <a 
+          href="#week2" 
+          class="nav-link px-4 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          data-section="week2"
+        >
+          Week 2
+        </a>
+        <a 
+          href="#about" 
+          class="nav-link px-4 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          data-section="about"
+        >
+          About
+        </a>
+      </div>
+
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Progress Indicator (Desktop) -->
+        <div class="hidden md:flex items-center gap-3 mr-4">
+          <span class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Progress</span>
+          <div class="w-24 h-1.5 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden">
+            <div 
+              id="nav-progress-bar" 
+              class="h-full bg-gradient-to-r from-[var(--color-tech-cyan)] to-[var(--color-power-purple)] w-0 transition-all duration-200"
+            ></div>
+          </div>
+          <span id="progress-percentage" class="text-xs text-[var(--color-text-secondary)] font-mono">0%</span>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button 
+          id="mobile-menu-btn"
+          class="lg:hidden p-2 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          aria-label="Toggle mobile menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <i data-lucide="menu" class="w-6 h-6 menu-icon" aria-hidden="true"></i>
+          <i data-lucide="x" class="w-6 h-6 close-icon hidden" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div 
+    id="mobile-menu" 
+    class="lg:hidden fixed inset-x-0 top-[64px] md:top-[80px] bg-[var(--color-bg-primary)]/95 backdrop-blur-xl border-b border-[var(--border-color)] transform -translate-y-full opacity-0 pointer-events-none transition-all duration-300"
+    aria-hidden="true"
+  >
+    <div class="container py-6 space-y-2">
+      
+      <!-- Week 1 Section -->
+      <div class="mobile-nav-section">
+        <a 
+          href="#week1" 
+          class="mobile-nav-link flex items-center justify-between p-4 rounded-xl bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          data-section="week1"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-[var(--color-us-blue)]/20 flex items-center justify-center">
+              <i data-lucide="history" class="w-5 h-5 text-[var(--color-us-blue)]" aria-hidden="true"></i>
+            </div>
+            <div>
+              <span class="block text-[var(--color-text-primary)] font-medium">Week 1</span>
+              <span class="block text-[var(--color-text-tertiary)] text-sm">The Digital Sovereignty Era</span>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--color-text-muted)]" aria-hidden="true"></i>
+        </a>
+        
+        <!-- Sub-items for Week 1 -->
+        <div class="mt-2 ml-4 space-y-1">
+          <a href="#part1" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part I: Strategic Convergence (1990-2000)
+          </a>
+          <a href="#part2" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part II: Architecture of Sovereignty (1998-2003)
+          </a>
+          <a href="#part3" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part III: The Rupture (2013)
+          </a>
+          <a href="#part4" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part IV: Splinternet Accelerates (2019-2024)
+          </a>
+        </div>
+      </div>
+
+      <!-- Week 2 Section -->
+      <div class="mobile-nav-section">
+        <a 
+          href="#week2" 
+          class="mobile-nav-link flex items-center justify-between p-4 rounded-xl bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+          data-section="week2"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-[var(--color-tech-cyan)]/20 flex items-center justify-center">
+              <i data-lucide="cpu" class="w-5 h-5 text-[var(--color-tech-cyan)]" aria-hidden="true"></i>
+            </div>
+            <div>
+              <span class="block text-[var(--color-text-primary)] font-medium">Week 2</span>
+              <span class="block text-[var(--color-text-tertiary)] text-sm">AI & The New World Order</span>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--color-text-muted)]" aria-hidden="true"></i>
+        </a>
+        
+        <!-- Sub-items for Week 2 -->
+        <div class="mt-2 ml-4 space-y-1">
+          <a href="#week2-part1" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part 1: AI Makes Sovereignty Industrial
+          </a>
+          <a href="#week2-part2" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part 2: National Revival Through Tech
+          </a>
+          <a href="#week2-part3" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part 3: The New Ideological Map
+          </a>
+          <a href="#week2-part4" class="block p-3 pl-8 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] rounded-lg hover:bg-[var(--color-bg-tertiary)] transition-colors">
+            Part 4: The Collision of Frames
+          </a>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <a 
+        href="#about" 
+        class="mobile-nav-link flex items-center gap-3 p-4 rounded-xl bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] transition-all duration-200"
+        data-section="about"
+      >
+        <div class="w-10 h-10 rounded-lg bg-[var(--color-power-purple)]/20 flex items-center justify-center">
+          <i data-lucide="info" class="w-5 h-5 text-[var(--color-power-purple)]" aria-hidden="true"></i>
+        </div>
+        <span class="text-[var(--color-text-primary)] font-medium">About the Course</span>
+      </a>
+
+      <!-- Mobile Progress -->
+      <div class="pt-4 border-t border-[var(--border-color)]">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">Reading Progress</span>
+          <span id="mobile-progress-percentage" class="text-xs text-[var(--color-text-secondary)] font-mono">0%</span>
+        </div>
+        <div class="w-full h-2 bg-[var(--color-bg-tertiary)] rounded-full overflow-hidden">
+          <div 
+            id="mobile-progress-bar" 
+            class="h-full bg-gradient-to-r from-[var(--color-tech-cyan)] to-[var(--color-power-purple)] w-0 transition-all duration-200"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Spacer to prevent content from being hidden behind fixed nav -->
+<div class="h-16 md:h-20" aria-hidden="true"></div>
