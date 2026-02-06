@@ -215,14 +215,14 @@
       line-height: 1;
     }
 
-    .timeline-item {
+    .timeline .timeline-item {
       position: relative;
       padding-left: 2rem;
       padding-bottom: 2rem;
       border-left: 2px solid rgba(59,130,246,0.3);
     }
 
-    .timeline-item::before {
+    .timeline .timeline-item::before {
       content: '';
       position: absolute;
       left: -6px;
@@ -645,47 +645,6 @@
       animation: bounce 2s infinite;
     }
   
-    /* Fix for light background sections */
-    .bg-white, .bg-slate-50, [class*="bg-[#faf9f7]"], [class*="bg-[#f5f3f0]"] {
-      color: #1e293b !important;
-    }
-
-    .bg-white h1, .bg-white h2, .bg-white h3, .bg-white h4,
-    .bg-slate-50 h1, .bg-slate-50 h2, .bg-slate-50 h3, .bg-slate-50 h4,
-    [class*="bg-[#faf9f7]"] h1, [class*="bg-[#faf9f7]"] h2, [class*="bg-[#faf9f7]"] h3, [class*="bg-[#faf9f7]"] h4,
-    [class*="bg-[#f5f3f0]"] h1, [class*="bg-[#f5f3f0]"] h2, [class*="bg-[#f5f3f0]"] h3, [class*="bg-[#f5f3f0]"] h4 {
-      color: #0f172a !important;
-    }
-
-    .bg-white p, .bg-white span, .bg-white li,
-    .bg-slate-50 p, .bg-slate-50 span, .bg-slate-50 li,
-    [class*="bg-[#faf9f7]"] p, [class*="bg-[#faf9f7]"] span, [class*="bg-[#faf9f7]"] li,
-    [class*="bg-[#f5f3f0]"] p, [class*="bg-[#f5f3f0]"] span, [class*="bg-[#f5f3f0]"] li {
-      color: #334155 !important;
-    }
-
-    /* Source items styling */
-    .source-item {
-      display: flex;
-      gap: 0.75rem;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-
-    .source-number {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: #3b82f6;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .source-text {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #334155;
-    }
-
     /* Navigation buttons */
     .nav-prev, .nav-next {
       display: inline-flex;
@@ -707,46 +666,6 @@
       box-shadow: 0 10px 20px rgba(59,130,246,0.3);
     }
 
-    /* Sources section specific styling */
-    .sources-section {
-      background: #f8fafc !important;
-      color: #1e293b !important;
-      padding: 3rem 0;
-    }
-
-    .sources-section h3 {
-      color: #0f172a !important;
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-
-    .sources-section .source-item {
-      display: flex;
-      gap: 0.75rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .sources-section .source-number {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      color: #3b82f6;
-      font-weight: 600;
-      flex-shrink: 0;
-      min-width: 2rem;
-    }
-
-    .sources-section .source-text {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #334155 !important;
-    }
-
-    .sources-section .source-text em {
-      font-style: italic;
-      color: #475569;
-    }
 </style>
 </head>
 <body>
@@ -2463,38 +2382,22 @@
         );
       });
       
-      // Timeline Items Stagger
-      const timelineItems = document.querySelectorAll('.timeline-item');
-      gsap.fromTo(timelineItems,
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'power3.out',
+      // Timeline items: animate each row when it enters the viewport
+      gsap.utils.toArray('#mainTimeline .timeline-item').forEach((item) => {
+        gsap.from(item, {
           scrollTrigger: {
-            trigger: '#mainTimeline',
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-      
-      // Timeline Line Draw
-      gsap.fromTo('#mainTimeline::before',
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          duration: 1.5,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '#mainTimeline',
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
+            trigger: item,
+            start: 'top 98%',
+            toggleActions: 'play none none none',
+            once: true
+          },
+          opacity: 0,
+          y: 36,
+          x: -10,
+          duration: 1.05,
+          ease: 'power3.out'
+        });
+      });
       
       // Conviction Cards Stagger
       const convictionCards = document.querySelectorAll('.conviction-card');
@@ -2642,23 +2545,23 @@
     <div class="max-w-7xl mx-auto">
       
       <!-- Week Badge -->
-      <div class="week-badge inline-flex items-center gap-2 px-4 py-2 bg-red-900/30 border border-red-700/50 rounded-full mb-6">
+      <div class="week1-part2-badge inline-flex items-center gap-2 px-4 py-2 bg-red-900/30 border border-red-700/50 rounded-full mb-6">
         <i data-lucide="shield-alert" class="w-4 h-4 text-red-400"></i>
         <span class="text-red-300 text-sm font-medium tracking-wider uppercase">Week 1 — Part II</span>
       </div>
       
       <!-- Main Title -->
-      <h1 class="title-text heading-1 text-white mb-4 leading-tight">
+      <h1 class="week1-part2-title heading-1 text-white mb-4 leading-tight">
         The <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Architecture</span> of Sovereignty
       </h1>
       
       <!-- Subtitle -->
-      <p class="subtitle-text text-xl sm:text-2xl text-slate-400 mb-6 font-light">
+      <p class="week1-part2-subtitle text-xl sm:text-2xl text-slate-400 mb-6 font-light">
         China's Foundational Rebuttal <span class="text-red-400">(1998-2003)</span>
       </p>
       
       <!-- Intro Quote -->
-      <div class="intro-quote max-w-3xl border-l-4 border-red-600 pl-6 py-2">
+      <div class="week1-part2-intro-quote max-w-3xl border-l-4 border-red-600 pl-6 py-2">
         <p class="text-lg sm:text-xl text-slate-300 italic leading-relaxed">
           "If you open the window for fresh air, you have to expect some flies to blow in."
         </p>
@@ -3759,14 +3662,14 @@
         gsap.registerPlugin(ScrollTrigger);
         
         // Header animations
-        gsap.from('.week-badge', {
+        gsap.from('.week1-part2-badge', {
           opacity: 0,
           y: 20,
           duration: 0.6,
           ease: 'power2.out'
         });
         
-        gsap.from('.title-text', {
+        gsap.from('.week1-part2-title', {
           opacity: 0,
           y: 30,
           duration: 0.8,
@@ -3774,7 +3677,7 @@
           ease: 'power2.out'
         });
         
-        gsap.from('.subtitle-text', {
+        gsap.from('.week1-part2-subtitle', {
           opacity: 0,
           y: 20,
           duration: 0.6,
@@ -3782,7 +3685,7 @@
           ease: 'power2.out'
         });
         
-        gsap.from('.intro-quote', {
+        gsap.from('.week1-part2-intro-quote', {
           opacity: 0,
           x: -30,
           duration: 0.8,
@@ -3795,7 +3698,7 @@
           scrollTrigger: {
             trigger: '.contrast-grid',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -50,
@@ -3807,7 +3710,7 @@
           scrollTrigger: {
             trigger: '.contrast-grid',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 50,
@@ -3822,7 +3725,7 @@
             scrollTrigger: {
               trigger: header,
               start: 'top 85%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -3837,7 +3740,7 @@
             scrollTrigger: {
               trigger: block,
               start: 'top 85%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -3853,7 +3756,7 @@
             scrollTrigger: {
               trigger: quote,
               start: 'top 80%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             scale: 0.95,
@@ -3867,7 +3770,7 @@
           scrollTrigger: {
             trigger: '.component-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -3881,7 +3784,7 @@
           scrollTrigger: {
             trigger: '.bat-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -3895,7 +3798,7 @@
           scrollTrigger: {
             trigger: '.stat-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -3905,18 +3808,21 @@
           ease: 'back.out(1.2)'
         });
         
-        // Timeline items
-        gsap.from('.timeline-item', {
-          scrollTrigger: {
-            trigger: '.timeline-container',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          x: -30,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out'
+        // Timeline items: reveal per row to avoid hidden cards when scrolling quickly
+        gsap.utils.toArray('#week1-part2 .timeline-item').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 34,
+            x: -10,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
         
         // Evolution items
@@ -3924,7 +3830,7 @@
           scrollTrigger: {
             trigger: '.evolution-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -20,
@@ -3938,7 +3844,7 @@
           scrollTrigger: {
             trigger: '.profile-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -3951,7 +3857,7 @@
           scrollTrigger: {
             trigger: '.xi-quote',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.95,
@@ -3976,7 +3882,7 @@
           scrollTrigger: {
             trigger: '.nav-prev',
             start: 'top 90%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 20,
@@ -5359,7 +5265,7 @@
           scrollTrigger: {
             trigger: '.innocence-content',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -50,
@@ -5371,7 +5277,7 @@
           scrollTrigger: {
             trigger: '.innocence-visual',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 50,
@@ -5384,7 +5290,7 @@
           scrollTrigger: {
             trigger: '.revelation-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 60,
@@ -5398,7 +5304,7 @@
           scrollTrigger: {
             trigger: '.upstream-shock',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.95,
@@ -5411,7 +5317,7 @@
           scrollTrigger: {
             trigger: '.westphalia-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -5421,17 +5327,20 @@
         });
         
         // Timeline Items
-        gsap.from('.timeline-item', {
-          scrollTrigger: {
-            trigger: '.westphalia-timeline',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          x: -30,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out'
+        gsap.utils.toArray('#week1-part3 .timeline-item').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 30,
+            x: -12,
+            duration: 0.95,
+            ease: 'power3.out'
+          });
         });
         
         // NETmundial Camps
@@ -5439,7 +5348,7 @@
           scrollTrigger: {
             trigger: '.netmundial-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -5453,7 +5362,7 @@
           scrollTrigger: {
             trigger: '.iana-transition',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.97,
@@ -5466,7 +5375,7 @@
           scrollTrigger: {
             trigger: '.topology-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -5480,7 +5389,7 @@
           scrollTrigger: {
             trigger: '.industry-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -5492,7 +5401,7 @@
           scrollTrigger: {
             trigger: '.legal-battles',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -5502,17 +5411,19 @@
         });
         
         // Legal Timeline
-        gsap.from('.timeline-case', {
-          scrollTrigger: {
-            trigger: '.legal-timeline',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          y: 40,
-          duration: 0.7,
-          stagger: 0.2,
-          ease: 'power2.out'
+        gsap.utils.toArray('.timeline-case').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 42,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
         
         // Data Fortresses
@@ -5520,7 +5431,7 @@
           scrollTrigger: {
             trigger: '.data-fortresses',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -5533,7 +5444,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -40,
@@ -5545,7 +5456,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 40,
@@ -5557,7 +5468,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-stats',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -5572,7 +5483,7 @@
           scrollTrigger: {
             trigger: '.conclusion-content',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -6862,7 +6773,7 @@
           scrollTrigger: {
             trigger: '.splinternet-header',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -6875,7 +6786,7 @@
           scrollTrigger: {
             trigger: '.splinternet-intro',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -50,
@@ -6888,7 +6799,7 @@
           scrollTrigger: {
             trigger: '.splinternet-map',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -6898,17 +6809,20 @@
         });
 
         // Timeline events
-        gsap.from('.timeline-event', {
-          scrollTrigger: {
-            trigger: '.splinternet-timeline',
-            start: 'top 70%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          x: (i) => i % 2 === 0 ? -30 : 30,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out'
+        gsap.utils.toArray('.timeline-event').forEach((event, i) => {
+          gsap.from(event, {
+            scrollTrigger: {
+              trigger: event,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 24,
+            x: i % 2 === 0 ? -26 : 26,
+            duration: 0.95,
+            ease: 'power3.out'
+          });
         });
 
         // Clean Network layers
@@ -6916,7 +6830,7 @@
           scrollTrigger: {
             trigger: '.clean-network-section',
             start: 'top 60%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 30,
@@ -6930,7 +6844,7 @@
           scrollTrigger: {
             trigger: '.triple-stack-section',
             start: 'top 60%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -6944,7 +6858,7 @@
           scrollTrigger: {
             trigger: '.statistics-section',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.9,
@@ -6960,7 +6874,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 75%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -7988,14 +7902,14 @@
         const content = section.querySelector('.section-content');
         const visual = section.querySelector('.section-visual');
         const paragraphs = section.querySelectorAll('.content-paragraph');
-        const cards = section.querySelectorAll('.variable-card, .comparison-card, .stat-card, .stack-layer, .energy-deal, .timeline-item, .talent-stat, .visa-policy, .efficiency-technique, .barrier-card');
+        const cards = section.querySelectorAll('.variable-card, .comparison-card, .stat-card, .stack-layer, .energy-deal, .talent-stat, .visa-policy, .efficiency-technique, .barrier-card');
         
         if (content) {
           gsap.from(content, {
             scrollTrigger: {
               trigger: section,
               start: 'top 70%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             x: -50,
@@ -8009,7 +7923,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 70%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             x: 50,
@@ -8024,7 +7938,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 60%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 20,
@@ -8038,8 +7952,8 @@
           gsap.from(cards, {
             scrollTrigger: {
               trigger: section,
-              start: 'top 60%',
-              toggleActions: 'play none none reverse'
+              start: 'top 70%',
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -8048,6 +7962,22 @@
             ease: 'power3.out'
           });
         }
+
+        const timelineRows = section.querySelectorAll('.timeline-item');
+        timelineRows.forEach((row) => {
+          gsap.from(row, {
+            scrollTrigger: {
+              trigger: row,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 32,
+            duration: 1,
+            ease: 'power4.out'
+          });
+        });
       });
       
       // Formula animation
@@ -8055,7 +7985,7 @@
         scrollTrigger: {
           trigger: '.formula-container',
           start: 'top 70%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         opacity: 0,
         scale: 0.9,
@@ -8070,7 +8000,7 @@
           scrollTrigger: {
             trigger: quote,
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -30,
@@ -8084,7 +8014,7 @@
         scrollTrigger: {
           trigger: '.deepseek-highlight',
           start: 'top 70%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         opacity: 0,
         scale: 0.95,
@@ -8097,7 +8027,7 @@
         scrollTrigger: {
           trigger: '.question-block',
           start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         opacity: 0,
         y: 30,
@@ -8110,7 +8040,7 @@
         scrollTrigger: {
           trigger: '.sources-section',
           start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         opacity: 0,
         y: 20,
@@ -8497,7 +8427,7 @@
     </div>
 
     <!-- Timeline of Export Controls -->
-    <div class="gsap-timeline opacity-0 translate-y-6 mb-10">
+    <div class="gsap-timeline mb-10">
       <h3 class="text-xl font-bold text-slate-200 mb-6 flex items-center gap-2">
         <i data-lucide="clock" class="w-5 h-5 text-red-400"></i>
         Timeline: The Evolution of US Chip Controls
@@ -8510,7 +8440,7 @@
         <!-- Timeline Items -->
         <div class="space-y-6">
           <!-- Oct 2022 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="shield-alert" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -8524,7 +8454,7 @@
           </div>
 
           <!-- Oct 2023 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="refresh-cw" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -8538,7 +8468,7 @@
           </div>
 
           <!-- Jan 2025 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="globe-2" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -8553,7 +8483,7 @@
           </div>
 
           <!-- 2026 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="dollar-sign" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -9424,30 +9354,32 @@
       });
 
       // Timeline
-      gsap.to('.gsap-timeline', {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power2.out',
+      gsap.from('.gsap-timeline', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        ease: 'power3.out',
         scrollTrigger: {
           trigger: '.gsap-timeline',
-          start: 'top 80%',
-          toggleActions: 'play none none none'
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+          once: true
         }
       });
 
       // Timeline items with stagger
-      gsap.utils.toArray('.gsap-timeline-item').forEach((el, i) => {
-        gsap.to(el, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          delay: i * 0.15,
-          ease: 'power2.out',
+      gsap.utils.toArray('.gsap-timeline-item').forEach((el) => {
+        gsap.from(el, {
+          opacity: 0,
+          x: 36,
+          y: 18,
+          duration: 0.95,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none none'
+            start: 'top 98%',
+            toggleActions: 'play none none none',
+            once: true
           }
         });
       });
@@ -11244,7 +11176,7 @@
           scrollTrigger: {
             trigger: '.intro-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -11257,7 +11189,7 @@
           scrollTrigger: {
             trigger: '.question-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -11271,7 +11203,7 @@
           scrollTrigger: {
             trigger: '.frames-overview',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -11287,7 +11219,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 75%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             x: -30,
@@ -11300,7 +11232,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 60%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 20,
@@ -11315,7 +11247,7 @@
           scrollTrigger: {
             trigger: '.comparison-section',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -11328,7 +11260,7 @@
           scrollTrigger: {
             trigger: '.network-section',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -12919,7 +12851,7 @@
         scrollTrigger: {
           trigger: '.tradeoff-hero',
           start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 40,
         opacity: 0,
@@ -12933,7 +12865,7 @@
         scrollTrigger: {
           trigger: '.intro-card',
           start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 50,
         opacity: 0,
@@ -12946,7 +12878,7 @@
         scrollTrigger: {
           trigger: '.axes-overview',
           start: 'top 75%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 40,
         opacity: 0,
@@ -12961,7 +12893,7 @@
           scrollTrigger: {
             trigger: header,
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           x: -50,
           opacity: 0,
@@ -12976,7 +12908,7 @@
           scrollTrigger: {
             trigger: card,
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           x: index % 2 === 0 ? -40 : 40,
           opacity: 0,
@@ -12991,7 +12923,7 @@
           scrollTrigger: {
             trigger: section,
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           y: 40,
           opacity: 0,
@@ -13006,7 +12938,7 @@
           scrollTrigger: {
             trigger: item.parentElement,
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           y: 30,
           opacity: 0,
@@ -13022,7 +12954,7 @@
           scrollTrigger: {
             trigger: quote,
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           scale: 0.95,
           opacity: 0,
@@ -13036,7 +12968,7 @@
         scrollTrigger: {
           trigger: '.multipolar-section',
           start: 'top 75%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 40,
         opacity: 0,
@@ -13050,7 +12982,7 @@
         scrollTrigger: {
           trigger: '.conclusion-section',
           start: 'top 70%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 50,
         opacity: 0,
@@ -13064,7 +12996,7 @@
         scrollTrigger: {
           trigger: '.summary-visualization',
           start: 'top 75%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         x: -30,
         opacity: 0,
@@ -13078,7 +13010,7 @@
         scrollTrigger: {
           trigger: '.final-quote',
           start: 'top 80%',
-          toggleActions: 'play none none reverse'
+          toggleActions: 'play none none none'
         },
         y: 50,
         opacity: 0,
@@ -13210,9 +13142,10 @@
         }
       });
 
-      // Fade in sections
-      gsap.utils.toArray('section').forEach(section => {
-        const elements = section.querySelectorAll('h1, h2, h3, p, .card, .quote-block');
+      // Optional generic fade in (disabled by default to avoid conflicts
+      // with section-specific GSAP timelines).
+      gsap.utils.toArray('section[data-auto-animate=\"true\"]').forEach(section => {
+        const elements = section.querySelectorAll('h1, h2, h3, p:not(.subtitle-text), .card, .quote-block');
         if (elements.length > 0) {
           gsap.from(elements, {
             opacity: 0,
@@ -13222,7 +13155,7 @@
             scrollTrigger: {
               trigger: section,
               start: 'top 80%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             }
           });
         }

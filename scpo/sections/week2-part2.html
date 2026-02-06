@@ -349,7 +349,7 @@
     </div>
 
     <!-- Timeline of Export Controls -->
-    <div class="gsap-timeline opacity-0 translate-y-6 mb-10">
+    <div class="gsap-timeline mb-10">
       <h3 class="text-xl font-bold text-slate-200 mb-6 flex items-center gap-2">
         <i data-lucide="clock" class="w-5 h-5 text-red-400"></i>
         Timeline: The Evolution of US Chip Controls
@@ -362,7 +362,7 @@
         <!-- Timeline Items -->
         <div class="space-y-6">
           <!-- Oct 2022 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="shield-alert" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -376,7 +376,7 @@
           </div>
 
           <!-- Oct 2023 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="refresh-cw" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -390,7 +390,7 @@
           </div>
 
           <!-- Jan 2025 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="globe-2" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -405,7 +405,7 @@
           </div>
 
           <!-- 2026 -->
-          <div class="gsap-timeline-item opacity-0 translate-x-6 flex gap-4 md:gap-6">
+          <div class="gsap-timeline-item flex gap-4 md:gap-6">
             <div class="w-8 h-8 md:w-12 md:h-12 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 border-4 border-slate-950 z-10">
               <i data-lucide="dollar-sign" class="w-4 h-4 md:w-5 md:h-5 text-white"></i>
             </div>
@@ -1276,30 +1276,32 @@
       });
 
       // Timeline
-      gsap.to('.gsap-timeline', {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        ease: 'power2.out',
+      gsap.from('.gsap-timeline', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        ease: 'power3.out',
         scrollTrigger: {
           trigger: '.gsap-timeline',
-          start: 'top 80%',
-          toggleActions: 'play none none none'
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+          once: true
         }
       });
 
       // Timeline items with stagger
-      gsap.utils.toArray('.gsap-timeline-item').forEach((el, i) => {
-        gsap.to(el, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          delay: i * 0.15,
-          ease: 'power2.out',
+      gsap.utils.toArray('.gsap-timeline-item').forEach((el) => {
+        gsap.from(el, {
+          opacity: 0,
+          x: 36,
+          y: 18,
+          duration: 0.95,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
-            toggleActions: 'play none none none'
+            start: 'top 98%',
+            toggleActions: 'play none none none',
+            once: true
           }
         });
       });

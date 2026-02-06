@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavigationHighlight();
   initChapterRail();
   initRevealAnimations();
+  initTimelineVisibilityGuard();
 });
 
 // ============================================================================
@@ -86,8 +87,16 @@ function initGSAP() {
   // Respect reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReducedMotion) {
-    gsap.globalTimeline.timeScale(0);
+    // Make animations instant instead of freezing at initial hidden states
+    gsap.defaults({
+      duration: 0,
+      ease: 'none'
+    });
+    return;
   }
+
+  // Slow reveal animations slightly so motion is readable while scrolling
+  gsap.globalTimeline.timeScale(0.75);
 }
 
 /**
@@ -106,7 +115,7 @@ function createScrollAnimation(target, animation, scrollTrigger = {}) {
     trigger: target,
     start: 'top 80%',
     end: 'bottom 20%',
-    toggleActions: 'play none none reverse',
+    toggleActions: 'play none none none',
     ...scrollTrigger
   };
 
@@ -211,20 +220,26 @@ function smoothScrollTo(target, offset = 80, duration = 800) {
 
   const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset;
 
-  // Use GSAP for smooth scroll if available
-  if (typeof gsap !== 'undefined') {
+  const hasGsapScrollTo =
+    typeof gsap !== 'undefined' &&
+    gsap.plugins &&
+    gsap.plugins.ScrollToPlugin;
+
+  // Prefer GSAP smooth scrolling only when ScrollToPlugin is available.
+  if (hasGsapScrollTo) {
     gsap.to(window, {
       duration: duration / 1000,
       scrollTo: { y: targetPosition, autoKill: false },
       ease: 'power3.inOut'
     });
-  } else {
-    // Fallback to native smooth scroll
-    window.scrollTo({
-      top: targetPosition,
-      behavior: 'smooth'
-    });
+    return;
   }
+
+  // Fallback to native smooth scroll
+  window.scrollTo({
+    top: targetPosition,
+    behavior: 'smooth'
+  });
 }
 
 // ============================================================================
@@ -267,6 +282,79 @@ function initRevealAnimations() {
   createIntersectionObserver('.reveal-on-scroll', {}, (element) => {
     element.classList.add('is-visible');
   });
+}
+
+/**
+ * Force visible timeline content when it enters viewport.
+ * Prevents timeline rows from staying hidden due conflicting ScrollTriggers.
+ */
+function initTimelineVisibilityGuard() {
+  const selector = '.timeline-item, .timeline-event, .timeline-case, .gsap-timeline-item';
+  const elements = Array.from(document.querySelectorAll(selector));
+
+  if (elements.length === 0) return;
+
+  const repairDelayMs = 1400;
+  const repairTimers = new WeakMap();
+
+  const forceVisible = (element) => {
+    const style = window.getComputedStyle(element);
+    const opacity = parseFloat(style.opacity || '1');
+
+    if (opacity >= 0.98 && style.transform === 'none') return;
+
+    if (typeof gsap !== 'undefined') {
+      gsap.killTweensOf(element);
+      gsap.set(element, { opacity: 1, x: 0, y: 0, clearProps: 'transform,opacity' });
+    } else {
+      element.style.opacity = '1';
+      element.style.transform = 'none';
+    }
+  };
+
+  const scheduleRepairCheck = (element) => {
+    if (repairTimers.has(element)) return;
+
+    const timerId = setTimeout(() => {
+      repairTimers.delete(element);
+
+      const style = window.getComputedStyle(element);
+      const opacity = parseFloat(style.opacity || '1');
+      const hasTransform = style.transform !== 'none';
+      const tweening = typeof gsap !== 'undefined' && typeof gsap.isTweening === 'function' && gsap.isTweening(element);
+
+      // Only repair elements that are still hidden after enough time to animate naturally.
+      if (!tweening && (opacity < 0.85 || hasTransform)) {
+        forceVisible(element);
+      }
+    }, repairDelayMs);
+
+    repairTimers.set(element, timerId);
+  };
+
+  const clearRepairCheck = (element) => {
+    const timerId = repairTimers.get(element);
+    if (timerId) {
+      clearTimeout(timerId);
+      repairTimers.delete(element);
+    }
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        scheduleRepairCheck(entry.target);
+      } else {
+        clearRepairCheck(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '0px 0px -2% 0px',
+    threshold: 0
+  });
+
+  elements.forEach((element) => observer.observe(element));
 }
 
 /**
@@ -481,18 +569,41 @@ function initChapterRail() {
 
   const progressEl = document.getElementById('chapter-rail-progress');
 
-  const targets = railLinks
-    .map(link => {
+  const nav = document.querySelector('.nav-fixed');
+  const orientation = progressEl?.dataset.orientation || 'vertical';
+  const trackCount = railLinks.length;
+  const dotSpanRatio = trackCount > 1 ? (trackCount - 1) / trackCount : 1;
+  const progressSegments = trackCount;
+
+  rail.style.setProperty('--chapter-rail-dot-span', `${dotSpanRatio * 100}%`);
+
+  const targetEntries = railLinks
+    .map((link) => {
       const id = link.getAttribute('data-section') || (link.getAttribute('href') || '').replace('#', '');
       if (!id) return null;
-      return document.getElementById(id);
+      const target = document.getElementById(id);
+      if (!target) return null;
+      return { link, id, target };
     })
     .filter(Boolean);
 
-  if (targets.length === 0) return;
+  if (targetEntries.length === 0) return;
+
+  const setProgress = (value) => {
+    if (!progressEl) return;
+    const clamped = Math.max(0, Math.min(100, value));
+    if (orientation === 'horizontal') {
+      progressEl.style.width = `${clamped}%`;
+    } else {
+      progressEl.style.height = `${clamped}%`;
+    }
+  };
+
+  const getNavOffset = () => (nav ? nav.offsetHeight + 8 : 80);
+  const getTargetTop = (target) => target.getBoundingClientRect().top + window.pageYOffset;
 
   function setActive(id) {
-    railLinks.forEach(link => {
+    railLinks.forEach((link) => {
       const linkId = link.getAttribute('data-section') || (link.getAttribute('href') || '').replace('#', '');
       const isActive = linkId === id;
       link.classList.toggle('is-active', isActive);
@@ -504,43 +615,120 @@ function initChapterRail() {
     });
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
-        if (id) setActive(id);
+  const getRailStateFromScroll = () => {
+    // Align progress/active state to the section currently under the fixed header.
+    const marker = window.pageYOffset + getNavOffset() + 2;
+    const lastIndex = targetEntries.length - 1;
+
+    if (window.pageYOffset <= 2) {
+      return { index: 0, progress: 0 };
+    }
+
+    let index = 0;
+    for (let i = 0; i < targetEntries.length; i += 1) {
+      if (marker >= getTargetTop(targetEntries[i].target)) {
+        index = i;
+      } else {
+        break;
       }
+    }
+
+    if (trackCount <= 1 || lastIndex <= 0) {
+      return { index, progress: 100 };
+    }
+
+    if (index >= lastIndex) {
+      const currentTop = getTargetTop(targetEntries[lastIndex].target);
+      const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const bottomMarker = maxScrollY + getNavOffset() + 2;
+      const segmentSize = Math.max(1, bottomMarker - currentTop);
+      const segmentProgress = Math.max(0, Math.min(1, (marker - currentTop) / segmentSize));
+      const progress = ((lastIndex + segmentProgress) / progressSegments) * 100;
+      return { index, progress };
+    }
+
+    const currentTop = getTargetTop(targetEntries[index].target);
+    const nextTop = getTargetTop(targetEntries[index + 1].target);
+    const segmentSize = Math.max(1, nextTop - currentTop);
+    const segmentProgress = Math.max(0, Math.min(1, (marker - currentTop) / segmentSize));
+    const progress = ((index + segmentProgress) / progressSegments) * 100;
+
+    return { index, progress };
+  };
+
+  const updateRailUI = () => {
+    const { index, progress } = getRailStateFromScroll();
+    setActive(targetEntries[index].id);
+    setProgress(progress);
+  };
+
+  function scrollRailToId(id) {
+    if (!id) return;
+    const entry = targetEntries.find((item) => item.id === id);
+    if (!entry) return;
+
+    const y = getTargetTop(entry.target) - getNavOffset();
+
+    window.scrollTo({
+      top: Math.max(0, y),
+      behavior: 'smooth'
     });
-  }, {
-    root: null,
-    rootMargin: '-30% 0px -60% 0px',
-    threshold: 0
+
+    setActive(id);
+    const clickedIndex = targetEntries.indexOf(entry);
+    const clickedProgress = trackCount > 0 ? (clickedIndex / trackCount) * 100 : 100;
+    setProgress(clickedProgress);
+  }
+
+  railLinks.forEach((link) => {
+    const id = link.getAttribute('data-section') || (link.getAttribute('href') || '').replace('#', '');
+    if (!id) return;
+
+    // Use capture phase to make chapter rail navigation deterministic.
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      scrollRailToId(id);
+    }, { capture: true });
   });
 
-  targets.forEach(target => observer.observe(target));
+  rail.addEventListener('click', (event) => {
+    // If user clicked directly on a dot/link, dedicated handlers above handle it.
+    const clickTarget = event.target;
+    if (clickTarget instanceof Element && clickTarget.closest('.chapter-rail__link')) return;
 
-  if (progressEl) {
-    const orientation = progressEl.dataset.orientation || 'vertical';
-    let ticking = false;
-    const updateProgress = () => {
-      const progress = getScrollProgress();
-      if (orientation === 'horizontal') {
-        progressEl.style.width = `${progress}%`;
-      } else {
-        progressEl.style.height = `${progress}%`;
-      }
-      ticking = false;
-    };
+    const rect = rail.getBoundingClientRect();
+    if (!rect.width) return;
 
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateProgress);
-        ticking = true;
-      }
-    }, { passive: true });
+    const spanWidth = rect.width * dotSpanRatio;
+    const x = event.clientX - rect.left;
+    const ratioInDots = spanWidth > 0
+      ? Math.min(1, Math.max(0, x / spanWidth))
+      : 1;
+    const index = x > spanWidth
+      ? railLinks.length - 1
+      : Math.round(ratioInDots * (railLinks.length - 1));
+    const nearest = railLinks[index];
+    if (!nearest) return;
 
-    updateProgress();
-  }
+    const id = nearest.getAttribute('data-section') || (nearest.getAttribute('href') || '').replace('#', '');
+    scrollRailToId(id);
+  });
+
+  let ticking = false;
+  const requestRailUpdate = () => {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        updateRailUI();
+        ticking = false;
+      });
+    }
+  };
+
+  window.addEventListener('scroll', requestRailUpdate, { passive: true });
+  window.addEventListener('resize', requestRailUpdate);
+  updateRailUI();
 }
 
 // ============================================================================

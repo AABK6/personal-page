@@ -1021,18 +1021,18 @@ a {
   );
 }
 
-.timeline-item {
+.timeline .timeline-item {
   position: relative;
   padding-bottom: var(--space-8);
 }
 
 @media (min-width: 768px) {
-  .timeline-item {
+  .timeline .timeline-item {
     padding-bottom: var(--space-12);
   }
 }
 
-.timeline-item::before {
+.timeline .timeline-item::before {
   content: '';
   position: absolute;
   left: calc(-1 * var(--space-8) - 5px);
@@ -1045,12 +1045,12 @@ a {
 }
 
 @media (min-width: 768px) {
-  .timeline-item::before {
+  .timeline .timeline-item::before {
     left: calc(-1 * var(--space-12) - 5px);
   }
 }
 
-.timeline-item--milestone::before {
+.timeline .timeline-item--milestone::before {
   width: 16px;
   height: 16px;
   left: calc(-1 * var(--space-8) - 7px);
@@ -1058,7 +1058,7 @@ a {
 }
 
 @media (min-width: 768px) {
-  .timeline-item--milestone::before {
+  .timeline .timeline-item--milestone::before {
     left: calc(-1 * var(--space-12) - 7px);
   }
 }
@@ -1212,7 +1212,7 @@ a {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
-  color: var(--color-secondary-500);
+  color: var(--color-secondary-600);
   flex-shrink: 0;
 }
 
@@ -1534,26 +1534,27 @@ a {
    9.4 Timeline Animations
    ------------------------------------------------------------------------- */
 
-.timeline-item {
+/* Opt-in timeline reveal animation (add `timeline-animate` on .timeline) */
+.timeline.timeline-animate .timeline-item {
   opacity: 0;
   transform: translateX(-20px);
   will-change: opacity, transform;
 }
 
-.timeline-item.is-visible {
+.timeline.timeline-animate .timeline-item.is-visible {
   opacity: 1;
   transform: translateX(0);
   transition: all var(--duration-slow) var(--ease-out-expo);
 }
 
 /* Timeline line draw animation */
-.timeline::before {
+.timeline.timeline-animate::before {
   transform: scaleY(0);
   transform-origin: top;
   will-change: transform;
 }
 
-.timeline.is-visible::before {
+.timeline.timeline-animate.is-visible::before {
   transform: scaleY(1);
   transition: transform var(--duration-slowest) var(--ease-out-quart);
 }

@@ -1620,38 +1620,22 @@
         );
       });
       
-      // Timeline Items Stagger
-      const timelineItems = document.querySelectorAll('.timeline-item');
-      gsap.fromTo(timelineItems,
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'power3.out',
+      // Timeline items: animate each row when it enters the viewport
+      gsap.utils.toArray('#mainTimeline .timeline-item').forEach((item) => {
+        gsap.from(item, {
           scrollTrigger: {
-            trigger: '#mainTimeline',
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-      
-      // Timeline Line Draw
-      gsap.fromTo('#mainTimeline::before',
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          duration: 1.5,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: '#mainTimeline',
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
+            trigger: item,
+            start: 'top 98%',
+            toggleActions: 'play none none none',
+            once: true
+          },
+          opacity: 0,
+          y: 36,
+          x: -10,
+          duration: 1.05,
+          ease: 'power3.out'
+        });
+      });
       
       // Conviction Cards Stagger
       const convictionCards = document.querySelectorAll('.conviction-card');

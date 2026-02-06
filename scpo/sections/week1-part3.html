@@ -1364,7 +1364,7 @@
           scrollTrigger: {
             trigger: '.innocence-content',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -50,
@@ -1376,7 +1376,7 @@
           scrollTrigger: {
             trigger: '.innocence-visual',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 50,
@@ -1389,7 +1389,7 @@
           scrollTrigger: {
             trigger: '.revelation-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 60,
@@ -1403,7 +1403,7 @@
           scrollTrigger: {
             trigger: '.upstream-shock',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.95,
@@ -1416,7 +1416,7 @@
           scrollTrigger: {
             trigger: '.westphalia-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -1426,17 +1426,20 @@
         });
         
         // Timeline Items
-        gsap.from('.timeline-item', {
-          scrollTrigger: {
-            trigger: '.westphalia-timeline',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          x: -30,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out'
+        gsap.utils.toArray('#week1-part3 .timeline-item').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 30,
+            x: -12,
+            duration: 0.95,
+            ease: 'power3.out'
+          });
         });
         
         // NETmundial Camps
@@ -1444,7 +1447,7 @@
           scrollTrigger: {
             trigger: '.netmundial-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -1458,7 +1461,7 @@
           scrollTrigger: {
             trigger: '.iana-transition',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.97,
@@ -1471,7 +1474,7 @@
           scrollTrigger: {
             trigger: '.topology-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,
@@ -1485,7 +1488,7 @@
           scrollTrigger: {
             trigger: '.industry-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -1497,7 +1500,7 @@
           scrollTrigger: {
             trigger: '.legal-battles',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -1507,17 +1510,19 @@
         });
         
         // Legal Timeline
-        gsap.from('.timeline-case', {
-          scrollTrigger: {
-            trigger: '.legal-timeline',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          y: 40,
-          duration: 0.7,
-          stagger: 0.2,
-          ease: 'power2.out'
+        gsap.utils.toArray('.timeline-case').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 42,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
         
         // Data Fortresses
@@ -1525,7 +1530,7 @@
           scrollTrigger: {
             trigger: '.data-fortresses',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -1538,7 +1543,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -40,
@@ -1550,7 +1555,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-header',
             start: 'top 70%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 40,
@@ -1562,7 +1567,7 @@
           scrollTrigger: {
             trigger: '.sovereignty-stats',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -1577,7 +1582,7 @@
           scrollTrigger: {
             trigger: '.conclusion-content',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 50,

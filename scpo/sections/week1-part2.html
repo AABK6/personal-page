@@ -22,23 +22,23 @@
     <div class="max-w-7xl mx-auto">
       
       <!-- Week Badge -->
-      <div class="week-badge inline-flex items-center gap-2 px-4 py-2 bg-red-900/30 border border-red-700/50 rounded-full mb-6">
+      <div class="week1-part2-badge inline-flex items-center gap-2 px-4 py-2 bg-red-900/30 border border-red-700/50 rounded-full mb-6">
         <i data-lucide="shield-alert" class="w-4 h-4 text-red-400"></i>
         <span class="text-red-300 text-sm font-medium tracking-wider uppercase">Week 1 — Part II</span>
       </div>
       
       <!-- Main Title -->
-      <h1 class="title-text text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 leading-tight">
+      <h1 class="week1-part2-title text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 leading-tight">
         The <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Architecture</span> of Sovereignty
       </h1>
       
       <!-- Subtitle -->
-      <p class="subtitle-text text-xl sm:text-2xl text-slate-400 mb-6 font-light">
+      <p class="week1-part2-subtitle text-xl sm:text-2xl text-slate-400 mb-6 font-light">
         China's Foundational Rebuttal <span class="text-red-400">(1998-2003)</span>
       </p>
       
       <!-- Intro Quote -->
-      <div class="intro-quote max-w-3xl border-l-4 border-red-600 pl-6 py-2">
+      <div class="week1-part2-intro-quote max-w-3xl border-l-4 border-red-600 pl-6 py-2">
         <p class="text-lg sm:text-xl text-slate-300 italic leading-relaxed">
           "If you open the window for fresh air, you have to expect some flies to blow in."
         </p>
@@ -1139,14 +1139,14 @@
         gsap.registerPlugin(ScrollTrigger);
         
         // Header animations
-        gsap.from('.week-badge', {
+        gsap.from('.week1-part2-badge', {
           opacity: 0,
           y: 20,
           duration: 0.6,
           ease: 'power2.out'
         });
         
-        gsap.from('.title-text', {
+        gsap.from('.week1-part2-title', {
           opacity: 0,
           y: 30,
           duration: 0.8,
@@ -1154,7 +1154,7 @@
           ease: 'power2.out'
         });
         
-        gsap.from('.subtitle-text', {
+        gsap.from('.week1-part2-subtitle', {
           opacity: 0,
           y: 20,
           duration: 0.6,
@@ -1162,7 +1162,7 @@
           ease: 'power2.out'
         });
         
-        gsap.from('.intro-quote', {
+        gsap.from('.week1-part2-intro-quote', {
           opacity: 0,
           x: -30,
           duration: 0.8,
@@ -1175,7 +1175,7 @@
           scrollTrigger: {
             trigger: '.contrast-grid',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -50,
@@ -1187,7 +1187,7 @@
           scrollTrigger: {
             trigger: '.contrast-grid',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: 50,
@@ -1202,7 +1202,7 @@
             scrollTrigger: {
               trigger: header,
               start: 'top 85%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -1217,7 +1217,7 @@
             scrollTrigger: {
               trigger: block,
               start: 'top 85%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             y: 30,
@@ -1233,7 +1233,7 @@
             scrollTrigger: {
               trigger: quote,
               start: 'top 80%',
-              toggleActions: 'play none none reverse'
+              toggleActions: 'play none none none'
             },
             opacity: 0,
             scale: 0.95,
@@ -1247,7 +1247,7 @@
           scrollTrigger: {
             trigger: '.component-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -1261,7 +1261,7 @@
           scrollTrigger: {
             trigger: '.bat-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -1275,7 +1275,7 @@
           scrollTrigger: {
             trigger: '.stat-card',
             start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 30,
@@ -1285,18 +1285,21 @@
           ease: 'back.out(1.2)'
         });
         
-        // Timeline items
-        gsap.from('.timeline-item', {
-          scrollTrigger: {
-            trigger: '.timeline-container',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          },
-          opacity: 0,
-          x: -30,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out'
+        // Timeline items: reveal per row to avoid hidden cards when scrolling quickly
+        gsap.utils.toArray('#week1-part2 .timeline-item').forEach((item) => {
+          gsap.from(item, {
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 98%',
+              toggleActions: 'play none none none',
+              once: true
+            },
+            opacity: 0,
+            y: 34,
+            x: -10,
+            duration: 1,
+            ease: 'power3.out'
+          });
         });
         
         // Evolution items
@@ -1304,7 +1307,7 @@
           scrollTrigger: {
             trigger: '.evolution-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           x: -20,
@@ -1318,7 +1321,7 @@
           scrollTrigger: {
             trigger: '.profile-card',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 40,
@@ -1331,7 +1334,7 @@
           scrollTrigger: {
             trigger: '.xi-quote',
             start: 'top 80%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           scale: 0.95,
@@ -1356,7 +1359,7 @@
           scrollTrigger: {
             trigger: '.nav-prev',
             start: 'top 90%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none none'
           },
           opacity: 0,
           y: 20,
