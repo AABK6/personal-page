@@ -28,11 +28,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md) b1a16a0
 
 ## Phase 4: Visualizations and Scrollytelling
-- [~] Task: Interactive Stack Diagram
-  - [~] Write tests for diagram layer state updates
-  - [ ] Implement 3D/2.5D interactive stack diagram
-- [ ] Task: Non-Rivalrous Good Visualizer
-  - [ ] Write tests for visualizer interaction logic
+- [x] Task: Interactive Stack Diagram
+  - [x] Write tests for diagram layer state updates 1fd463e
+  - [x] Implement 3D/2.5D interactive stack diagram 1fd463e
+- [~] Task: Non-Rivalrous Good Visualizer
+  - [~] Write tests for visualizer interaction logic
   - [ ] Implement interactive animation for rival vs non-rival goods
 - [ ] Task: WebGL Background Globe
   - [ ] Write tests for globe initialization parameters
