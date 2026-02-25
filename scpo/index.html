@@ -4368,18 +4368,23 @@
   </div>
 
   <!-- 4. NETMUNDIAL & THE POWER STRUGGLE -->
-  <div class="relative z-10 px-6 py-24 bg-gradient-to-b from-slate-950 via-indigo-950/20 to-slate-950">
+  <div class="relative z-10 px-6 py-24 bg-gradient-to-b from-slate-950 via-indigo-950/20 to-slate-950 perspective-section" data-perspectives="washington,brazil">
     <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16 netmundial-header">
+      <div class="text-center mb-8 netmundial-header">
         <div class="inline-flex items-center gap-3 mb-6 px-5 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full">
           <i data-lucide="users" class="w-4 h-4 text-indigo-400"></i>
           <span class="text-indigo-400 font-mono text-sm tracking-widest uppercase">NETmundial 2014</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">The Diplomatic Revolt</h2>
-        <p class="text-slate-400 text-lg max-w-3xl mx-auto">
-          The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo.
+        <p class="text-slate-400 text-lg max-w-3xl mx-auto perspective-content washington hidden">
+          <span class="perspective-highlight" data-perspective="washington">From Washington's view:</span> The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo, but we must maintain the multi-stakeholder model to prevent authoritarian control.
+        </p>
+        <p class="text-slate-400 text-lg max-w-3xl mx-auto perspective-content brazil hidden">
+          <span class="perspective-highlight" data-perspective="brazil">From Brazil's view:</span> The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo; the NSA spying shows we need digital sovereignty and a more democratic internet governance.
         </p>
       </div>
+      
+      <div class="perspective-controls mx-auto mb-16 justify-center flex"></div>
       
       <!-- Three Camps Visualization -->
       <div class="grid md:grid-cols-3 gap-6 mb-16">
@@ -13177,5 +13182,6 @@
   <script src="js/decryption.js"></script>
   <script src="js/sidenotes.js"></script>
   <script src="js/glossary.js"></script>
+  <script src="js/perspective.js"></script>
 </body>
 </html>
