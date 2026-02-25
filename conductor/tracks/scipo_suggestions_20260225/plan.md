@@ -24,10 +24,10 @@
 - [x] Task: Perspective Switcher Toggle
   - [x] Write tests for state management of perspective switcher 66a6938
   - [x] Implement UI toggle and dynamic highlighting 66a6938
-- [~] Task: Print-Optimized Takeaway Generator
-  - [~] Write tests for text selection and PDF generation module
-  - [ ] Implement PDF generator logic
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md)
+- [x] Task: Print-Optimized Takeaway Generator
+  - [x] Write tests for text selection and PDF generation module d17e33b
+  - [x] Implement PDF generator logic d17e33b
+- [~] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md)
 
 ## Phase 4: Visualizations and Scrollytelling
 - [ ] Task: Interactive Stack Diagram
