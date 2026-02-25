@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../scpo/shared/design-system.css">
+  <link rel="stylesheet" href="../../scpo/shared/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body class="bg-slate-950 text-white">
+  
+  <div style="height: 100vh;">Scroll down to see the diagram</div>
+
+  <div id="stack-diagram-container" class="py-24">
+    <!-- The diagram will be injected or initialized here -->
+    <div class="stack-diagram relative h-[600px] w-full max-w-4xl mx-auto">
+      <div class="stack-layer application" data-layer="application">
+        <h3>Application Layer</h3>
+        <p>Platforms, AI, Censorship</p>
+      </div>
+      <div class="stack-layer logical" data-layer="logical">
+        <h3>Logical Layer</h3>
+        <p>Protocols, IP, DNS</p>
+      </div>
+      <div class="stack-layer physical" data-layer="physical">
+        <h3>Physical Layer</h3>
+        <p>Cables, Satellites, Chips</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 100vh;">Bottom spacer</div>
+
+  <script src="../../scpo/js/stack-diagram.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initStackDiagram === 'function') {
+        window.initStackDiagram();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1216,11 +1216,10 @@
                   <span class="text-sm font-mono text-orange-600">1992</span>
                 </div>
                 <h3 class="heading-4 text-lg mb-3">The End of History</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                  Francis Fukuyama declared liberal democracy as the "final form of human government," 
-                  suggesting the ideological battles of the 20th century had been won.
-                </p>
-                <div class="pt-4 border-t border-slate-200">
+                                                  <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                                    Francis Fukuyama declared liberal democracy as the "final form of human government,"
+                                                    suggesting the ideological battles of the 20th century had been won.
+                                                  </p>                <div class="pt-4 border-t border-slate-200">
                   <p class="text-xs text-slate-500 italic">
                     "What we may be witnessing is not just the end of the Cold War, but the end of 
                     history as such."
@@ -1683,7 +1682,7 @@
           </div>
           
           <!-- Key Insight -->
-          <div class="gsap-reveal insight-card takeaway-source insight-card--info">
+          <div class="gsap-reveal insight-card insight-card--info">
             <div class="insight-label">
               <i data-lucide="git-branch" class="w-4 h-4"></i>
               Strategic Pivot
@@ -4368,7 +4367,7 @@
   </div>
 
   <!-- 4. NETMUNDIAL & THE POWER STRUGGLE -->
-  <div class="relative z-10 px-6 py-24 bg-gradient-to-b from-slate-950 via-indigo-950/20 to-slate-950 perspective-section" data-perspectives="washington,brazil">
+  <div class="relative z-10 px-6 py-24 bg-gradient-to-b from-slate-950 via-indigo-950/20 to-slate-950 perspective-section" data-perspectives="Washington, Beijing, Brasilia">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-8 netmundial-header">
         <div class="inline-flex items-center gap-3 mb-6 px-5 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full">
@@ -4376,12 +4375,39 @@
           <span class="text-indigo-400 font-mono text-sm tracking-widest uppercase">NETmundial 2014</span>
         </div>
         <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">The Diplomatic Revolt</h2>
-        <p class="text-slate-400 text-lg max-w-3xl mx-auto perspective-content washington hidden">
-          <span class="perspective-highlight" data-perspective="washington">From Washington's view:</span> The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo, but we must maintain the multi-stakeholder model to prevent authoritarian control.
-        </p>
-        <p class="text-slate-400 text-lg max-w-3xl mx-auto perspective-content brazil hidden">
-          <span class="perspective-highlight" data-perspective="brazil">From Brazil's view:</span> The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo; the NSA spying shows we need digital sovereignty and a more democratic internet governance.
-        </p>
+        
+        <div class="max-w-3xl mx-auto mb-12">
+          <p class="text-slate-400 text-lg mb-6">
+            The global internet governance order faced its greatest challenge at the NETmundial summit in São Paulo. Sparked by the Snowden revelations, the summit became a forum for competing visions of digital power.
+          </p>
+          
+          <div class="perspective-content Washington hidden">
+            <div class="bg-blue-900/20 border-l-4 border-blue-500 p-6 text-left rounded-r-lg">
+              <h4 class="text-blue-400 font-bold mb-2">The Multistakeholder Defense</h4>
+              <p class="text-slate-300">
+                Washington views the "multistakeholder model" as the only safeguard against authoritarian control. By distributing power among technical experts, civil society, and the private sector, the internet remains a borderless tool for innovation and free expression, free from the slow and political machinery of intergovernmental bodies like the UN.
+              </p>
+            </div>
+          </div>
+          
+          <div class="perspective-content Beijing hidden">
+            <div class="bg-red-900/20 border-l-4 border-red-500 p-6 text-left rounded-r-lg">
+              <h4 class="text-red-400 font-bold mb-2">Cyber Sovereignty</h4>
+              <p class="text-slate-300">
+                From the perspective of Beijing and Moscow, the current model is "multistakeholder" in name only—serving as a facade for American hegemony. They advocate for state-centric governance where national borders apply to cyberspace, granting governments the right to regulate and control information flows within their territories to ensure social stability and national security.
+              </p>
+            </div>
+          </div>
+          
+          <div class="perspective-content Brasilia hidden">
+            <div class="bg-emerald-900/20 border-l-4 border-emerald-500 p-6 text-left rounded-r-lg">
+              <h4 class="text-emerald-400 font-bold mb-2">Reformed Internationalism</h4>
+              <p class="text-slate-300">
+                Leading the Global South, Brasília and New Delhi reject both US dominance and state-led balkanization. They seek to "internationalize" the multistakeholder model—moving ICANN oversight away from the US Department of Commerce toward a truly global, inclusive framework that balances human rights with development and equity for non-Western nations.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="perspective-controls mx-auto mb-16 justify-center flex"></div>
@@ -6439,7 +6465,35 @@
       </div>
     </div>
 
-    <!-- Section 6: Triple Stack Reality -->
+    <!-- Section 6: Interactive Stack Diagram -->
+    <div id="stack-diagram-container" class="mb-32 py-24 bg-slate-950/50 rounded-3xl border border-slate-800">
+      <div class="text-center mb-12">
+        <span class="text-cyan-400 text-sm font-semibold uppercase tracking-wider">The Architecture of Control</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">The Three Layers of Power</h2>
+        <p class="text-slate-400 mt-3 max-w-2xl mx-auto">
+          Geopolitical power in the digital age is exercised across the three fundamental layers of the global internet stack.
+        </p>
+      </div>
+
+      <div class="stack-diagram relative h-[600px] w-full max-w-4xl mx-auto px-6">
+        <div class="stack-layer application" data-layer="Application Layer">
+          <h3 class="text-xl font-bold">The Content Layer</h3>
+          <p>Where AI models, social platforms, and algorithms shape human perception and control information flows. The domain of soft power and ideological dominance.</p>
+        </div>
+        
+        <div class="stack-layer logical" data-layer="Logical Layer">
+          <h3 class="text-xl font-bold">The Protocol Layer</h3>
+          <p>The invisible standards—IP, DNS, and encryption—that define how data moves. A battleground for institutional control and technical sovereignty.</p>
+        </div>
+        
+        <div class="stack-layer physical" data-layer="Physical Layer">
+          <h3 class="text-xl font-bold">The Infrastructure Layer</h3>
+          <p>The physical reality of undersea cables, satellite constellations, and advanced semiconductors. The foundational base of digital sovereignty.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7: Triple Stack Reality -->
     <div class="mb-20 triple-stack-section">
       <div class="text-center mb-12">
         <span class="text-purple-400 text-sm font-semibold uppercase tracking-wider">The New Digital Order</span>
@@ -13180,9 +13234,8 @@
   
   <!-- Interactive Features Scripts -->
   <script src="js/decryption.js"></script>
-  <script src="js/sidenotes.js"></script>
   <script src="js/glossary.js"></script>
   <script src="js/perspective.js"></script>
-  <script src="js/takeaway.js"></script>
+  <script src="js/stack-diagram.js"></script>
 </body>
 </html>
