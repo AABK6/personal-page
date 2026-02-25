@@ -21,11 +21,11 @@
 - [x] Task: Inline Concept Glossary
   - [x] Write tests for tooltip rendering and positioning d2499f4
   - [x] Implement glassmorphism tooltip functionality d2499f4
-- [~] Task: Perspective Switcher Toggle
-  - [~] Write tests for state management of perspective switcher
-  - [ ] Implement UI toggle and dynamic highlighting
-- [ ] Task: Print-Optimized Takeaway Generator
-  - [ ] Write tests for text selection and PDF generation module
+- [x] Task: Perspective Switcher Toggle
+  - [x] Write tests for state management of perspective switcher 66a6938
+  - [x] Implement UI toggle and dynamic highlighting 66a6938
+- [~] Task: Print-Optimized Takeaway Generator
+  - [~] Write tests for text selection and PDF generation module
   - [ ] Implement PDF generator logic
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md)
 
