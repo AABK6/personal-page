@@ -14,24 +14,22 @@
   - [x] Integrate decryption effect with scroll triggers for main title and Clipper Chip sections ecddfd1
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md) e80e8c7
 
-## Phase 3: Advanced Pedagogical UX
-- [x] Task: Tufte-Style Sidenotes
-  - [x] Write tests for layout responsiveness of sidenotes 56ecc94
-  - [x] Implement CSS and JS for inline sidenotes 56ecc94
+## Phase 3: Advanced Pedagogical UX [checkpoint: b1a16a0]
+- [x] Task: Tufte-Style Sidenotes (CANCELLED)
+  - [x] Scrapped based on user feedback.
 - [x] Task: Inline Concept Glossary
   - [x] Write tests for tooltip rendering and positioning d2499f4
   - [x] Implement glassmorphism tooltip functionality d2499f4
 - [x] Task: Perspective Switcher Toggle
   - [x] Write tests for state management of perspective switcher 66a6938
   - [x] Implement UI toggle and dynamic highlighting 66a6938
-- [x] Task: Print-Optimized Takeaway Generator
-  - [x] Write tests for text selection and PDF generation module d17e33b
-  - [x] Implement PDF generator logic d17e33b
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md)
+- [x] Task: Print-Optimized Takeaway Generator (CANCELLED)
+  - [x] Scrapped based on user feedback.
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md) b1a16a0
 
 ## Phase 4: Visualizations and Scrollytelling
-- [ ] Task: Interactive Stack Diagram
-  - [ ] Write tests for diagram layer state updates
+- [~] Task: Interactive Stack Diagram
+  - [~] Write tests for diagram layer state updates
   - [ ] Implement 3D/2.5D interactive stack diagram
 - [ ] Task: Non-Rivalrous Good Visualizer
   - [ ] Write tests for visualizer interaction logic
