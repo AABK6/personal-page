@@ -2,7 +2,8 @@
 
 ## Phase 1: Setup and Foundation
 - [ ] Task: Project setup for testing
-  - [ ] Write tests configuration for UI interactions (e.g., set up Jest/Playwright or similar if not present)
+  - [ ] Review `scpo/creative_suggestions.md` to establish visual and interaction baselines.
+  - [ ] Write tests configuration for UI interactions and automated visual testing (set up Playwright for screenshot comparisons).
   - [ ] Implement initial scaffolding for new script modules
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup and Foundation' (Protocol in workflow.md)
 

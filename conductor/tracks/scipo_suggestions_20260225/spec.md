@@ -16,3 +16,4 @@ This track implements the creative and interactive suggestions outlined in `scpo
 ## Non-Functional Requirements
 - Ensure responsive design, adhering to a balanced approach between visual fidelity and accessibility/performance.
 - Integration must work within the existing HTML/CSS/Vanilla JS and GSAP ecosystem.
+- Implement automated visual testing (e.g., using Playwright screenshots) to ensure UI changes do not cause visual regressions across the different interactive sections based on `scpo/creative_suggestions.md`.
