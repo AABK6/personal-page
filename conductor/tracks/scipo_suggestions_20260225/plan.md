@@ -15,11 +15,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md) e80e8c7
 
 ## Phase 3: Advanced Pedagogical UX
-- [~] Task: Tufte-Style Sidenotes
-  - [~] Write tests for layout responsiveness of sidenotes
-  - [ ] Implement CSS and JS for inline sidenotes
-- [ ] Task: Inline Concept Glossary
-  - [ ] Write tests for tooltip rendering and positioning
+- [x] Task: Tufte-Style Sidenotes
+  - [x] Write tests for layout responsiveness of sidenotes 56ecc94
+  - [x] Implement CSS and JS for inline sidenotes 56ecc94
+- [~] Task: Inline Concept Glossary
+  - [~] Write tests for tooltip rendering and positioning
   - [ ] Implement glassmorphism tooltip functionality
 - [ ] Task: Perspective Switcher Toggle
   - [ ] Write tests for state management of perspective switcher
