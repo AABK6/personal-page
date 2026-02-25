@@ -1,0 +1,41 @@
+# Implementation Plan: Implement Sci-Po creative suggestions
+
+## Phase 1: Setup and Foundation
+- [ ] Task: Project setup for testing
+  - [ ] Write tests configuration for UI interactions (e.g., set up Jest/Playwright or similar if not present)
+  - [ ] Implement initial scaffolding for new script modules
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup and Foundation' (Protocol in workflow.md)
+
+## Phase 2: Decryption Text Effects
+- [ ] Task: Implement decryption effect logic
+  - [ ] Write failing unit tests for text decryption utility function
+  - [ ] Implement text decryption logic
+  - [ ] Integrate decryption effect with scroll triggers for main title and Clipper Chip sections
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md)
+
+## Phase 3: Advanced Pedagogical UX
+- [ ] Task: Tufte-Style Sidenotes
+  - [ ] Write tests for layout responsiveness of sidenotes
+  - [ ] Implement CSS and JS for inline sidenotes
+- [ ] Task: Inline Concept Glossary
+  - [ ] Write tests for tooltip rendering and positioning
+  - [ ] Implement glassmorphism tooltip functionality
+- [ ] Task: Perspective Switcher Toggle
+  - [ ] Write tests for state management of perspective switcher
+  - [ ] Implement UI toggle and dynamic highlighting
+- [ ] Task: Print-Optimized Takeaway Generator
+  - [ ] Write tests for text selection and PDF generation module
+  - [ ] Implement PDF generator logic
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: Advanced Pedagogical UX' (Protocol in workflow.md)
+
+## Phase 4: Visualizations and Scrollytelling
+- [ ] Task: Interactive Stack Diagram
+  - [ ] Write tests for diagram layer state updates
+  - [ ] Implement 3D/2.5D interactive stack diagram
+- [ ] Task: Non-Rivalrous Good Visualizer
+  - [ ] Write tests for visualizer interaction logic
+  - [ ] Implement interactive animation for rival vs non-rival goods
+- [ ] Task: WebGL Background Globe
+  - [ ] Write tests for globe initialization parameters
+  - [ ] Implement Three.js/Globe.gl background
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: Visualizations and Scrollytelling' (Protocol in workflow.md)
