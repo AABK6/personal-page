@@ -3,8 +3,8 @@
 ## Phase 1: Setup and Foundation
 - [~] Task: Project setup for testing
   - [x] Review `scpo/creative_suggestions.md` to establish visual and interaction baselines. 24e5215
-  - [~] Write tests configuration for UI interactions and automated visual testing (set up Playwright for screenshot comparisons).
-  - [ ] Implement initial scaffolding for new script modules
+  - [x] Write tests configuration for UI interactions and automated visual testing (set up Playwright for screenshot comparisons). 687d886
+  - [~] Implement initial scaffolding for new script modules
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup and Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Decryption Text Effects
