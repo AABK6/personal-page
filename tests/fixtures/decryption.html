@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <h1 id="target" data-decrypt="Hello World">a7$k9!L...</h1>
+  <script src="../../scpo/js/decryption.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initDecryption === 'function') {
+        window.initDecryption(document.getElementById('target'));
+      }
+    });
+  </script>
+</body>
+</html>
