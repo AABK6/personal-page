@@ -1573,14 +1573,14 @@
     <!-- ========================================================================
          SECTION 4: THE CLIPPER CHIP WARS (1993-1996)
          ======================================================================== -->
-    <section class="py-20 md:py-28 bg-[#f5f3f0]">
+    <section class="py-20 md:py-28 bg-[#f5f3f0] decrypt-container decrypt-on-scroll">
       <div class="container mx-auto px-6">
         <div class="max-w-4xl mx-auto">
           
           <!-- Section Header -->
           <div class="gsap-reveal section-header mb-12">
             <span class="heading-6 text-orange-600 mb-3 block">The Internal Contradiction</span>
-            <h2 class="heading-2 decrypt-on-scroll">The Clipper Chip Wars</h2>
+            <h2 class="heading-2">The Clipper Chip Wars</h2>
             <p class="chapter-subtitle">
               The first major battle over encryption revealed a fundamental tension in the liberal 
               digital order: openness versus surveillance, freedom versus security.
@@ -4714,14 +4714,13 @@
       <!-- Encryption Revolution -->
       <div class="encryption-revolution bg-gradient-to-r from-violet-950/50 to-slate-900 rounded-2xl p-8 mb-12 border border-violet-500/30">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h3 class="text-2xl font-bold text-white mb-4">The Encryption Revolution</h3>
-            <p class="text-slate-300 leading-relaxed mb-6">
-              Post-Snowden, major tech companies raced to encrypt all internal traffic. What was once optional became mandatory—data centers, backbone links, and user connections all received encryption upgrades.
-            </p>
-            
-            <div class="space-y-4">
-              <div class="flex items-center gap-4">
+                    <div class="decrypt-container decrypt-on-scroll">
+                      <h3 class="text-2xl font-bold text-white mb-4">The Encryption Revolution</h3>
+                      <p class="text-slate-300 leading-relaxed mb-6">
+                        Post-Snowden, major tech companies raced to encrypt all internal traffic. What was once optional became mandatory—data centers, backbone links, and user connections all received encryption upgrades.
+                      </p>
+          
+                      <div class="space-y-4">              <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-violet-500/20 rounded-lg flex items-center justify-center">
                   <i data-lucide="lock" class="w-5 h-5 text-violet-400"></i>
                 </div>
@@ -13176,5 +13175,6 @@
   
   <!-- Interactive Features Scripts -->
   <script src="js/decryption.js"></script>
+  <script src="js/sidenotes.js"></script>
 </body>
 </html>

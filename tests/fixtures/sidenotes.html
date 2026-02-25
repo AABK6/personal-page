@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../scpo/shared/design-system.css">
+  <link rel="stylesheet" href="../../scpo/shared/styles.css">
+  <!-- We'll use Tailwind classes as they exist in the main project -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Specific styles for sidenotes will be loaded from the main styles or injected here */
+    body { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div class="content-container relative max-w-3xl">
+    <p class="mb-4">
+      This is the main text of the paragraph that requires some extra context.
+      <span class="sidenote-wrapper">
+        <button class="sidenote-trigger text-orange-500 font-bold" aria-expanded="false" aria-controls="sn1">[1]</button>
+        <span class="sidenote" id="sn1">
+          This is the Tufte-style sidenote text that should appear on the right margin on desktop, and inline on mobile when triggered.
+        </span>
+      </span>
+      And here is the rest of the paragraph continuing normally.
+    </p>
+  </div>
+  
+  <script src="../../scpo/js/sidenotes.js"></script>
+  <script>
+    // Initialize if available
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initSidenotes === 'function') {
+        window.initSidenotes();
+      }
+    });
+  </script>
+</body>
+</html>
