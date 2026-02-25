@@ -7,16 +7,16 @@
   - [x] Implement initial scaffolding for new script modules 1661c4d
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Setup and Foundation' (Protocol in workflow.md) 854adfa
 
-## Phase 2: Decryption Text Effects
+## Phase 2: Decryption Text Effects [checkpoint: e80e8c7]
 - [x] Task: Implement decryption effect logic
   - [x] Write failing unit tests for text decryption utility function 64730be
   - [x] Implement text decryption logic 64730be
   - [x] Integrate decryption effect with scroll triggers for main title and Clipper Chip sections ecddfd1
-- [~] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md) e80e8c7
 
 ## Phase 3: Advanced Pedagogical UX
-- [ ] Task: Tufte-Style Sidenotes
-  - [ ] Write tests for layout responsiveness of sidenotes
+- [~] Task: Tufte-Style Sidenotes
+  - [~] Write tests for layout responsiveness of sidenotes
   - [ ] Implement CSS and JS for inline sidenotes
 - [ ] Task: Inline Concept Glossary
   - [ ] Write tests for tooltip rendering and positioning
