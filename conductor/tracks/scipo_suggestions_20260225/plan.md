@@ -18,11 +18,11 @@
 - [x] Task: Tufte-Style Sidenotes
   - [x] Write tests for layout responsiveness of sidenotes 56ecc94
   - [x] Implement CSS and JS for inline sidenotes 56ecc94
-- [~] Task: Inline Concept Glossary
-  - [~] Write tests for tooltip rendering and positioning
-  - [ ] Implement glassmorphism tooltip functionality
-- [ ] Task: Perspective Switcher Toggle
-  - [ ] Write tests for state management of perspective switcher
+- [x] Task: Inline Concept Glossary
+  - [x] Write tests for tooltip rendering and positioning d2499f4
+  - [x] Implement glassmorphism tooltip functionality d2499f4
+- [~] Task: Perspective Switcher Toggle
+  - [~] Write tests for state management of perspective switcher
   - [ ] Implement UI toggle and dynamic highlighting
 - [ ] Task: Print-Optimized Takeaway Generator
   - [ ] Write tests for text selection and PDF generation module
