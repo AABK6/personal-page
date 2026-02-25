@@ -1,0 +1,23 @@
+{
+  "name": "personal-page",
+  "version": "1.0.0",
+  "description": "",
+  "main": "population.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AABK6/personal-page.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AABK6/personal-page/issues"
+  },
+  "homepage": "https://github.com/AABK6/personal-page#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}
