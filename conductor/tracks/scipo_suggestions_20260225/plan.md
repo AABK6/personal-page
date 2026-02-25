@@ -8,11 +8,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Setup and Foundation' (Protocol in workflow.md) 854adfa
 
 ## Phase 2: Decryption Text Effects
-- [~] Task: Implement decryption effect logic
+- [x] Task: Implement decryption effect logic
   - [x] Write failing unit tests for text decryption utility function 64730be
   - [x] Implement text decryption logic 64730be
-  - [~] Integrate decryption effect with scroll triggers for main title and Clipper Chip sections
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md)
+  - [x] Integrate decryption effect with scroll triggers for main title and Clipper Chip sections ecddfd1
+- [~] Task: Conductor - User Manual Verification 'Phase 2: Decryption Text Effects' (Protocol in workflow.md)
 
 ## Phase 3: Advanced Pedagogical UX
 - [ ] Task: Tufte-Style Sidenotes
