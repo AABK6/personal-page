@@ -1261,10 +1261,29 @@
                   <span class="text-sm font-mono text-orange-600">1990</span>
                 </div>
                 <h3 class="heading-4 text-lg mb-3">Ideas as Non-Rival Goods</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
                   Paul Romer's endogenous growth theory: ideas are non-rival goods that can be 
                   shared without being depleted, creating infinite growth potential.
                 </p>
+
+                <!-- Non-Rivalrous Visualizer -->
+                <div id="non-rivalrous-container" class="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div class="grid grid-cols-2 gap-4">
+                    <div id="rival-good" class="p-3 bg-white rounded-lg border border-slate-100 text-center cursor-pointer hover:border-orange-200 transition-colors">
+                      <span class="text-xs font-bold text-slate-400 uppercase">Rival</span>
+                      <div class="apple-container text-3xl my-2">🍎</div>
+                      <p class="text-[10px] text-slate-500">Click to eat</p>
+                    </div>
+                    <div id="non-rival-good" class="p-3 bg-white rounded-lg border border-slate-100 text-center cursor-pointer hover:border-cyan-200 transition-colors">
+                      <span class="text-xs font-bold text-slate-400 uppercase">Non-Rival</span>
+                      <div class="code-container h-12 flex items-center justify-center font-mono text-cyan-600 text-xs overflow-hidden">
+                        <code>code</code>
+                      </div>
+                      <p class="text-[10px] text-slate-500">Click to share</p>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="pt-4 border-t border-slate-200">
                   <p class="text-xs text-slate-500 italic">
                     "Endogenous Technological Change" — the economics of infinite replication 
@@ -13237,5 +13256,6 @@
   <script src="js/glossary.js"></script>
   <script src="js/perspective.js"></script>
   <script src="js/stack-diagram.js"></script>
+  <script src="js/non-rivalrous.js"></script>
 </body>
 </html>

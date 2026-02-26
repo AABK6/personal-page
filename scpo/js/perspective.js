@@ -11,17 +11,14 @@ const PerspectiveStyles = `
 }
 
 /* Background tints */
-.perspective-section[data-active-perspective="washington"] {
+.perspective-section[data-active-perspective="Washington"] {
   background-color: rgba(59, 130, 246, 0.05); /* Blue tint */
 }
-.perspective-section[data-active-perspective="brazil"] {
-  background-color: rgba(34, 197, 94, 0.05); /* Green tint */
+.perspective-section[data-active-perspective="Brasilia"] {
+  background-color: rgba(16, 185, 129, 0.05); /* Emerald tint */
 }
-.perspective-section[data-active-perspective="china"] {
-  background-color: rgba(220, 38, 38, 0.05); /* Red tint */
-}
-.perspective-section[data-active-perspective="eu"] {
-  background-color: rgba(245, 158, 11, 0.05); /* Gold tint */
+.perspective-section[data-active-perspective="Beijing"] {
+  background-color: rgba(239, 68, 68, 0.05); /* Red tint */
 }
 
 /* UI Controls */
@@ -137,8 +134,10 @@ function initPerspectiveSwitchers() {
         section.querySelectorAll('.perspective-content').forEach(content => {
           if (content.classList.contains(p)) {
             content.classList.add('active');
+            content.classList.remove('hidden');
           } else {
             content.classList.remove('active');
+            content.classList.add('hidden');
           }
         });
       });
@@ -151,6 +150,9 @@ function initPerspectiveSwitchers() {
     section.querySelectorAll('.perspective-content').forEach(content => {
       if (content.classList.contains(defaultP)) {
         content.classList.add('active');
+        content.classList.remove('hidden');
+      } else {
+        content.classList.add('hidden');
       }
     });
   });

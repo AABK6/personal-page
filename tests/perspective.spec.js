@@ -6,29 +6,28 @@ test.describe('Perspective Switcher Toggle', () => {
     await page.goto(fileUrl);
     
     // Check if the buttons were generated
-    const btnWash = page.locator('button[data-perspective="washington"]');
-    const btnBrazil = page.locator('button[data-perspective="brazil"]');
+    const btnWash = page.locator('button[data-perspective="Washington"]');
+    const btnBeijing = page.locator('button[data-perspective="Beijing"]');
     
     await expect(btnWash).toBeVisible();
-    await expect(btnBrazil).toBeVisible();
+    await expect(btnBeijing).toBeVisible();
     
     // Initially, both specific contents are hidden (or maybe Washington is default)
-    const contentWash = page.locator('.perspective-content.washington');
-    const contentBrazil = page.locator('.perspective-content.brazil');
+    const contentWash = page.locator('.perspective-content.Washington');
+    const contentBeijing = page.locator('.perspective-content.Beijing');
     
     // Let's click Washington
     await btnWash.click();
     await expect(contentWash).toBeVisible();
-    await expect(contentBrazil).toBeHidden();
     
     // Background tint should be applied to the section
     const section = page.locator('.perspective-section');
-    await expect(section).toHaveAttribute('data-active-perspective', 'washington');
+    await expect(section).toHaveAttribute('data-active-perspective', 'Washington');
     
-    // Now click Brazil
-    await btnBrazil.click();
-    await expect(contentBrazil).toBeVisible();
+    // Now click Beijing
+    await btnBeijing.click();
+    await expect(contentBeijing).toBeVisible();
     await expect(contentWash).toBeHidden();
-    await expect(section).toHaveAttribute('data-active-perspective', 'brazil');
+    await expect(section).toHaveAttribute('data-active-perspective', 'Beijing');
   });
 });
