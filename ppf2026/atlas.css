@@ -61,6 +61,8 @@
   --line: #d4dedc;
   --teal: #006b84;
   --coral: #eb5f5e;
+  --forum-mist: #eff7f9;
+  --forum-arcs: url("./assets/forum-arcs.png");
   --sans: "Jost", "Trebuchet MS", sans-serif;
   --serif: "EB Garamond", Georgia, serif;
   --edge: clamp(20px, 6vw, 84px);
@@ -108,8 +110,16 @@ h1:focus, main:focus { outline: none; }
 }
 .dateline [aria-hidden="true"] { color: #bc5553; }
 .edition-photo {
+  position: relative;
   min-height: 208px;
   background: #d8e0df url("./assets/palais-de-chaillot.jpg") center 58% / cover no-repeat;
+}
+/* Interlocking arcs from the Forum's graphic guidelines, “Trames”, p. 19. */
+.edition-photo::after {
+  content: "";
+  position: absolute; inset: 0 0 0 auto; width: clamp(60px, 22%, 98px);
+  background: var(--forum-mist) var(--forum-arcs) 50% 58% / 127% auto no-repeat;
+  pointer-events: none;
 }
 .saved-intro { padding-block: 42px 27px; }
 .saved-intro h1 { font-size: clamp(3.4rem, 6vw, 5.4rem); margin-bottom: 0; }
@@ -145,9 +155,15 @@ h1:focus, main:focus { outline: none; }
 .day-block { margin-top: 36px; }
 .day-block + .day-block { margin-top: 50px; }
 .day-heading {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
   border-bottom: 1px solid #91a7a9; padding-bottom: 12px;
 }
+.day-heading::after, .prose::before {
+  content: ""; position: absolute; left: 0; width: 34px; height: 3px;
+  background: var(--coral); pointer-events: none;
+}
+.day-heading::after { bottom: -1px; }
+.prose::before { top: -1px; }
 .day-heading h2 { font-size: clamp(1.85rem, 2.7vw, 2.55rem); font-weight: 500; letter-spacing: -.027em; line-height: 1.12; }
 .day-heading span { flex: none; color: var(--quiet); font-size: .88rem; }
 .session-list { list-style: none; padding: 0; }
@@ -169,7 +185,14 @@ h1:focus, main:focus { outline: none; }
 .empty a { display: inline-block; margin-top: 12px; }
 
 .reader, .reader-navigation { max-width: 756px; margin-inline: auto; }
-.reader-navigation { padding-top: clamp(25px, 5vw, 62px); }
+.reader-navigation {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding-top: clamp(25px, 5vw, 62px);
+}
+.reader-navigation::after {
+  content: ""; width: 38px; height: 32px; flex: none; opacity: .7;
+  background: var(--forum-arcs) center / contain no-repeat; pointer-events: none;
+}
 .back-link { display: inline-flex; align-items: center; gap: .55rem; color: var(--quiet); text-decoration: none; padding-block: 6px; font-size: .97rem; }
 .back-link span { color: var(--teal); font-size: 1.2rem; line-height: 1; }
 .back-link:hover { color: var(--teal); text-decoration: underline; }
@@ -198,7 +221,7 @@ h1:focus, main:focus { outline: none; }
 .moments a, .youtube { color: var(--teal); text-underline-offset: .22em; }
 .moments a { font-variant-numeric: tabular-nums; }
 .prose {
-  max-width: 68ch; margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--line);
+  position: relative; max-width: 68ch; margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--line);
   font: 400 clamp(1.3rem, 1.6vw, 1.47rem)/1.56 var(--serif); color: var(--body);
 }
 .prose p + p, .prose p + h2 { margin-top: .95em; }
@@ -228,6 +251,11 @@ a:hover, .article-end button:hover, .credits summary:hover, .filter-summary butt
 @media (max-width: 590px) {
   .edition { display: block; padding-block: 26px 24px; }
   .edition-photo { display: none; }
+  .edition-type { position: relative; }
+  .edition-type::after {
+    content: ""; position: absolute; inset: 0 0 auto auto; width: 62px; height: 46px;
+    background: var(--forum-arcs) right center / contain no-repeat; opacity: .75; pointer-events: none;
+  }
   .forum-mark { width: 57px; }
   .edition h1 { font-size: clamp(3.45rem, 13vw, 4.7rem); margin: 17px 0 10px; }
   .dateline { font-size: .94rem; }
@@ -253,6 +281,7 @@ a:hover, .article-end button:hover, .credits summary:hover, .filter-summary butt
   .foot { padding-block: 25px 32px; }
 }
 @media print {
+  .reader-navigation, .edition-type::after, .day-heading::after, .prose::before { display: none !important; }
   .search-tools, .filter-summary, .back-link, .replay, .foot, .row-arrow, .article-end, .skip { display: none !important; }
   body { color: black; background: white; }
   .shell { margin: 0; padding: 0; max-width: none; }
